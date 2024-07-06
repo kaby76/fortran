@@ -38,4 +38,4 @@
 * From ISO/IEC 1539-1:2023: `The syntax rules are not a complete and accurate syntax description of Fortran, and cannot be used to
 generate a Fortran parser automatically; where a syntax rule is incomplete, it is restricted by corresponding
 constraints and text.`
-* The main scraping script is [extract.sh](https://github.com/kaby76/fortran/blob/main/extract.sh).It calls tritext to yank out text from a PDF file. Then, it calls a special program [extraction](https://github.com/kaby76/fortran/tree/main/extraction) to yank out EBNF from that text. The script uses a custom [ENBF in Antlr](https://github.com/kaby76/fortran/tree/main/ebnf) to parse and modify the scraped Fortran EBNF.
+* The main scraping script is [extract.sh](https://github.com/kaby76/fortran/blob/main/extract.sh). It calls tritext to yank out text from a PDF file. Then, it calls a special program [extraction](https://github.com/kaby76/fortran/tree/main/extraction) to yank out EBNF from that text. The script uses a custom [ENBF in Antlr](https://github.com/kaby76/fortran/tree/main/ebnf) to parse and modify the scraped Fortran EBNF.
