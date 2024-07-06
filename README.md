@@ -1,4 +1,6 @@
-# Fortran Standards Documents and Resources
+# Fortran Scraping
+
+## Fortran Standards Documents and Resources
 * Distilled from https://gcc.gnu.org/wiki/GFortranStandards
 * All drafts in PDFs contain LHS margin with line numberings.
 
