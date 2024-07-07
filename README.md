@@ -40,4 +40,6 @@ generate a Fortran parser automatically; where a syntax rule is incomplete, it i
 constraints and text.`
 * The main scraping script is [extract.sh](https://github.com/kaby76/fortran/blob/main/extract.sh). It calls
 [tritext](https://github.com/kaby76/Trash/tree/10666b6d74bc7154008512912d409a4c2b81ebae/src/tritext)
-to yank out text from a PDF file. Then, it calls a special program [extraction](https://github.com/kaby76/fortran/tree/main/extraction) to yank out EBNF from that text. The script uses a custom [ENBF in Antlr](https://github.com/kaby76/fortran/tree/main/ebnf) to parse and modify the scraped Fortran EBNF.
+to yank out text from a PDF file. Then, it calls a custom-written program just for
+extracting the EBNF from the text, [extraction](https://github.com/kaby76/fortran/tree/main/extraction).
+The script also uses an [ENBF in Antlr](https://github.com/kaby76/fortran/tree/main/ebnf) to parse and modify the scraped Fortran EBNF.
