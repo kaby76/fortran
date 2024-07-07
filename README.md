@@ -1,4 +1,4 @@
-# Fortran Scraping
+# Scraping the EBNF grammar from the ISO Spec
 
 ## Fortran Standards Documents and Resources
 * Distilled from https://gcc.gnu.org/wiki/GFortranStandards
