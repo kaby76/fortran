@@ -260,15 +260,15 @@
                    ( component_part )?
                    ( type_bound_procedure_part )?
                    end_type_stmt ;
- derived_type_stmt : 'TYPE' ( ( ',' <i>type-attr-spec-list</i> )? '::' )? <i>type-name</i>
-                   ( '(' <i>type-param-name-list</i> ')' )? ;
+ derived_type_stmt : 'TYPE' ( ( ',' type_attr_spec_list )? '::' )? type_name
+                   ( '(' type_param_name_list ')' )? ;
  type_attr_spec : 'ABSTRACT'
               | access_spec
               | 'BIND (C)'
               | 'EXTENDS (' <i>parent-type-name</i> ')' ;
  private_or_sequence : private_components_stmt
               | sequence_stmt ;
- end_type_stmt : 'END TYPE' ( <i>type-name</i> )? ;
+ end_type_stmt : 'END TYPE' ( type_name )? ;
  sequence_stmt : 'SEQUENCE' ;
  type_param_def_stmt : integer_type_spec',' type_param_attr_spec '::'
                   <i>type-param-decl-list</i> ;
@@ -319,7 +319,7 @@
               | 'NOPASS'
               | 'PASS' ( '('<i>arg-name</i>')' )? ;
  final_procedure_stmt : 'FINAL' ( '::' )? <i>final-subroutine-name-list</i> ;
- derived_type_spec : <i>type-name</i> ( '(' <i>type-param-spec-list</i> ')' )? ;
+ derived_type_spec : type_name ( '(' <i>type-param-spec-list</i> ')' )? ;
  type_param_spec : ( keyword '=' )? type_param_value ;
  structure_constructor : derived_type_spec '(' ( <i>component-spec-list</i> )? ')
                 <b>J3/23-007r1 91J3/23-007r1 WD 1539-1 2023-06-13</b>' ;
@@ -1283,7 +1283,7 @@ scalar_logical_variable : logical_variable ;
 
 inquire_spec_list : inquire_spec ( ',' inquire_spec )*  ;
 
-flush_spec_list : flush_spec ( ',' <i>flushSpec</i> )*  ;
+flush_spec_list : flush_spec ( ',' flush_spec )*  ;
 
 position_spec_list : position_spec ( ',' position_spec )*  ;
 
@@ -1316,6 +1316,15 @@ label_list : label ( ',' label )*  ;
 form_team_spec_list : form_team_spec ( ',' form_team_spec )*  ;
 
 construct_name : name ;
+
+scalar_int_constant_expr : int_constant_expr ;
+
+type_attr_spec_list : type_param_attr_spec ( ', <i>type-param-attr-spec' )*  ;
+
+type_param_name_list : <i>type-param-name</i> ( ',' <i>type-param-name</i> )*  ;
+
+type_name : name ;
+
 
 
 

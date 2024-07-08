@@ -114,7 +114,7 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 
 <i>inquire-spec-list</i> <b>is</b> <i>inquire-spec</i> [ , <i>inquire-spec</i> ] ...
 
-<i>flush-spec-list</i> <b>is</b> <i>flush-spec</i> [ , <i>flushSpec</i> ] ...
+<i>flush-spec-list</i> <b>is</b> <i>flush-spec</i> [ , <i>flush-spec</i> ] ...
 
 <i>position-spec-list</i> <b>is</b> <i>position-spec</i> [ , <i>position-spec</i> ] ...
 
@@ -147,6 +147,15 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 <i>form-team-spec-list</i> <b>is</b> <i>form-team-spec</i> [ , <i>form-team-spec</i> ] ...
 
 <i>construct-name</i> <b>is</b> <i>name</i>
+
+<i>scalar-int-constant-expr</i> <b>is</b> <i>int-constant-expr</i>
+
+<i>type-attr-spec-list</i> <b>is</b> <i>type-param-attr-spec</i> [ , <i>type-param-attr-spec ] ...
+
+<i>type-param-name-list</i> <b>is</b> <i>type-param-name</i> [ , <i>type-param-name</i> ] ...
+
+<i>type-name</i> <b>is</b> <i>name</i>
+
 
 ";' | trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf
