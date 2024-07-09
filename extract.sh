@@ -11,7 +11,7 @@ to="${@%%.*}".txt
 echo $to
 if [ ! -f $to ]
 then
-	tritext.exe --filter 'l1<50' --markup $@ 2> /dev/null > $to
+	tritext.exe --filter 'l1<50;l2>780;l2<60' --markup $@ 2> /dev/null > $to
 fi
 
 echo "Making the program that extracts EBNF rules from the text."
@@ -150,12 +150,45 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 
 <i>scalar-int-constant-expr</i> <b>is</b> <i>int-constant-expr</i>
 
-<i>type-attr-spec-list</i> <b>is</b> <i>type-param-attr-spec</i> [ , <i>type-param-attr-spec ] ...
+<i>type-attr-spec-list</i> <b>is</b> <i>type-param-attr-spec</i> [ , <i>type-param-attr-spec</i> ] ...
 
 <i>type-param-name-list</i> <b>is</b> <i>type-param-name</i> [ , <i>type-param-name</i> ] ...
 
 <i>type-name</i> <b>is</b> <i>name</i>
 
+<i>type-param-decl-list</i> <b>is</b> <i>type-param-decl</i> [ , <i>type-param-decl</i> ] ...
+
+<i>type-param-name</i> <b>is</b> <i>name</i>
+
+<i>component-attr-spec-list</i> <b>is</b> <i>component-attr-spec</i> [ , <i>component-attr-spec</i> ] ...
+
+<i>component-name</i> <b>is</b> <i>name</i>
+
+<i>deferred-shape-spec-list</i> <b>is</b> <i>deferred-shape-spec</i> [ , <i>deferred-shape-spec</i> ] ...
+
+<i>explicit-shape-spec-list</i> <b>is</b> <i>explicit-shape-spec</i> [ , <i>explicit-shape-spec</i> ] ...
+
+<i>proc-component-attr-spec-list</i> <b>is</b> <i>proc-component-attr-spec</i> [ , <i>proc-component-attr-spec</i> ] ...
+
+<i>arg-name</i> <b>is</b> <i>name</i>
+
+<i>component-decl-list</i> <b>is</b> <i>component-decl</i> [ , <i>component-decl</i> ] ...
+
+<i>scalar-int-constant-name</i> <b>is</b> <i>int-constant-name</i>
+
+<i>int-constant-name</i> <b>is</b> <i>name</i>
+
+<i>associate-construct-name</i> <b>is</b> <i>name</i>
+
+<i>associate-name</i> <b>is</b> <i>name</i>
+
+<i>case-value-range-list</i> <b>is</b> <i>case-value-range</i> [ , <i>case-value-range</i> ] ...
+
+<i>case-construct-name</i> <b>is</b> <i>name</i>
+
+<i>scalar-constant-expr</i> <b>is</b> <i>constant-expr</i>
+
+<i>binding-attr-list</i> <b>is</b> <i>binding-attr</i> [ , <i>binding-attr</i> ] ...
 
 ";' | trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf

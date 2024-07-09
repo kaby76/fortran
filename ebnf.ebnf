@@ -218,7 +218,7 @@
  signed_int_literal_constant : ( sign )? int_literal_constant ;
  int_literal_constant : digit_string ( '_' kind_param )? ;
  kind_param : digit_string
-              | <i>scalar-int-constant-name</i> '
+              | scalar_int_constant_name '
                <b>J3/23-007r1 65J3/23-007r1 WD 1539-1 2023-06-13</b>' ;
  signed_digit_string : ( sign )? digit_string ;
  digit_string : digit ( digit )*  ;
@@ -271,31 +271,31 @@
  end_type_stmt : 'END TYPE' ( type_name )? ;
  sequence_stmt : 'SEQUENCE' ;
  type_param_def_stmt : integer_type_spec',' type_param_attr_spec '::'
-                  <i>type-param-decl-list</i> ;
- type_param_decl : <i>type-param-name</i> ( '=' scalar_int_constant_expr )? ;
+                  type_param_decl_list ;
+ type_param_decl : type_param_name ( '=' scalar_int_constant_expr )? ;
  type_param_attr_spec : 'KIND'
               | 'LEN' ;
  component_part : ( component_def_stmt )*  ;
  component_def_stmt : data_component_def_stmt
               | proc_component_def_stmt ;
- data_component_def_stmt : declaration_type_spec ( ( ',' <i>component-attr-spec-list</i> )? '::' )?
-                  <i>component-decl-list</i> ;
+ data_component_def_stmt : declaration_type_spec ( ( ',' component_attr_spec_list )? '::' )?
+                  component_decl_list ;
  component_attr_spec : access_spec
               | 'ALLOCATABLE'
               | 'CODIMENSION <i>lbracket coarray-spec rbracket</i>'
               | 'CONTIGUOUS'
               | 'DIMENSION (' component_array_spec ')'
               | 'POINTER' ;
- component_decl : <i>component-name</i> ( '(' component_array_spec ')' )?
+ component_decl : component_name ( '(' component_array_spec ')' )?
                    ( '<i>lbracket coarray-spec rbracket</i>' )?
                    ( '*' char_length )? ( component_initialization )? ;
- component_array_spec : <i>explicit-shape-spec-list</i>
-              | <i>deferred-shape-spec-list</i> ;
+ component_array_spec : explicit_shape_spec_list
+              | deferred_shape_spec_list ;
  proc_component_def_stmt : 'PROCEDURE (' ( proc_interface )? ') ,'
-                  <i>proc-component-attr-spec-list</i> '::' proc_decl_list ;
+                  proc_component_attr_spec_list '::' proc_decl_list ;
  proc_component_attr_spec : access_spec
               | 'NOPASS'
-              | 'PASS' ( '('<i>arg-name</i>')' )?
+              | 'PASS' ( '('arg_name')' )?
               | 'POINTER' ;
  component_initialization : '=' constant_expr
               | '=<i>> null-init</i>'
@@ -309,15 +309,15 @@
  type_bound_proc_binding : type_bound_procedure_stmt
               | type_bound_generic_stmt
               | final_procedure_stmt ;
- type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' <i>binding-attr-list</i> )? '::' )? <i>type-bound-proc-decl-list</i>
-              | 'PROCEDURE ('interface_name'),' <i>binding-attr-list</i> '::' <i>binding-name-list</i> ;
+ type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' binding_attr_list )? '::' )? <i>type-bound-proc-decl-list</i>
+              | 'PROCEDURE ('interface_name'),' binding_attr_list '::' <i>binding-name-list</i> ;
  type_bound_proc_decl : binding_name ( '=<i>> procedure-name</i>' )? ;
  type_bound_generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=<i>> binding-name-list</i>' ;
  binding_attr : access_spec
               | 'DEFERRED'
               | 'NON_OVERRIDABLE'
               | 'NOPASS'
-              | 'PASS' ( '('<i>arg-name</i>')' )? ;
+              | 'PASS' ( '('arg_name')' )? ;
  final_procedure_stmt : 'FINAL' ( '::' )? <i>final-subroutine-name-list</i> ;
  derived_type_spec : type_name ( '(' <i>type-param-spec-list</i> ')' )? ;
  type_param_spec : ( keyword '=' )? type_param_value ;
@@ -414,11 +414,11 @@
                    ( lower_cobound ':' )? '*' ;
  lower_cobound : specification_expr ;
  upper_cobound : specification_expr ;
- array_spec : <i>explicit-shape-spec-list</i>
+ array_spec : explicit_shape_spec_list
               | explicit_shape_bounds_spec
               | <i>assumed-shape-spec-list</i>
               | assumed_shape_bounds_spec
-              | <i>deferred-shape-spec-list</i>
+              | deferred_shape_spec_list
               | assumed_size_spec
               | implied_shape_spec
               | implied_shape_or_assumed_size_spec
@@ -434,7 +434,7 @@
  assumed_shape_bounds_spec : explicit_bounds_expr ':' ;
  deferred_shape_spec : ':' ;
  assumed_implied_spec : ( lower_bound ':' )? '*' ;
- assumed_size_spec : <i>explicit-shape-spec-list</i>',' assumed_implied_spec ;
+ assumed_size_spec : explicit_shape_spec_list',' assumed_implied_spec ;
  implied_shape_or_assumed_size_spec : assumed_implied_spec '
                <b>J3/23-007r1 111J3/23-007r1 WD 1539-1 2023-06-13</b>' ;
  implied_shape_spec : assumed_implied_spec',' <i>assumed-implied-spec-list</i> ;
@@ -489,7 +489,7 @@
  parameter_stmt : 'PARAMETER (' <i>named-constant-def-list</i> ')' ;
  named_constant_def : named_constant '=' constant_expr ;
  pointer_stmt : 'POINTER' ( '::' )? <i>pointer-decl-list</i> ;
- pointer_decl : object_name ( '(' <i>deferred-shape-spec-list</i> ')' )?
+ pointer_decl : object_name ( '(' deferred_shape_spec_list ')' )?
               | <i>procptr-entity-name</i> ;
  protected_stmt : 'PROTECTED' ( '::' )? <i>entity-name-list</i> ;
  save_stmt : 'SAVE' ( ( '::' )? <i>saved-entity-list</i> )? ;
@@ -554,7 +554,7 @@
  coindexed_named_object : data_ref ;
  complex_part_designator : designator '% RE'
               | designator '% IM' ;
- type_param_inquiry : designator '%' <i>type-param-name</i> ;
+ type_param_inquiry : designator '%' type_param_name ;
  array_element : data_ref ;
  array_section : data_ref ( '(' substring_range ')' )?
               | complex_part_designator ;
@@ -613,7 +613,7 @@
               | enumeration_constructor
               | function_reference
               | type_param_inquiry
-              | <i>type-param-name</i>
+              | type_param_name
               | '(' expr ')'
               | conditional_expr ;
  conditional_expr : '(' scalar_logical_expr '?' expr ( ':' scalar_logical_expr '?' expr )* ':' expr ')' ;
@@ -714,12 +714,12 @@
  associate_construct : '<i>associate-stmt
                    block
                    end-associate-stmt</i>' ;
- associate_stmt : ( <i>associate-construct-name</i> ':' )? 'ASSOCIATE
+ associate_stmt : ( associate_construct_name ':' )? 'ASSOCIATE
                    ('<i>association-list</i> ')' ;
- association : <i>associate-name</i> '=<i>> selector</i>' ;
+ association : associate_name '=<i>> selector</i>' ;
  selector : expr
               | variable ;
- end_associate_stmt : 'END ASSOCIATE' ( <i>associate-construct-name</i> )? ;
+ end_associate_stmt : 'END ASSOCIATE' ( associate_construct_name )? ;
  block_construct : block_stmt
                     ( block_specification_part )? '
                   <i>block
@@ -793,23 +793,23 @@
                    ( '<i>case-stmt
                      block</i>' )* 
                    end_select_stmt ;
- select_case_stmt : ( <i>case-construct-name</i> ':' )? 'SELECT CASE (' case_expr ')' ;
- case_stmt : 'CASE' case_selector (<i>case-construct-name</i>)? ;
- end_select_stmt : 'END SELECT' ( <i>case-construct-name</i> )? ;
+ select_case_stmt : ( case_construct_name ':' )? 'SELECT CASE (' case_expr ')' ;
+ case_stmt : 'CASE' case_selector (case_construct_name)? ;
+ end_select_stmt : 'END SELECT' ( case_construct_name )? ;
  case_expr : scalar_expr ;
- case_selector : '(' <i>case-value-range-list</i> ')'
+ case_selector : '(' case_value_range_list ')'
               | 'DEFAULT' ;
  case_value_range : case_value
               | case_value ':'
               | ':' case_value
               | case_value ':' case_value ;
- case_value : <i>scalar-constant-expr</i> ;
+ case_value : scalar_constant_expr ;
  select_rank_construct : select_rank_stmt
                    ( '<i>select-rank-case-stmt
                    block</i>' )*
                    end_select_rank_stmt ;
  select_rank_stmt : ( select_construct_name ':' )? 'SELECT RANK
-                   (' ( <i>associate-name</i> '=>' )? selector ')' ;
+                   (' ( associate_name '=>' )? selector ')' ;
  select_rank_case_stmt : 'RANK (' scalar_int_constant_expr ')' ( select_construct_name )?
               | 'RANK ( * )' ( select_construct_name )?
               | 'RANK DEFAULT' ( select_construct_name )? ;
@@ -820,7 +820,7 @@
                      block</i>' )* 
                    end_select_type_stmt ;
  select_type_stmt : ( select_construct_name ':' )? 'SELECT TYPE
-                   (' ( <i>associate-name</i> '=>' )? selector ')' ;
+                   (' ( associate_name '=>' )? selector ')' ;
  type_guard_stmt : 'TYPE IS (' type_spec ')' ( select_construct_name )?
               | 'CLASS IS (' derived_type_spec ')' ( select_construct_name )?
               | 'CLASS DEFAULT' ( select_construct_name )? ;
@@ -1319,12 +1319,45 @@ construct_name : name ;
 
 scalar_int_constant_expr : int_constant_expr ;
 
-type_attr_spec_list : type_param_attr_spec ( ', <i>type-param-attr-spec' )*  ;
+type_attr_spec_list : type_param_attr_spec ( ',' type_param_attr_spec )*  ;
 
-type_param_name_list : <i>type-param-name</i> ( ',' <i>type-param-name</i> )*  ;
+type_param_name_list : type_param_name ( ',' type_param_name )*  ;
 
 type_name : name ;
 
+type_param_decl_list : type_param_decl ( ',' type_param_decl )*  ;
+
+type_param_name : name ;
+
+component_attr_spec_list : component_attr_spec ( ',' component_attr_spec )*  ;
+
+component_name : name ;
+
+deferred_shape_spec_list : deferred_shape_spec ( ',' deferred_shape_spec )*  ;
+
+explicit_shape_spec_list : explicit_shape_spec ( ',' explicit_shape_spec )*  ;
+
+proc_component_attr_spec_list : proc_component_attr_spec ( ',' proc_component_attr_spec )*  ;
+
+arg_name : name ;
+
+component_decl_list : component_decl ( ',' component_decl )*  ;
+
+scalar_int_constant_name : int_constant_name ;
+
+int_constant_name : name ;
+
+associate_construct_name : name ;
+
+associate_name : name ;
+
+case_value_range_list : case_value_range ( ',' case_value_range )*  ;
+
+case_construct_name : name ;
+
+scalar_constant_expr : constant_expr ;
+
+binding_attr_list : binding_attr ( ',' binding_attr )*  ;
 
 
 
