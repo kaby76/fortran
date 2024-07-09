@@ -1,5 +1,5 @@
 #
-#set -x
+set -x
 set -e
 echo '==========================================================='
 echo 'Extracting text from ISO Fortran spec and extracting rules.'
@@ -11,7 +11,12 @@ to="${@%%.*}".txt
 echo $to
 if [ ! -f $to ]
 then
-	tritext.exe --filter 'l1<50;l2>780;l2<60' --markup $@ 2> /dev/null > $to
+	tritext.exe --filter 'l1<50;l2>780;l2<68' --markup $@ > $to
+	if [ $? -ne 0 ]
+	then
+		echo problem.
+		exit
+	fi
 fi
 
 echo "Making the program that extracts EBNF rules from the text."
@@ -250,3 +255,5 @@ s%[<]i[>]letter[<]/i[>]%letter%g
 s%[<]i[>]digit[<]/i[>]%digit%g
 EOF
 sed -f rename2.txt -i ebnf.ebnf
+
+rm -f rename.txt rename2.txt ids.txt updated_ids.txt
