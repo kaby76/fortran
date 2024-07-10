@@ -29,6 +29,7 @@ fi
 
 echo "Extracting rules from text $to."
 cat $to | ./extraction/bin/Debug/net8.0/RuleExtraction.exe > ebnf.ebnf
+cp ebnf.ebnf backup.ebnf
 
 echo "Change lines with brackets in order to make grammar and parse work."
 sed -i "s%R779 <i>lbracket</i> <b>is</b> \[%R779 <i>lbracket</i> <b>is</b> '['%" ebnf.ebnf
