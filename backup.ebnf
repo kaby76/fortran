@@ -82,8 +82,7 @@ R1541 <i>separate-module-subprogram</i> <b>is</b> <i>mp-subprogram-stmt</i>
                    <i>end-mp-subprogram-stmt</i>
 R513 <i>other-specification-stmt</i> <b>is</b> <i>access-stmt</i>
               <b>or</b> <i>allocatable-stmt</i>
-                <b>J3/23-007r1 39
-              or</b> <i>asynchronous-stmt</i>
+              <b>or</b> <i>asynchronous-stmt</i>
               <b>or</b> <i>bind-stmt</i>
               <b>or</b> <i>codimension-stmt</i>
               <b>or</b> <i>contiguous-stmt</i>
@@ -137,6 +136,21 @@ R515 <i>action-stmt</i> <b>is</b> <i>allocate-stmt</i>
               <b>or</b> <i>nullify-stmt</i>
               <b>or</b> <i>open-stmt</i>
               <b>or</b> <i>pointer-assignment-stmt</i>
+              <b>or</b> <i>print-stmt</i>
+              <b>or</b> <i>read-stmt</i>
+              <b>or</b> <i>return-stmt</i>
+              <b>or</b> <i>rewind-stmt</i>
+              <b>or</b> <i>stop-stmt</i>
+              <b>or</b> <i>sync-all-stmt</i>
+              <b>or</b> <i>sync-images-stmt</i>
+              <b>or</b> <i>sync-memory-stmt</i>
+              <b>or</b> <i>sync-team-stmt</i>
+              <b>or</b> <i>unlock-stmt</i>
+              <b>or</b> <i>wait-stmt</i>
+              <b>or</b> <i>where-stmt</i>
+              <b>or</b> <i>write-stmt</i>
+              <b>or</b> <i>computed-goto-stmt</i>
+              <b>or</b> <i>forall-stmt</i>
 R516 <i>keyword</i> <b>is</b> <i>name</i>
 R601 <i>alphanumeric-character</i> <b>is</b> <i>letter</i>
               <b>or</b> <i>digit</i>
@@ -221,7 +235,6 @@ R707 <i>signed-int-literal-constant</i> <b>is</b> [ <i>sign</i> ] <i>int-literal
 R708 <i>int-literal-constant</i> <b>is</b> <i>digit-string</i> [ _ <i>kind-param</i> ]
 R709 <i>kind-param</i> <b>is</b> <i>digit-string</i>
               <b>or</b> <i>scalar-int-constant-name</i>
-                <b>J3/23-007r1 65</b>
 R710 <i>signed-digit-string</i> <b>is</b> [ <i>sign</i> ] <i>digit-string</i>
 R711 <i>digit-string</i> <b>is</b> <i>digit</i> [ <i>digit</i> ] ...
 R712 <i>sign</i> <b>is</b> +
@@ -324,7 +337,6 @@ R753 <i>final-procedure-stmt</i> <b>is</b> FINAL [ :: ] <i>final-subroutine-name
 R754 <i>derived-type-spec</i> <b>is</b> <i>type-name</i> [ ( <i>type-param-spec-list</i> ) ]
 R755 <i>type-param-spec</i> <b>is</b> [ <i>keyword</i> = ] <i>type-param-value</i>
 R756 <i>structure-constructor</i> <b>is</b> <i>derived-type-spec</i> ( [ <i>component-spec-list</i> ] )
-                <b>J3/23-007r1 91</b>
 R757 <i>component-spec</i> <b>is</b> [ <i>keyword</i> = ] <i>component-data-source</i>
 R758 <i>component-data-source</i> <b>is</b> <i>expr</i>
               <b>or</b> <i>data-target</i>
@@ -370,7 +382,6 @@ R778 <i>ac-spec</i> <b>is</b> <i>type-spec</i> ::
               <b>or</b> [<i>type-spec</i> ::] <i>ac-value-list</i>
 R779 <i>lbracket</i> <b>is</b> [
 R780 <i>rbracket</i> <b>is</b> ]
-                <b>J3/23-007r1 99</b>
 R781 <i>ac-value</i> <b>is</b> <i>expr</i>
               <b>or</b> <i>ac-implied-do</i>
 R782 <i>ac-implied-do</i> <b>is</b> ( <i>ac-value-list</i> , <i>ac-implied-do-control</i> )
@@ -438,7 +449,6 @@ R822 <i>deferred-shape-spec</i> <b>is</b> :
 R823 <i>assumed-implied-spec</i> <b>is</b> [ <i>lower-bound</i> : ] *
 R824 <i>assumed-size-spec</i> <b>is</b> <i>explicit-shape-spec-list</i>, <i>assumed-implied-spec</i>
 R825 <i>implied-shape-or-assumed-size-spec</i> <b>is</b> <i>assumed-implied-spec</i>
-                <b>J3/23-007r1 111</b>
 R826 <i>implied-shape-spec</i> <b>is</b> <i>assumed-implied-spec</i>, <i>assumed-implied-spec-list</i>
 R827 <i>assumed-rank-spec</i> <b>is</b> ..
 R828 <i>intent-spec</i> <b>is</b> IN
@@ -567,7 +577,6 @@ R921 <i>section-subscript</i> <b>is</b> <i>subscript</i>
               <b>or</b> <i>subscript-triplet</i>
               <b>or</b> <i>multiple-subscript-triplet</i>
               <b>or</b> <i>vector-subscript</i>
-                <b>J3/23-007r1 139</b>
 R922 <i>subscript-triplet</i> <b>is</b> [ <i>subscript</i> ] : [ <i>subscript</i> ] [ : <i>stride</i> ]
 R923 <i>multiple-subscript-triplet</i> <b>is</b> @ [ <i>int-expr</i> ] : [ <i>int-expr</i> ] [ : <i>int-expr</i> ]
 R924 <i>stride</i> <b>is</b> <i>scalar-int-expr</i>
@@ -644,7 +653,6 @@ R1014 <i>rel-op</i> <b>is</b> .EQ.
               <b>or</b> <i><</i>=
               <b>or</b> <i>></i>
               <b>or</b> <i>></i>=
-                <b>J3/23-007r1 155
 R1015 <i>and-operand</i> <b>is</b> [ <i>not-op</i> ] <i>level-4-expr</i>
 R1016 <i>or-operand</i> <b>is</b> [ <i>or-operand and-op</i> ] <i>and-operand</i>
 R1017 <i>equiv-operand</i> <b>is</b> [ <i>equiv-operand or-op</i> ] <i>or-operand</i>
@@ -760,7 +768,6 @@ R1125 <i>concurrent-header</i> <b>is</b> ( [ <i>integer-type-spec</i> :: ] <i>co
 R1126 <i>concurrent-control</i> <b>is</b> <i>index-name</i> = <i>concurrent-limit</i> : <i>concurrent-limit</i> [ : <i>concurrent-step</i> ]
 R1127 <i>concurrent-limit</i> <b>is</b> <i>scalar-int-expr</i>
 R1128 <i>concurrent-step</i> <b>is</b> <i>scalar-int-expr</i>
-                <b>J3/23-007r1 195</b>
 R1129 <i>concurrent-locality</i> <b>is</b> [ <i>locality-spec</i> ]...
 R1130 <i>locality-spec</i> <b>is</b> LOCAL ( <i>variable-name-list</i> )
               <b>or</b> LOCAL_INIT ( <i>variable-name-list</i> )
@@ -816,7 +823,6 @@ R1152 <i>select-rank-case-stmt</i> <b>is</b> RANK ( <i>scalar-int-constant-expr<
               <b>or</b> RANK ( * ) [ <i>select-construct-name</i> ]
               <b>or</b> RANK DEFAULT [ <i>select-construct-name</i> ]
 R1153 <i>end-select-rank-stmt</i> <b>is</b> END SELECT [ <i>select-construct-name</i> ]
-                <b>J3/23-007r1 207</b>
 R1154 <i>select-type-construct</i> <b>is</b> <i>select-type-stmt</i>
                    [ <i>type-guard-stmt
                      block</i> ] ...
@@ -854,7 +860,6 @@ R1177 <i>event-wait-spec</i> <b>is</b> <i>until-spec</i>
 R1178 <i>until-spec</i> <b>is</b> UNTIL_COUNT = <i>scalar-int-expr</i>
 R1179 <i>form-team-stmt</i> <b>is</b> FORM TEAM ( <i>team-number</i>, <i>team-variable</i>
                    [ , <i>form-team-spec-list</i> ] )
-                <b>J3/23-007r1 221</b>
 R1180 <i>team-number</i> <b>is</b> <i>scalar-int-expr</i>
 R1181 <i>team-variable</i> <b>is</b> <i>scalar-variable</i>
 R1182 <i>form-team-spec</i> <b>is</b> NEW_INDEX = <i>scalar-int-expr</i>
@@ -869,7 +874,6 @@ R1201 <i>io-unit</i> <b>is</b> <i>file-unit-number</i>
               <b>or</b> <i>internal-file-variable</i>
 R1202 <i>file-unit-number</i> <b>is</b> <i>scalar-int-expr</i>
 R1203 <i>internal-file-variable</i> <b>is</b> <i>char-variable</i>
-                <b>J3/23-007r1 233</b>
 R1204 <i>open-stmt</i> <b>is</b> OPEN ( <i>connect-spec-list</i> )
 R1205 <i>connect-spec</i> <b>is</b> [ UNIT = ] <i>file-unit-number</i>
               <b>or</b> ACCESS = <i>scalar-default-char-expr</i>
@@ -923,6 +927,8 @@ R1213 <i>io-control-spec</i> <b>is</b> [ UNIT = ] <i>io-unit</i>
               <b>or</b> POS = <i>scalar-int-expr</i>
               <b>or</b> REC = <i>scalar-int-expr</i>
               <b>or</b> ROUND = <i>scalar-default-char-expr</i>
+              <b>or</b> SIGN = <i>scalar-default-char-expr</i>
+              <b>or</b> SIZE = <i>scalar-int-variable</i>
 R1214 <i>id-variable</i> <b>is</b> <i>scalar-int-variable</i>
 R1215 <i>format</i> <b>is</b> <i>default-char-expr</i>
               <b>or</b> <i>label</i>
@@ -941,6 +947,11 @@ R1221 <i>dtv-type-spec</i> <b>is</b> TYPE( <i>derived-type-spec</i> )
 R1222 <i>wait-stmt</i> <b>is</b> WAIT (<i>wait-spec-list</i>)
 R1223 <i>wait-spec</i> <b>is</b> [ UNIT = ] <i>file-unit-number</i>
               <b>or</b> END = <i>label</i>
+              <b>or</b> EOR = <i>label</i>
+              <b>or</b> ERR = <i>label</i>
+              <b>or</b> ID = <i>scalar-int-expr</i>
+              <b>or</b> IOMSG = <i>iomsg-variable</i>
+              <b>or</b> IOSTAT = <i>stat-variable</i>
 R1224 <i>backspace-stmt</i> <b>is</b> BACKSPACE <i>file-unit-number</i>
               <b>or</b> BACKSPACE ( <i>position-spec-list</i> )
 R1225 <i>endfile-stmt</i> <b>is</b> ENDFILE <i>file-unit-number</i>
@@ -987,6 +998,16 @@ R1231 <i>inquire-spec</i> <b>is</b> [ UNIT = ] <i>file-unit-number</i>
               <b>or</b> PENDING = <i>scalar-logical-variable</i>
               <b>or</b> POS = <i>scalar-int-variable</i>
               <b>or</b> POSITION = <i>scalar-default-char-variable</i>
+              <b>or</b> READ = <i>scalar-default-char-variable</i>
+              <b>or</b> READWRITE = <i>scalar-default-char-variable</i>
+              <b>or</b> RECL = <i>scalar-int-variable</i>
+              <b>or</b> ROUND = <i>scalar-default-char-variable</i>
+              <b>or</b> SEQUENTIAL = <i>scalar-default-char-variable</i>
+              <b>or</b> SIGN = <i>scalar-default-char-variable</i>
+              <b>or</b> SIZE = <i>scalar-int-variable</i>
+              <b>or</b> STREAM = <i>scalar-default-char-variable</i>
+              <b>or</b> UNFORMATTED = <i>scalar-default-char-variable</i>
+              <b>or</b> WRITE = <i>scalar-default-char-variable</i>
 R1301 <i>format-stmt</i> <b>is</b> FORMAT <i>format-specification</i>
 R1302 <i>format-specification</i> <b>is</b> ( [ <i>format-items</i> ] )
               <b>or</b> ( [ <i>format-items</i>, ] <i>unlimited-format-item</i> )
@@ -1000,8 +1021,7 @@ R1306 <i>r</i> <b>is</b> <i>int-literal-constant</i>
 R1307 <i>data-edit-desc</i> <b>is</b> I <i>w</i> [ . <i>m</i> ]
               <b>or</b> B <i>w</i> [ . <i>m</i> ]
               <b>or</b> O <i>w</i> [ . <i>m</i> ]
-                <b>J3/23-007r1 275
-              or</b> Z <i>w</i> [ . <i>m</i> ]
+              <b>or</b> Z <i>w</i> [ . <i>m</i> ]
               <b>or</b> F <i>w</i> . <i>d</i>
               <b>or</b> E <i>w</i> . <i>d</i> [ E <i>e</i> ]
               <b>or</b> EN <i>w</i> . <i>d</i> [ E <i>e</i> ]
@@ -1129,8 +1149,7 @@ R1513 <i>proc-interface</i> <b>is</b> <i>interface-name</i>
               <b>or</b> <i>declaration-type-spec</i>
 R1514 <i>proc-attr-spec</i> <b>is</b> <i>access-spec</i>
               <b>or</b> <i>proc-language-binding-spec</i>
-                <b>J3/23-007r1 317
-              or</b> INTENT ( <i>intent-spec</i> )
+              <b>or</b> INTENT ( <i>intent-spec</i> )
               <b>or</b> OPTIONAL
               <b>or</b> POINTER
               <b>or</b> PROTECTED
@@ -1199,7 +1218,6 @@ R1541 <i>separate-module-subprogram</i> <b>is</b> <i>mp-subprogram-stmt</i>
 R1542 <i>mp-subprogram-stmt</i> <b>is</b> MODULE PROCEDURE <i>procedure-name</i>
 R1543 <i>end-mp-subprogram-stmt</i> <b>is</b> END [PROCEDURE [<i>procedure-name</i>]]
 R1544 <i>entry-stmt</i> <b>is</b> ENTRY <i>entry-name</i> [ ( [ <i>dummy-arg-list</i> ] ) [ <i>suffix</i> ] ]
-                <b>J3/23-007r1 341</b>
 R1545 <i>return-stmt</i> <b>is</b> RETURN [ <i>scalar-int-expr</i> ]
 R1546 <i>contains-stmt</i> <b>is</b> CONTAINS
 R1547 <i>stmt-function-stmt</i> <b>is</b> <i>function-name</i> ( [ <i>dummy-arg-name-list</i> ] ) = <i>scalar-expr</i>
