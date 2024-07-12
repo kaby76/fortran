@@ -1,5 +1,5 @@
 #
-set -x
+#set -x
 set -e
 echo '==========================================================='
 echo 'Extracting text from ISO Fortran spec and extracting rules.'
@@ -33,6 +33,10 @@ cat $to | ./extraction/bin/Debug/net8.0/RuleExtraction.exe > ebnf.ebnf
 echo "Change lines with brackets in order to make grammar and parse work."
 sed -i "s%R779 <i>lbracket</i> <b>is</b> \[%R779 <i>lbracket</i> <b>is</b> '['%" ebnf.ebnf
 sed -i "s%R780 <i>rbracket</i> <b>is</b> \]%R780 <i>rbracket</i> <b>is</b> ']'%" ebnf.ebnf
+sed -i 's/_ \] '"'"'/_ ] SQUOTE/' ebnf.ebnf
+sed -i 's/\] [.][.][.] '"'"'/] ... SQUOTE/' ebnf.ebnf
+sed -i 's/_ \] "/_ ] DQUOTE/' ebnf.ebnf
+sed -i 's/\] [.][.][.] "/] ... DQUOTE/' ebnf.ebnf
 dos2unix ebnf.ebnf
 cp ebnf.ebnf backup.ebnf
 
@@ -196,6 +200,100 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 
 <i>binding-attr-list</i> <b>is</b> <i>binding-attr</i> [ , <i>binding-attr</i> ] ...
 
+<i>assumed-implied-spec-list</i> <b>is</b> <i>assumed-implied-spec</i> [ , <i>assumed-implied-spec</i> ] ...
+
+<i>access-id-list</i> <b>is</b> <i>access-id</i> [ , <i>access-id</i> ] ...
+
+<i>access-name</i> <b>is</b> <i>name</i>
+
+<i>allocatable-decl-list</i> <b>is</b> <i>allocatable-decl</i> [ , <i>allocatable-decl</i> ] ...
+
+<i>object-name-list</i> <b>is</b> <i>object-name</i> [ , <i>object-name</i> ] ...
+
+<i>bind-entity-list</i> <b>is</b> <i>bind-entity</i> [ , <i>bind-entity</i> ] ...
+
+<i>entity-name</i> <b>is</b> <i>name</i>
+
+<i>common-block-name</i> <b>is</b> <i>name</i>
+
+<i>codimension-decl-list</i> <b>is</b> <i>codimension-decl</i> [ , <i>codimension-decl</i> ] ...
+
+<i>assumed-shape-spec-list</i> <b>is</b> <i>assumed-shape-spec</i> [ , <i>assumed-shape-spec</i> ] ...
+
+<i>coarray-name</i> <b>is</b> <i>name</i>
+
+<i>if-construct-name</i> <b>is</b> <i>name</i>
+
+<i>variable-name-list</i> <b>is</b> <i>variable-name</i> [ , <i>variable-name</i> ] ...
+
+<i>concurrent-control-list</i> <b>is</b> <i>concurrent-control</i> [ , <i>concurrent-control</i> ] ...
+
+<i>index-name</i> <b>is</b> <i>name</i>
+
+<i>do-construct-name</i> <b>is</b> <i>name</i>
+
+<i>critical-construct-name</i> <b>is</b> <i>name</i>
+
+<i>coarray-association-list</i> <b>is</b> <i>coarray-association</i> [ , <i>coarray-association</i> ] ...
+
+<i>team-construct-name</i> <b>is</b> <i>name</i>
+
+<i>block-construct-name</i> <b>is</b> <i>name</i>
+
+<i>where-construct-name</i> <b>is</b> <i>name</i>
+
+<i>forall-construct-name</i> <b>is</b> <i>name</i>
+
+<i>procedure-component-name</i> <b>is</b> <i>name</i>
+
+<i>data-pointer-component-name</i> <b>is</b> <i>name</i>
+
+<i>type-bound-proc-decl-list</i> <b>is</b> <i>type-bound-proc-decl</i> [ , <i>type-bound-proc-decl</i> ] ...
+
+<i>binding-name-list</i> <b>is</b> <i>binding-name</i> [ , <i>binding-name</i> ] ...
+
+<i>final-subroutine-name-list</i> <b>is</b> <i>final-subroutine-name</i> [ , <i>final-subroutine-name</i> ] ...
+
+<i>type-param-spec-list</i> <b>is</b> <i>type-param-spec</i> [ , <i>type-param-spec</i> ] ...
+
+<i>component-spec-list</i> <b>is</b> <i>component-spec</i> [ , <i>component-spec</i> ] ...
+
+<i>enum-type-name</i> <b>is</b> <i>name</i>
+
+<i>enumerator-list</i> <b>is</b> <i>enumerator</i> [ , <i>enumerator</i> ] ...
+
+<i>enumeration-type-name</i> <b>is</b> <i>name</i>
+
+<i>enumerator-name-list</i> <b>is</b> <i>enumerator-name</i> [ , <i>enumeratorName</i> ] ...
+
+<i>ac-value-list</i> <b>is</b> <i>ac-value</i> [ , <i>ac-value</i> ] ...
+
+<i>entity-decl-list</i> <b>is</b> <i>entity-decl</i> [ , <i>entity-decl</i> ] ...
+
+<i>data-stmt-object-list</i> <b>is</b> <i>data-stmt-object</i> [ , <i>data-stmt-object</i> ] ...
+
+<i>data-stmt-value-list</i> <b>is</b> <i>data-stmt-value</i> [ , <i>data-stmt-value</i> ] ...
+
+<i>array-name</i> <b>is</b> <i>name</i>
+
+<i>named-constant-def-list</i> <b>is</b> <i>named-constant-def</i> [ , <i>named-constant-def</i> ] ...
+
+<i>pointer-decl-list</i> <b>is</b> <i>pointer-decl</i> [ , <i>pointer-decl</i> ] ...
+
+<i>procptr-entity-name</i> <b>is</b> <i>name</i>
+
+<i>entity-name-list</i> <b>is</b> <i>entity-name</i> [ , <i>entity-name</i> ] ...
+
+<i>saved-entity-list</i> <b>is</b> <i>saved-entity</i> [ , <i>saved-entity</i> ] ...
+
+<i>target-decl-list</i> <b>is</b> <i>target-decl</i> [ , <i>target-decl</i> ] ...
+
+<i>implicit-spec-list</i> <b>is</b> <i>implicit-spec</i> [ , <i>implicit-spec</i> ] ...
+
+<i>implicit-none-spec-list</i> <b>is</b> <i>implicit-none-spec</i> [ , <i>implicit-none-spec</i> ] ...
+
+<i>letter-spec-list</i> <b>is</b> <i>LETTERSPEC</i> [ , <i>LETTERSPEC</i> ] ...
+
 ";' | trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf
@@ -220,6 +318,8 @@ s%[<]i[>][<][<]/i[>]%<%g
 s%[<]i[>][>][<]/i[>]%>%g
 EOF
 sed -f rename2.txt -i ebnf.ebnf
+
+
 
 echo "Deleting several rules involving 'xyz', which should not be in the EBNF."
 echo "Delete rule numbers from rules, and add semi-colon rule terminators."
@@ -246,6 +346,7 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 	trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf
+
 
 echo "Rename."
 sed -f rename.txt -i ebnf.ebnf

@@ -263,8 +263,8 @@
               | '*' char_length ( ',' )? ;
  char_length : '(' type_param_value ')'
               | int_literal_constant ;
- char_literal_constant : ( kind_param '_' )? ' [ <i>rep-char</i> ] ... '
-              | ( kind_param '_' )? " [ <i>rep-char</i> ] ... " ;
+ char_literal_constant : ( kind_param '_' )? 'SQUOTE' ( <i>rep-char</i> )*  'SQUOTE'
+              | ( kind_param '_' )? 'DQUOTE' ( <i>rep-char</i> )*  'DQUOTE' ;
  logical_literal_constant : '.TRUE.' ( '_' kind_param )?
               | '.FALSE.' ( '_' kind_param )? ;
  derived_type_def : derived_type_stmt
@@ -322,19 +322,19 @@
  type_bound_proc_binding : type_bound_procedure_stmt
               | type_bound_generic_stmt
               | final_procedure_stmt ;
- type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' binding_attr_list )? '::' )? <i>type-bound-proc-decl-list</i>
-              | 'PROCEDURE' '('interface_name'),' binding_attr_list '::' <i>binding-name-list</i> ;
+ type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' binding_attr_list )? '::' )? type_bound_proc_decl_list
+              | 'PROCEDURE' '('interface_name'),' binding_attr_list '::' binding_name_list ;
  type_bound_proc_decl : binding_name ( '=>' procedure_name )? ;
- type_bound_generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' <i>binding-name-list</i> ;
+ type_bound_generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' binding_name_list ;
  binding_attr : access_spec
               | 'DEFERRED'
               | 'NON_OVERRIDABLE'
               | 'NOPASS'
               | 'PASS' ( '('arg_name')' )? ;
- final_procedure_stmt : 'FINAL' ( '::' )? <i>final-subroutine-name-list</i> ;
- derived_type_spec : type_name ( '(' <i>type-param-spec-list</i> ')' )? ;
+ final_procedure_stmt : 'FINAL' ( '::' )? final_subroutine_name_list ;
+ derived_type_spec : type_name ( '(' type_param_spec_list ')' )? ;
  type_param_spec : ( keyword '=' )? type_param_value ;
- structure_constructor : derived_type_spec '(' ( <i>component-spec-list</i> )? ')' ;
+ structure_constructor : derived_type_spec '(' ( component_spec_list )? ')' ;
  component_spec : ( keyword '=' )? component_data_source ;
  component_data_source : expr
               | data_target
@@ -343,30 +343,30 @@
 'enumerator-def-stmt</i>'
                    ( enumerator_def_stmt )* 
                    end_enum_stmt ;
- enum_def_stmt : 'ENUM,' 'BIND(C)' ( '::' <i>enum-type-name</i> )? ;
- enumerator_def_stmt : 'ENUMERATOR' ( '::' )? <i>enumerator-list</i> ;
+ enum_def_stmt : 'ENUM,' 'BIND(C)' ( '::' enum_type_name )? ;
+ enumerator_def_stmt : 'ENUMERATOR' ( '::' )? enumerator_list ;
  enumerator : named_constant ( '=' scalar_int_constant_expr )? ;
  end_enum_stmt : 'END' 'ENUM' ;
- enum_type_spec : <i>enum-type-name</i> ;
+ enum_type_spec : enum_type_name ;
  enum_constructor : enum_type_spec '(' scalar_expr ')' ;
  enumeration_type_def : '<i>enumeration-type-stmt'                   
 'enumeration-enumerator-stmt</i>'
                    ( enumeration_enumerator_stmt )*
                    end_enumeration_type_stmt ;
- enumeration_type_stmt : 'ENUMERATION' 'TYPE' ( ( ',' access_spec )? '::' )? <i>enumeration-type-name</i> ;
- enumeration_enumerator_stmt : 'ENUMERATOR' ( '::' )? <i>enumerator-name-list</i> ;
- end_enumeration_type_stmt : 'END' 'ENUMERATION' 'TYPE' ( <i>enumeration-type-name</i> )? ;
- enumeration_type_spec : <i>enumeration-type-name</i> ;
+ enumeration_type_stmt : 'ENUMERATION' 'TYPE' ( ( ',' access_spec )? '::' )? enumeration_type_name ;
+ enumeration_enumerator_stmt : 'ENUMERATOR' ( '::' )? enumerator_name_list ;
+ end_enumeration_type_stmt : 'END' 'ENUMERATION' 'TYPE' ( enumeration_type_name )? ;
+ enumeration_type_spec : enumeration_type_name ;
  enumeration_constructor : enumeration_type_spec '(' scalar_int_expr ')' ;
  boz_literal_constant : binary_constant
-              | octal_constant
-              | hex_constant ;
- binary_constant : 'B' ' digit [ digit ] ... '
-              | 'B' " digit [ digit ] ... " ;
- octal_constant : 'O' ' digit [ digit ] ... '
-              | 'O' " digit [ digit ] ... " ;
- hex_constant : 'Z' ' hex_digit [ hex_digit ] ... '
-              | 'Z' " hex_digit [ hex_digit ] ... " ;
+              | <i>octal-constant</i>
+              | <i>hex-constant</i> ;
+ binary_constant : 'B' ' digit [ digit ] ... SQUOTE
+              <b>or</b> B " digit [ digit ] ... DQUOTE
+R774 <i>octal-constant</i> <b>is</b> O ' digit ( digit )*  'SQUOTE'
+              | 'O' " digit [ digit ] ... DQUOTE
+R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... SQUOTE
+              <b>or</b> Z " hex_digit ( hex_digit )*  'DQUOTE' ;
  hex_digit : digit
               | 'A'
               | 'B'
@@ -377,16 +377,16 @@
  array_constructor : '(/' ac_spec '/)'
               | lbracket ac_spec rbracket ;
  ac_spec : type_spec '::'
-              | (type_spec '::')? <i>ac-value-list</i> ;
+              | (type_spec '::')? ac_value_list ;
  lbracket : '[' ;
  rbracket : ']' ;
  ac_value : expr
               | ac_implied_do ;
- ac_implied_do : '(' <i>ac-value-list</i> ',' ac_implied_do_control ')' ;
+ ac_implied_do : '(' ac_value_list ',' ac_implied_do_control ')' ;
  ac_implied_do_control : ( integer_type_spec '::' )? ac_do_variable '=' scalar_int_expr ','
                   scalar_int_expr ( ',' scalar_int_expr )? ;
  ac_do_variable : do_variable ;
- type_declaration_stmt : declaration_type_spec ( ( ',' attr_spec )*  '::' )? <i>entity-decl-list</i> ;
+ type_declaration_stmt : declaration_type_spec ( ( ',' attr_spec )*  '::' )? entity_decl_list ;
  attr_spec : access_spec
               | 'ALLOCATABLE'
               | 'ASYNCHRONOUS'
@@ -427,7 +427,7 @@
  upper_cobound : specification_expr ;
  array_spec : explicit_shape_spec_list
               | explicit_shape_bounds_spec
-              | <i>assumed-shape-spec-list</i>
+              | assumed_shape_spec_list
               | assumed_shape_bounds_spec
               | deferred_shape_spec_list
               | assumed_size_spec
@@ -447,27 +447,27 @@
  assumed_implied_spec : ( lower_bound ':' )? '*' ;
  assumed_size_spec : explicit_shape_spec_list',' assumed_implied_spec ;
  implied_shape_or_assumed_size_spec : assumed_implied_spec ;
- implied_shape_spec : assumed_implied_spec',' <i>assumed-implied-spec-list</i> ;
+ implied_shape_spec : assumed_implied_spec',' assumed_implied_spec_list ;
  assumed_rank_spec : '..' ;
  intent_spec : 'IN'
               | 'OUT'
               | 'INOUT' ;
  rank_clause : 'RANK' '(' scalar_int_constant_expr ')' ;
- access_stmt : access_spec ( ( '::' )? <i>access-id-list</i> )? ;
- access_id : <i>access-name</i>
+ access_stmt : access_spec ( ( '::' )? access_id_list )? ;
+ access_id : access_name
               | generic_spec ;
- allocatable_stmt : 'ALLOCATABLE' ( '::' )? <i>allocatable-decl-list</i> ;
+ allocatable_stmt : 'ALLOCATABLE' ( '::' )? allocatable_decl_list ;
  allocatable_decl : object_name ( '(' array_spec ')' )?
                    ( lbracket coarray_spec rbracket )? ;
- asynchronous_stmt : 'ASYNCHRONOUS' ( '::' )? <i>object-name-list</i> ;
- bind_stmt : language_binding_spec ( '::' )? <i>bind-entity-list</i> ;
- bind_entity : <i>entity-name</i>
-              | '/' <i>common-block-name</i> '/' ;
- codimension_stmt : 'CODIMENSION' ( '::' )? <i>codimension-decl-list</i> ;
- codimension_decl : <i>coarray-name</i> lbracket coarray_spec rbracket ;
- contiguous_stmt : 'CONTIGUOUS' ( '::' )? <i>object-name-list</i> ;
+ asynchronous_stmt : 'ASYNCHRONOUS' ( '::' )? object_name_list ;
+ bind_stmt : language_binding_spec ( '::' )? bind_entity_list ;
+ bind_entity : entity_name
+              | '/' common_block_name '/' ;
+ codimension_stmt : 'CODIMENSION' ( '::' )? codimension_decl_list ;
+ codimension_decl : coarray_name lbracket coarray_spec rbracket ;
+ contiguous_stmt : 'CONTIGUOUS' ( '::' )? object_name_list ;
  data_stmt : 'DATA' data_stmt_set ( ( ',' )? data_stmt_set )*  ;
- data_stmt_set : <i>data-stmt-object-list</i> '/' <i>data-stmt-value-list</i> '/' ;
+ data_stmt_set : data_stmt_object_list '/' data_stmt_value_list '/' ;
  data_stmt_object : variable
               | data_implied_do ;
  data_implied_do : '(' <i>data-i-do-object-list</i> ',' ( integer_type_spec '::' )? data_i_do_variable '='
@@ -492,29 +492,29 @@
               | enumeration_constructor ;
  int_constant_subobject : constant_subobject ;
  constant_subobject : designator ;
- dimension_stmt : 'DIMENSION' ( '::' )? <i>array-name</i> '(' array_spec ')'
-                   ( ',' <i>array-name</i> '(' array_spec ')' )*  ;
+ dimension_stmt : 'DIMENSION' ( '::' )? array_name '(' array_spec ')'
+                   ( ',' array_name '(' array_spec ')' )*  ;
  intent_stmt : 'INTENT' '(' intent_spec ')' ( '::' )? dummy_arg_name_list ;
  optional_stmt : 'OPTIONAL' ( '::' )? dummy_arg_name_list ;
- parameter_stmt : 'PARAMETER' '(' <i>named-constant-def-list</i> ')' ;
+ parameter_stmt : 'PARAMETER' '(' named_constant_def_list ')' ;
  named_constant_def : named_constant '=' constant_expr ;
- pointer_stmt : 'POINTER' ( '::' )? <i>pointer-decl-list</i> ;
+ pointer_stmt : 'POINTER' ( '::' )? pointer_decl_list ;
  pointer_decl : object_name ( '(' deferred_shape_spec_list ')' )?
-              | <i>procptr-entity-name</i> ;
- protected_stmt : 'PROTECTED' ( '::' )? <i>entity-name-list</i> ;
- save_stmt : 'SAVE' ( ( '::' )? <i>saved-entity-list</i> )? ;
+              | procptr_entity_name ;
+ protected_stmt : 'PROTECTED' ( '::' )? entity_name_list ;
+ save_stmt : 'SAVE' ( ( '::' )? saved_entity_list )? ;
  saved_entity : object_name
               | proc_pointer_name
-              | '/' <i>common-block-name</i> '/' ;
+              | '/' common_block_name '/' ;
  proc_pointer_name : name ;
- target_stmt : 'TARGET' ( '::' )? <i>target-decl-list</i> ;
+ target_stmt : 'TARGET' ( '::' )? target_decl_list ;
  target_decl : object_name ( '(' array_spec ')' )?
                    ( lbracket coarray_spec rbracket )? ;
  value_stmt : 'VALUE' ( '::' )? dummy_arg_name_list ;
- volatile_stmt : 'VOLATILE' ( '::' )? <i>object-name-list</i> ;
- implicit_stmt : 'IMPLICIT' <i>implicit-spec-list</i>
-              | 'IMPLICIT' 'NONE' ( '(' ( <i>implicit-none-spec-list</i> )? ')' )? ;
- implicit_spec : declaration_type_spec '(' <i>letter-spec-list</i> ')' ;
+ volatile_stmt : 'VOLATILE' ( '::' )? object_name_list ;
+ implicit_stmt : 'IMPLICIT' implicit_spec_list
+              | 'IMPLICIT' 'NONE' ( '(' ( implicit_none_spec_list )? ')' )? ;
+ implicit_spec : declaration_type_spec '(' letter_spec_list ')' ;
  letter_spec : letter ( '-' letter )? ;
  implicit_none_spec : 'EXTERNAL'
               | 'TYPE' ;
@@ -533,8 +533,8 @@
               | array_element
               | substring ;
  common_stmt : 'COMMON'
-                      ( '/' ( <i>common-block-name</i> )? '/' )? <i>common-block-object-list</i>
-                      ( ( ',' )? '/' ( <i>common-block-name</i> )? '/'
+                      ( '/' ( common_block_name )? '/' )? <i>common-block-object-list</i>
+                      ( ( ',' )? '/' ( common_block_name )? '/'
                      <i>common-block-object-list</i> )*  ;
  common_block_object : variable_name ( '(' array_spec ')' )? ;
  designator : object_name
@@ -678,13 +678,13 @@
 '=>' data_target
               | proc_pointer_object '=>' proc_target ;
  data_pointer_object : variable_name
-              | scalar_variable '%' <i>data-pointer-component-name</i> ;
+              | scalar_variable '%' data_pointer_component_name ;
  bounds_spec : lower_bound_expr ':' ;
  bounds_remapping : lower_bound_expr ':' upper_bound_expr ;
  data_target : expr ;
  proc_pointer_object : proc_pointer_name
               | proc_component_ref ;
- proc_component_ref : scalar_variable '%' <i>procedure-component-name</i> ;
+ proc_component_ref : scalar_variable '%' procedure_component_name ;
  proc_target : expr
               | procedure_name
               | proc_component_ref ;
@@ -696,19 +696,19 @@
                    ( elsewhere_stmt
                      ( where_body_construct )*  )?
                    end_where_stmt ;
- where_construct_stmt : (<i>where-construct-name</i>':')? 'WHERE' '(' mask_expr ')' ;
+ where_construct_stmt : (where_construct_name':')? 'WHERE' '(' mask_expr ')' ;
  where_body_construct : where_assignment_stmt
               | where_stmt
               | where_construct ;
  where_assignment_stmt : assignment_stmt ;
  mask_expr : logical_expr ;
- masked_elsewhere_stmt : 'ELSEWHERE' '('mask_expr')' (<i>where-construct-name</i>)? ;
- elsewhere_stmt : 'ELSEWHERE' (<i>where-construct-name</i>)? ;
- end_where_stmt : 'END' 'WHERE' (<i>where-construct-name</i>)? ;
+ masked_elsewhere_stmt : 'ELSEWHERE' '('mask_expr')' (where_construct_name)? ;
+ elsewhere_stmt : 'ELSEWHERE' (where_construct_name)? ;
+ end_where_stmt : 'END' 'WHERE' (where_construct_name)? ;
  forall_construct : forall_construct_stmt
                        (forall_body_construct )* 
                        end_forall_stmt ;
- forall_construct_stmt : (<i>forall-construct-name</i> ':')? 'FORALL' concurrent_header ;
+ forall_construct_stmt : (forall_construct_name ':')? 'FORALL' concurrent_header ;
  forall_body_construct : forall_assignment_stmt
               | where_stmt
               | where_construct
@@ -716,7 +716,7 @@
               | forall_stmt ;
  forall_assignment_stmt : assignment_stmt
               | pointer_assignment_stmt ;
- end_forall_stmt : 'END' 'FORALL' (<i>forall-construct-name</i> )? ;
+ end_forall_stmt : 'END' 'FORALL' (forall_construct_name )? ;
  forall_stmt : 'FORALL' concurrent_header forall_assignment_stmt ;
  block : ( execution_part_construct )*  ;
  associate_construct : '<i>associate-stmt'                   
@@ -732,45 +732,45 @@
                     ( block_specification_part )?                   
 '<i>block'                   
 'end-block-stmt</i>' ;
- block_stmt : ( <i>block-construct-name</i> ':' )? 'BLOCK' ;
+ block_stmt : ( block_construct_name ':' )? 'BLOCK' ;
  block_specification_part : ( use_stmt )* 
                   ( import_stmt )* 
                   ( declaration_construct )*  ;
- end_block_stmt : 'END' 'BLOCK' ( <i>block-construct-name</i> )? ;
+ end_block_stmt : 'END' 'BLOCK' ( block_construct_name )? ;
  change_team_construct : '<i>change-team-stmt'                   
 'block'                   
 'end-change-team-stmt</i>' ;
- change_team_stmt : ( <i>team-construct-name</i> ':' )? 'CHANGE' 'TEAM' '(' team_value
-                   ( ',' <i>coarray-association-list</i> )? ( ',' sync_stat_list )? ')' ;
+ change_team_stmt : ( team_construct_name ':' )? 'CHANGE' 'TEAM' '(' team_value
+                   ( ',' coarray_association_list )? ( ',' sync_stat_list )? ')' ;
  coarray_association : codimension_decl '=>' selector ;
- end_change_team_stmt : 'END' 'TEAM' ( '(' ( sync_stat_list )? ')' )? ( <i>team-construct-name</i> )? ;
+ end_change_team_stmt : 'END' 'TEAM' ( '(' ( sync_stat_list )? ')' )? ( team_construct_name )? ;
  team_value : scalar_expr ;
  critical_construct : '<i>critical-stmt'                   
 'block'                   
 'end-critical-stmt</i>' ;
- critical_stmt : ( <i>critical-construct-name</i> ':' )? 'CRITICAL' ( '(' ( sync_stat_list )? ')' )? ;
- end_critical_stmt : 'END' 'CRITICAL' ( <i>critical-construct-name</i> )? ;
+ critical_stmt : ( critical_construct_name ':' )? 'CRITICAL' ( '(' ( sync_stat_list )? ')' )? ;
+ end_critical_stmt : 'END' 'CRITICAL' ( critical_construct_name )? ;
  do_construct : '<i>do-stmt'                   
 'block'                   
 'end-do</i>' ;
  do_stmt : nonlabel_do_stmt
               | label_do_stmt ;
- label_do_stmt : ( <i>do-construct-name</i> ':' )? 'DO' label ( loop_control )? ;
- nonlabel_do_stmt : ( <i>do-construct-name</i> ':' )? 'DO' ( loop_control )? ;
+ label_do_stmt : ( do_construct_name ':' )? 'DO' label ( loop_control )? ;
+ nonlabel_do_stmt : ( do_construct_name ':' )? 'DO' ( loop_control )? ;
  loop_control : ( ',' )? do_variable '=' scalar_int_expr',' scalar_int_expr
                    ( ',' scalar_int_expr )?
               | ( ',' )? 'WHILE' '(' scalar_logical_expr ')'
               | ( ',' )? 'CONCURRENT' concurrent_header concurrent_locality ;
  do_variable : <i>scalar-int-variable-name</i> ;
- concurrent_header : '(' ( integer_type_spec '::' )? <i>concurrent-control-list</i> ( ',' <i>scalar-mask-expr</i> )? ')' ;
- concurrent_control : <i>index-name</i> '=' concurrent_limit ':' concurrent_limit ( ':' concurrent_step )? ;
+ concurrent_header : '(' ( integer_type_spec '::' )? concurrent_control_list ( ',' <i>scalar-mask-expr</i> )? ')' ;
+ concurrent_control : index_name '=' concurrent_limit ':' concurrent_limit ( ':' concurrent_step )? ;
  concurrent_limit : scalar_int_expr ;
  concurrent_step : scalar_int_expr ;
  concurrent_locality : ( locality_spec )* ;
- locality_spec : 'LOCAL' '(' <i>variable-name-list</i> ')'
-              | 'LOCAL_INIT' '(' <i>variable-name-list</i> ')'
-              | 'REDUCE' '(' reduce_operation ':' <i>variable-name-list</i> ')'
-              | 'SHARED' '(' <i>variable-name-list</i> ')'
+ locality_spec : 'LOCAL' '(' variable_name_list ')'
+              | 'LOCAL_INIT' '(' variable_name_list ')'
+              | 'REDUCE' '(' reduce_operation ':' variable_name_list ')'
+              | 'SHARED' '(' variable_name_list ')'
               | 'DEFAULT' '(' 'NONE' ')' ;
  reduce_operation : binary_reduce_op
               | <i>function-reduction-name</i> ;
@@ -782,8 +782,8 @@
               | '.NEQV.' ;
  end_do : end_do_stmt
               | continue_stmt ;
- end_do_stmt : 'END' 'DO' ( <i>do-construct-name</i> )? ;
- cycle_stmt : 'CYCLE' ( <i>do-construct-name</i> )? ;
+ end_do_stmt : 'END' 'DO' ( do_construct_name )? ;
+ cycle_stmt : 'CYCLE' ( do_construct_name )? ;
  if_construct : '<i>if-then-stmt'                     
 'block</i>'
                    ( '<i>else-if-stmt'                     
@@ -791,10 +791,10 @@
                    ( '<i>else-stmt'                     
 'block</i>' )?
                    end_if_stmt ;
- if_then_stmt : ( <i>if-construct-name</i> ':' )? 'IF' '(' scalar_logical_expr ')' 'THEN' ;
- else_if_stmt : 'ELSE' 'IF' '(' scalar_logical_expr ')' 'THEN' ( <i>if-construct-name</i> )? ;
- else_stmt : 'ELSE' ( <i>if-construct-name</i> )? ;
- end_if_stmt : 'END' 'IF' ( <i>if-construct-name</i> )? ;
+ if_then_stmt : ( if_construct_name ':' )? 'IF' '(' scalar_logical_expr ')' 'THEN' ;
+ else_if_stmt : 'ELSE' 'IF' '(' scalar_logical_expr ')' 'THEN' ( if_construct_name )? ;
+ else_stmt : 'ELSE' ( if_construct_name )? ;
+ end_if_stmt : 'END' 'IF' ( if_construct_name )? ;
  if_stmt : 'IF' '(' scalar_logical_expr ')' action_stmt ;
  case_construct : select_case_stmt
                    ( '<i>case-stmt'                     
@@ -1376,6 +1376,100 @@ case_construct_name : name ;
 scalar_constant_expr : constant_expr ;
 
 binding_attr_list : binding_attr ( ',' binding_attr )*  ;
+
+assumed_implied_spec_list : assumed_implied_spec ( ',' assumed_implied_spec )*  ;
+
+access_id_list : access_id ( ',' access_id )*  ;
+
+access_name : name ;
+
+allocatable_decl_list : allocatable_decl ( ',' allocatable_decl )*  ;
+
+object_name_list : object_name ( ',' object_name )*  ;
+
+bind_entity_list : bind_entity ( ',' bind_entity )*  ;
+
+entity_name : name ;
+
+common_block_name : name ;
+
+codimension_decl_list : codimension_decl ( ',' codimension_decl )*  ;
+
+assumed_shape_spec_list : assumed_shape_spec ( ',' assumed_shape_spec )*  ;
+
+coarray_name : name ;
+
+if_construct_name : name ;
+
+variable_name_list : variable_name ( ',' variable_name )*  ;
+
+concurrent_control_list : concurrent_control ( ',' concurrent_control )*  ;
+
+index_name : name ;
+
+do_construct_name : name ;
+
+critical_construct_name : name ;
+
+coarray_association_list : coarray_association ( ',' coarray_association )*  ;
+
+team_construct_name : name ;
+
+block_construct_name : name ;
+
+where_construct_name : name ;
+
+forall_construct_name : name ;
+
+procedure_component_name : name ;
+
+data_pointer_component_name : name ;
+
+type_bound_proc_decl_list : type_bound_proc_decl ( ',' type_bound_proc_decl )*  ;
+
+binding_name_list : binding_name ( ',' binding_name )*  ;
+
+final_subroutine_name_list : <i>final-subroutine-name</i> ( ',' <i>final-subroutine-name</i> )*  ;
+
+type_param_spec_list : type_param_spec ( ',' type_param_spec )*  ;
+
+component_spec_list : component_spec ( ',' component_spec )*  ;
+
+enum_type_name : name ;
+
+enumerator_list : enumerator ( ',' enumerator )*  ;
+
+enumeration_type_name : name ;
+
+enumerator_name_list : <i>enumerator-name</i> ( ',' <i>enumeratorName</i> )*  ;
+
+ac_value_list : ac_value ( ',' ac_value )*  ;
+
+entity_decl_list : entity_decl ( ',' entity_decl )*  ;
+
+data_stmt_object_list : data_stmt_object ( ',' data_stmt_object )*  ;
+
+data_stmt_value_list : data_stmt_value ( ',' data_stmt_value )*  ;
+
+array_name : name ;
+
+named_constant_def_list : named_constant_def ( ',' named_constant_def )*  ;
+
+pointer_decl_list : pointer_decl ( ',' pointer_decl )*  ;
+
+procptr_entity_name : name ;
+
+entity_name_list : entity_name ( ',' entity_name )*  ;
+
+saved_entity_list : saved_entity ( ',' saved_entity )*  ;
+
+target_decl_list : target_decl ( ',' target_decl )*  ;
+
+implicit_spec_list : implicit_spec ( ',' implicit_spec )*  ;
+
+implicit_none_spec_list : implicit_none_spec ( ',' implicit_none_spec )*  ;
+
+letter_spec_list : <i>LETTERSPEC</i> ( ',' <i>LETTERSPEC</i> )*  ;
 
 
 

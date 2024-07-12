@@ -265,8 +265,8 @@ R722 <i>length-selector</i> <b>is</b> ( [ LEN = ] <i>type-param-value</i> )
               <b>or</b> * <i>char-length</i> [ , ]
 R723 <i>char-length</i> <b>is</b> ( <i>type-param-value</i> )
               <b>or</b> <i>int-literal-constant</i>
-R724 <i>char-literal-constant</i> <b>is</b> [ <i>kind-param</i> _ ] ' [ <i>rep-char</i> ] ... '
-              <b>or</b> [ <i>kind-param</i> _ ] " [ <i>rep-char</i> ] ... "
+R724 <i>char-literal-constant</i> <b>is</b> [ <i>kind-param</i> _ ] SQUOTE [ <i>rep-char</i> ] ... SQUOTE
+              <b>or</b> [ <i>kind-param</i> _ ] DQUOTE [ <i>rep-char</i> ] ... DQUOTE
 R725 <i>logical-literal-constant</i> <b>is</b> .TRUE. [ _ <i>kind-param</i> ]
               <b>or</b> .FALSE. [ _ <i>kind-param</i> ]
 R726 <i>derived-type-def</i> <b>is</b> <i>derived-type-stmt</i>
@@ -363,12 +363,12 @@ R771 <i>enumeration-constructor</i> <b>is</b> <i>enumeration-type-spec</i> ( <i>
 R772 <i>boz-literal-constant</i> <b>is</b> <i>binary-constant</i>
               <b>or</b> <i>octal-constant</i>
               <b>or</b> <i>hex-constant</i>
-R773 <i>binary-constant</i> <b>is</b> B ' <i>digit</i> [ <i>digit</i> ] ... '
-              <b>or</b> B " <i>digit</i> [ <i>digit</i> ] ... "
-R774 <i>octal-constant</i> <b>is</b> O ' <i>digit</i> [ <i>digit</i> ] ... '
-              <b>or</b> O " <i>digit</i> [ <i>digit</i> ] ... "
-R775 <i>hex-constant</i> <b>is</b> Z ' <i>hex-digit</i> [ <i>hex-digit</i> ] ... '
-              <b>or</b> Z " <i>hex-digit</i> [ <i>hex-digit</i> ] ... "
+R773 <i>binary-constant</i> <b>is</b> B ' <i>digit</i> [ <i>digit</i> ] ... SQUOTE
+              <b>or</b> B " <i>digit</i> [ <i>digit</i> ] ... DQUOTE
+R774 <i>octal-constant</i> <b>is</b> O ' <i>digit</i> [ <i>digit</i> ] ... SQUOTE
+              <b>or</b> O " <i>digit</i> [ <i>digit</i> ] ... DQUOTE
+R775 <i>hex-constant</i> <b>is</b> Z ' <i>hex-digit</i> [ <i>hex-digit</i> ] ... SQUOTE
+              <b>or</b> Z " <i>hex-digit</i> [ <i>hex-digit</i> ] ... DQUOTE
 R776 <i>hex-digit</i> <b>is</b> <i>digit</i>
               <b>or</b> A
               <b>or</b> B
