@@ -212,23 +212,23 @@
               | enum_type_spec
               | enumeration_type_spec ;
  declaration_type_spec : intrinsic_type_spec
-              | 'TYPE (' intrinsic_type_spec ')'
-              | 'TYPE (' derived_type_spec ')'
-              | 'TYPE (' enum_type_spec ')'
-              | 'TYPE (' enumeration_type_spec ')'
-              | 'CLASS (' derived_type_spec ')'
-              | 'CLASS ( * )'
-              | 'TYPE ( * )'
-              | 'TYPEOF (' data_ref ')'
-              | 'CLASSOF (' data_ref ')' ;
+              | 'TYPE' '(' intrinsic_type_spec ')'
+              | 'TYPE' '(' derived_type_spec ')'
+              | 'TYPE' '(' enum_type_spec ')'
+              | 'TYPE' '(' enumeration_type_spec ')'
+              | 'CLASS' '(' derived_type_spec ')'
+              | 'CLASS' '(' '*' ')'
+              | 'TYPE' '(' '*' ')'
+              | 'TYPEOF' '(' data_ref ')'
+              | 'CLASSOF' '(' data_ref ')' ;
  intrinsic_type_spec : integer_type_spec
               | 'REAL' ( kind_selector )?
-              | 'DOUBLE PRECISION'
+              | 'DOUBLE' 'PRECISION'
               | 'COMPLEX' ( kind_selector )?
               | 'CHARACTER' ( char_selector )?
               | 'LOGICAL' ( kind_selector )? ;
  integer_type_spec : 'INTEGER' ( kind_selector )? ;
- kind_selector : '(' ( 'KIND =' )? scalar_int_constant_expr ')' ;
+ kind_selector : '(' ( 'KIND' '=' )? scalar_int_constant_expr ')' ;
  signed_int_literal_constant : ( sign )? int_literal_constant ;
  int_literal_constant : digit_string ( '_' kind_param )? ;
  kind_param : digit_string
@@ -253,13 +253,13 @@
               | signed_real_literal_constant
               | named_constant ;
  char_selector : length_selector
-              | '( LEN =' type_param_value ',
-                   KIND =' scalar_int_constant_expr ')'
+              | '(' 'LEN' '=' type_param_value ','                   
+'KIND' '=' scalar_int_constant_expr ')'
               | '(' type_param_value ','
-                   ( 'KIND =' )? scalar_int_constant_expr ')'
-              | '( KIND =' scalar_int_constant_expr
-                   ( ', LEN ='type_param_value )? ')' ;
- length_selector : '(' ( 'LEN =' )? type_param_value ')'
+                   ( 'KIND' '=' )? scalar_int_constant_expr ')'
+              | '(' 'KIND' '=' scalar_int_constant_expr
+                   ( ',' 'LEN' '='type_param_value )? ')' ;
+ length_selector : '(' ( 'LEN' '=' )? type_param_value ')'
               | '*' char_length ( ',' )? ;
  char_length : '(' type_param_value ')'
               | int_literal_constant ;
@@ -277,11 +277,11 @@
                    ( '(' type_param_name_list ')' )? ;
  type_attr_spec : 'ABSTRACT'
               | access_spec
-              | 'BIND (C)'
-              | 'EXTENDS (' <i>parent-type-name</i> ')' ;
+              | 'BIND' '(C)'
+              | 'EXTENDS' '(' <i>parent-type-name</i> ')' ;
  private_or_sequence : private_components_stmt
               | sequence_stmt ;
- end_type_stmt : 'END TYPE' ( type_name )? ;
+ end_type_stmt : 'END' 'TYPE' ( type_name )? ;
  sequence_stmt : 'SEQUENCE' ;
  type_param_def_stmt : integer_type_spec',' type_param_attr_spec '::'
                   type_param_decl_list ;
@@ -297,14 +297,14 @@
               | 'ALLOCATABLE'
               | 'CODIMENSION' lbracket coarray_spec rbracket
               | 'CONTIGUOUS'
-              | 'DIMENSION (' component_array_spec ')'
+              | 'DIMENSION' '(' component_array_spec ')'
               | 'POINTER' ;
  component_decl : component_name ( '(' component_array_spec ')' )?
                    ( lbracket coarray_spec rbracket )?
                    ( '*' char_length )? ( component_initialization )? ;
  component_array_spec : explicit_shape_spec_list
               | deferred_shape_spec_list ;
- proc_component_def_stmt : 'PROCEDURE (' ( proc_interface )? ') ,'
+ proc_component_def_stmt : 'PROCEDURE' '(' ( proc_interface )? ')' ','
                   proc_component_attr_spec_list '::' proc_decl_list ;
  proc_component_attr_spec : access_spec
               | 'NOPASS'
@@ -323,7 +323,7 @@
               | type_bound_generic_stmt
               | final_procedure_stmt ;
  type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' binding_attr_list )? '::' )? <i>type-bound-proc-decl-list</i>
-              | 'PROCEDURE ('interface_name'),' binding_attr_list '::' <i>binding-name-list</i> ;
+              | 'PROCEDURE' '('interface_name'),' binding_attr_list '::' <i>binding-name-list</i> ;
  type_bound_proc_decl : binding_name ( '=>' procedure_name )? ;
  type_bound_generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' <i>binding-name-list</i> ;
  binding_attr : access_spec
@@ -339,23 +339,23 @@
  component_data_source : expr
               | data_target
               | proc_target ;
- enum_def : '<i>enum-def-stmt
-                   enumerator-def-stmt</i>'
+ enum_def : '<i>enum-def-stmt'                   
+'enumerator-def-stmt</i>'
                    ( enumerator_def_stmt )* 
                    end_enum_stmt ;
- enum_def_stmt : 'ENUM, BIND(C)' ( '::' <i>enum-type-name</i> )? ;
+ enum_def_stmt : 'ENUM,' 'BIND(C)' ( '::' <i>enum-type-name</i> )? ;
  enumerator_def_stmt : 'ENUMERATOR' ( '::' )? <i>enumerator-list</i> ;
  enumerator : named_constant ( '=' scalar_int_constant_expr )? ;
- end_enum_stmt : 'END ENUM' ;
+ end_enum_stmt : 'END' 'ENUM' ;
  enum_type_spec : <i>enum-type-name</i> ;
  enum_constructor : enum_type_spec '(' scalar_expr ')' ;
- enumeration_type_def : '<i>enumeration-type-stmt
-                   enumeration-enumerator-stmt</i>'
+ enumeration_type_def : '<i>enumeration-type-stmt'                   
+'enumeration-enumerator-stmt</i>'
                    ( enumeration_enumerator_stmt )*
                    end_enumeration_type_stmt ;
- enumeration_type_stmt : 'ENUMERATION TYPE' ( ( ',' access_spec )? '::' )? <i>enumeration-type-name</i> ;
+ enumeration_type_stmt : 'ENUMERATION' 'TYPE' ( ( ',' access_spec )? '::' )? <i>enumeration-type-name</i> ;
  enumeration_enumerator_stmt : 'ENUMERATOR' ( '::' )? <i>enumerator-name-list</i> ;
- end_enumeration_type_stmt : 'END ENUMERATION TYPE' ( <i>enumeration-type-name</i> )? ;
+ end_enumeration_type_stmt : 'END' 'ENUMERATION' 'TYPE' ( <i>enumeration-type-name</i> )? ;
  enumeration_type_spec : <i>enumeration-type-name</i> ;
  enumeration_constructor : enumeration_type_spec '(' scalar_int_expr ')' ;
  boz_literal_constant : binary_constant
@@ -392,9 +392,9 @@
               | 'ASYNCHRONOUS'
               | 'CODIMENSION' lbracket coarray_spec rbracket
               | 'CONTIGUOUS'
-              | 'DIMENSION (' array_spec ')'
+              | 'DIMENSION' '(' array_spec ')'
               | 'EXTERNAL'
-              | 'INTENT (' intent_spec ')'
+              | 'INTENT' '(' intent_spec ')'
               | 'INTRINSIC'
               | language_binding_spec
               | 'OPTIONAL'
@@ -417,7 +417,7 @@
  null_init : function_reference ;
  access_spec : 'PUBLIC'
               | 'PRIVATE' ;
- language_binding_spec : 'BIND (C' ( ', NAME =' scalar_default_char_constant_expr )?')' ;
+ language_binding_spec : 'BIND' '(C' ( ',' 'NAME' '=' scalar_default_char_constant_expr )?')' ;
  coarray_spec : <i>deferred-coshape-spec-list</i>
               | explicit_coshape_spec ;
  deferred_coshape_spec : ':' ;
@@ -452,7 +452,7 @@
  intent_spec : 'IN'
               | 'OUT'
               | 'INOUT' ;
- rank_clause : 'RANK (' scalar_int_constant_expr ')' ;
+ rank_clause : 'RANK' '(' scalar_int_constant_expr ')' ;
  access_stmt : access_spec ( ( '::' )? <i>access-id-list</i> )? ;
  access_id : <i>access-name</i>
               | generic_spec ;
@@ -494,9 +494,9 @@
  constant_subobject : designator ;
  dimension_stmt : 'DIMENSION' ( '::' )? <i>array-name</i> '(' array_spec ')'
                    ( ',' <i>array-name</i> '(' array_spec ')' )*  ;
- intent_stmt : 'INTENT (' intent_spec ')' ( '::' )? dummy_arg_name_list ;
+ intent_stmt : 'INTENT' '(' intent_spec ')' ( '::' )? dummy_arg_name_list ;
  optional_stmt : 'OPTIONAL' ( '::' )? dummy_arg_name_list ;
- parameter_stmt : 'PARAMETER (' <i>named-constant-def-list</i> ')' ;
+ parameter_stmt : 'PARAMETER' '(' <i>named-constant-def-list</i> ')' ;
  named_constant_def : named_constant '=' constant_expr ;
  pointer_stmt : 'POINTER' ( '::' )? <i>pointer-decl-list</i> ;
  pointer_decl : object_name ( '(' deferred_shape_spec_list ')' )?
@@ -513,17 +513,17 @@
  value_stmt : 'VALUE' ( '::' )? dummy_arg_name_list ;
  volatile_stmt : 'VOLATILE' ( '::' )? <i>object-name-list</i> ;
  implicit_stmt : 'IMPLICIT' <i>implicit-spec-list</i>
-              | 'IMPLICIT NONE' ( '(' ( <i>implicit-none-spec-list</i> )? ')' )? ;
+              | 'IMPLICIT' 'NONE' ( '(' ( <i>implicit-none-spec-list</i> )? ')' )? ;
  implicit_spec : declaration_type_spec '(' <i>letter-spec-list</i> ')' ;
  letter_spec : letter ( '-' letter )? ;
  implicit_none_spec : 'EXTERNAL'
               | 'TYPE' ;
  import_stmt : 'IMPORT' (( '::' )? <i>import-name-list</i> )?
-              | 'IMPORT, ONLY :' <i>import-name-list</i>
-              | 'IMPORT, NONE'
-              | 'IMPORT, ALL' ;
- namelist_stmt : 'NAMELIST
-                   /' namelist_group_name '/' <i>namelist-group-object-list</i>
+              | 'IMPORT,' 'ONLY' ':' <i>import-name-list</i>
+              | 'IMPORT,' 'NONE'
+              | 'IMPORT,' 'ALL' ;
+ namelist_stmt : 'NAMELIST'                   
+'/' namelist_group_name '/' <i>namelist-group-object-list</i>
                    ( ( ',' )? '/' namelist_group_name '/'
                   <i>namelist-group-object-list</i> )*  ;
  namelist_group_object : variable_name ;
@@ -562,8 +562,8 @@
  part_ref : <i>part-name</i> ( '(' section_subscript_list ')' )? ( image_selector )? ;
  structure_component : data_ref ;
  coindexed_named_object : data_ref ;
- complex_part_designator : designator '% RE'
-              | designator '% IM' ;
+ complex_part_designator : designator '%' 'RE'
+              | designator '%' 'IM' ;
  type_param_inquiry : designator '%' type_param_name ;
  array_element : data_ref ;
  array_section : data_ref ( '(' substring_range ')' )?
@@ -581,16 +581,16 @@
  vector_subscript : int_expr ;
  image_selector : lbracket <i>cosubscript-list</i> ( ',' <i>image-selector-spec-list</i> )? rbracket ;
  cosubscript : scalar_int_expr ;
- image_selector_spec : 'NOTIFY =' notify_variable
-              | 'STAT =' stat_variable
-              | 'TEAM =' team_value
-              | 'TEAM_NUMBER =' scalar_int_expr ;
- allocate_stmt : 'ALLOCATE (' ( type_spec '::' )? <i>allocation-list</i>
+ image_selector_spec : 'NOTIFY' '=' notify_variable
+              | 'STAT' '=' stat_variable
+              | 'TEAM' '=' team_value
+              | 'TEAM_NUMBER' '=' scalar_int_expr ;
+ allocate_stmt : 'ALLOCATE' '(' ( type_spec '::' )? <i>allocation-list</i>
                    ( ',' <i>alloc-opt-list</i> )? ')' ;
- alloc_opt : 'ERRMSG =' errmsg_variable
-              | 'MOLD =' source_expr
-              | 'SOURCE =' source_expr
-              | 'STAT =' stat_variable ;
+ alloc_opt : 'ERRMSG' '=' errmsg_variable
+              | 'MOLD' '=' source_expr
+              | 'SOURCE' '=' source_expr
+              | 'STAT' '=' stat_variable ;
  errmsg_variable : scalar_default_char_variable ;
  source_expr : expr ;
  allocation : allocate_object ( '(' <i>allocate-shape-spec-list</i> ')' )?
@@ -606,13 +606,13 @@
  upper_bounds_expr : int_expr ;
  allocate_coarray_spec : ( <i>allocate-coshape-spec-list</i> ',' )? ( lower_bound_expr ':' )? '*' ;
  allocate_coshape_spec : ( lower_bound_expr ':' )? upper_bound_expr ;
- nullify_stmt : 'NULLIFY (' <i>pointer-object-list</i> ')' ;
+ nullify_stmt : 'NULLIFY' '(' <i>pointer-object-list</i> ')' ;
  pointer_object : variable_name
               | structure_component
               | proc_pointer_name ;
- deallocate_stmt : 'DEALLOCATE (' <i>allocate-object-list</i> ( ',' <i>dealloc-opt-list</i> )? ')' ;
- dealloc_opt : 'STAT =' stat_variable
-              | 'ERRMSG =' errmsg_variable ;
+ deallocate_stmt : 'DEALLOCATE' '(' <i>allocate-object-list</i> ( ',' <i>dealloc-opt-list</i> )? ')' ;
+ dealloc_opt : 'STAT' '=' stat_variable
+              | 'ERRMSG' '=' errmsg_variable ;
  stat_variable : scalar_int_variable ;
  primary : literal_constant
               | designator
@@ -672,10 +672,10 @@
  int_constant_expr : int_expr ;
  assignment_stmt : variable '=' expr ;
  pointer_assignment_stmt : data_pointer_object ( '(' <i>bounds-spec-list</i> ')' )? '=>' data_target
-              | data_pointer_object '(' lower_bounds_expr ': ) =>' data_target
-              | data_pointer_object '(' <i>bounds-remapping-list</i> ') =>' data_target
-              | data_pointer_object '(' lower_bounds_expr ':' upper_bounds_expr ')
-                   =>' data_target
+              | data_pointer_object '(' lower_bounds_expr ':' ')' '=>' data_target
+              | data_pointer_object '(' <i>bounds-remapping-list</i> ')' '=>' data_target
+              | data_pointer_object '(' lower_bounds_expr ':' upper_bounds_expr ')'                   
+'=>' data_target
               | proc_pointer_object '=>' proc_target ;
  data_pointer_object : variable_name
               | scalar_variable '%' <i>data-pointer-component-name</i> ;
@@ -688,7 +688,7 @@
  proc_target : expr
               | procedure_name
               | proc_component_ref ;
- where_stmt : 'WHERE (' mask_expr ')' where_assignment_stmt ;
+ where_stmt : 'WHERE' '(' mask_expr ')' where_assignment_stmt ;
  where_construct : where_construct_stmt
                      ( where_body_construct )* 
                    ( masked_elsewhere_stmt
@@ -696,15 +696,15 @@
                    ( elsewhere_stmt
                      ( where_body_construct )*  )?
                    end_where_stmt ;
- where_construct_stmt : (<i>where-construct-name</i>':')? 'WHERE (' mask_expr ')' ;
+ where_construct_stmt : (<i>where-construct-name</i>':')? 'WHERE' '(' mask_expr ')' ;
  where_body_construct : where_assignment_stmt
               | where_stmt
               | where_construct ;
  where_assignment_stmt : assignment_stmt ;
  mask_expr : logical_expr ;
- masked_elsewhere_stmt : 'ELSEWHERE ('mask_expr')' (<i>where-construct-name</i>)? ;
+ masked_elsewhere_stmt : 'ELSEWHERE' '('mask_expr')' (<i>where-construct-name</i>)? ;
  elsewhere_stmt : 'ELSEWHERE' (<i>where-construct-name</i>)? ;
- end_where_stmt : 'END WHERE' (<i>where-construct-name</i>)? ;
+ end_where_stmt : 'END' 'WHERE' (<i>where-construct-name</i>)? ;
  forall_construct : forall_construct_stmt
                        (forall_body_construct )* 
                        end_forall_stmt ;
@@ -716,50 +716,50 @@
               | forall_stmt ;
  forall_assignment_stmt : assignment_stmt
               | pointer_assignment_stmt ;
- end_forall_stmt : 'END FORALL' (<i>forall-construct-name</i> )? ;
+ end_forall_stmt : 'END' 'FORALL' (<i>forall-construct-name</i> )? ;
  forall_stmt : 'FORALL' concurrent_header forall_assignment_stmt ;
  block : ( execution_part_construct )*  ;
- associate_construct : '<i>associate-stmt
-                   block
-                   end-associate-stmt</i>' ;
- associate_stmt : ( associate_construct_name ':' )? 'ASSOCIATE
-                   ('<i>association-list</i> ')' ;
+ associate_construct : '<i>associate-stmt'                   
+'block'                   
+'end-associate-stmt</i>' ;
+ associate_stmt : ( associate_construct_name ':' )? 'ASSOCIATE'                   
+'('<i>association-list</i> ')' ;
  association : associate_name '=>' selector ;
  selector : expr
               | variable ;
- end_associate_stmt : 'END ASSOCIATE' ( associate_construct_name )? ;
+ end_associate_stmt : 'END' 'ASSOCIATE' ( associate_construct_name )? ;
  block_construct : block_stmt
-                    ( block_specification_part )? '
-                  <i>block
-                   end-block-stmt</i>' ;
+                    ( block_specification_part )?                   
+'<i>block'                   
+'end-block-stmt</i>' ;
  block_stmt : ( <i>block-construct-name</i> ':' )? 'BLOCK' ;
  block_specification_part : ( use_stmt )* 
                   ( import_stmt )* 
                   ( declaration_construct )*  ;
- end_block_stmt : 'END BLOCK' ( <i>block-construct-name</i> )? ;
- change_team_construct : '<i>change-team-stmt
-                   block
-                   end-change-team-stmt</i>' ;
- change_team_stmt : ( <i>team-construct-name</i> ':' )? 'CHANGE TEAM (' team_value
+ end_block_stmt : 'END' 'BLOCK' ( <i>block-construct-name</i> )? ;
+ change_team_construct : '<i>change-team-stmt'                   
+'block'                   
+'end-change-team-stmt</i>' ;
+ change_team_stmt : ( <i>team-construct-name</i> ':' )? 'CHANGE' 'TEAM' '(' team_value
                    ( ',' <i>coarray-association-list</i> )? ( ',' sync_stat_list )? ')' ;
  coarray_association : codimension_decl '=>' selector ;
- end_change_team_stmt : 'END TEAM' ( '(' ( sync_stat_list )? ')' )? ( <i>team-construct-name</i> )? ;
+ end_change_team_stmt : 'END' 'TEAM' ( '(' ( sync_stat_list )? ')' )? ( <i>team-construct-name</i> )? ;
  team_value : scalar_expr ;
- critical_construct : '<i>critical-stmt
-                   block
-                   end-critical-stmt</i>' ;
+ critical_construct : '<i>critical-stmt'                   
+'block'                   
+'end-critical-stmt</i>' ;
  critical_stmt : ( <i>critical-construct-name</i> ':' )? 'CRITICAL' ( '(' ( sync_stat_list )? ')' )? ;
- end_critical_stmt : 'END CRITICAL' ( <i>critical-construct-name</i> )? ;
- do_construct : '<i>do-stmt
-                   block
-                   end-do</i>' ;
+ end_critical_stmt : 'END' 'CRITICAL' ( <i>critical-construct-name</i> )? ;
+ do_construct : '<i>do-stmt'                   
+'block'                   
+'end-do</i>' ;
  do_stmt : nonlabel_do_stmt
               | label_do_stmt ;
  label_do_stmt : ( <i>do-construct-name</i> ':' )? 'DO' label ( loop_control )? ;
  nonlabel_do_stmt : ( <i>do-construct-name</i> ':' )? 'DO' ( loop_control )? ;
  loop_control : ( ',' )? do_variable '=' scalar_int_expr',' scalar_int_expr
                    ( ',' scalar_int_expr )?
-              | ( ',' )? 'WHILE (' scalar_logical_expr ')'
+              | ( ',' )? 'WHILE' '(' scalar_logical_expr ')'
               | ( ',' )? 'CONCURRENT' concurrent_header concurrent_locality ;
  do_variable : <i>scalar-int-variable-name</i> ;
  concurrent_header : '(' ( integer_type_spec '::' )? <i>concurrent-control-list</i> ( ',' <i>scalar-mask-expr</i> )? ')' ;
@@ -767,11 +767,11 @@
  concurrent_limit : scalar_int_expr ;
  concurrent_step : scalar_int_expr ;
  concurrent_locality : ( locality_spec )* ;
- locality_spec : 'LOCAL (' <i>variable-name-list</i> ')'
-              | 'LOCAL_INIT (' <i>variable-name-list</i> ')'
-              | 'REDUCE (' reduce_operation ':' <i>variable-name-list</i> ')'
-              | 'SHARED (' <i>variable-name-list</i> ')'
-              | 'DEFAULT ( NONE )' ;
+ locality_spec : 'LOCAL' '(' <i>variable-name-list</i> ')'
+              | 'LOCAL_INIT' '(' <i>variable-name-list</i> ')'
+              | 'REDUCE' '(' reduce_operation ':' <i>variable-name-list</i> ')'
+              | 'SHARED' '(' <i>variable-name-list</i> ')'
+              | 'DEFAULT' '(' 'NONE' ')' ;
  reduce_operation : binary_reduce_op
               | <i>function-reduction-name</i> ;
  binary_reduce_op : '+'
@@ -782,27 +782,27 @@
               | '.NEQV.' ;
  end_do : end_do_stmt
               | continue_stmt ;
- end_do_stmt : 'END DO' ( <i>do-construct-name</i> )? ;
+ end_do_stmt : 'END' 'DO' ( <i>do-construct-name</i> )? ;
  cycle_stmt : 'CYCLE' ( <i>do-construct-name</i> )? ;
- if_construct : '<i>if-then-stmt
-                     block</i>'
-                   ( '<i>else-if-stmt
-                     block</i>' )* 
-                   ( '<i>else-stmt
-                     block</i>' )?
+ if_construct : '<i>if-then-stmt'                     
+'block</i>'
+                   ( '<i>else-if-stmt'                     
+'block</i>' )* 
+                   ( '<i>else-stmt'                     
+'block</i>' )?
                    end_if_stmt ;
- if_then_stmt : ( <i>if-construct-name</i> ':' )? 'IF (' scalar_logical_expr ') THEN' ;
- else_if_stmt : 'ELSE IF (' scalar_logical_expr ') THEN' ( <i>if-construct-name</i> )? ;
+ if_then_stmt : ( <i>if-construct-name</i> ':' )? 'IF' '(' scalar_logical_expr ')' 'THEN' ;
+ else_if_stmt : 'ELSE' 'IF' '(' scalar_logical_expr ')' 'THEN' ( <i>if-construct-name</i> )? ;
  else_stmt : 'ELSE' ( <i>if-construct-name</i> )? ;
- end_if_stmt : 'END IF' ( <i>if-construct-name</i> )? ;
- if_stmt : 'IF (' scalar_logical_expr ')' action_stmt ;
+ end_if_stmt : 'END' 'IF' ( <i>if-construct-name</i> )? ;
+ if_stmt : 'IF' '(' scalar_logical_expr ')' action_stmt ;
  case_construct : select_case_stmt
-                   ( '<i>case-stmt
-                     block</i>' )* 
+                   ( '<i>case-stmt'                     
+'block</i>' )* 
                    end_select_stmt ;
- select_case_stmt : ( case_construct_name ':' )? 'SELECT CASE (' case_expr ')' ;
+ select_case_stmt : ( case_construct_name ':' )? 'SELECT' 'CASE' '(' case_expr ')' ;
  case_stmt : 'CASE' case_selector (case_construct_name)? ;
- end_select_stmt : 'END SELECT' ( case_construct_name )? ;
+ end_select_stmt : 'END' 'SELECT' ( case_construct_name )? ;
  case_expr : scalar_expr ;
  case_selector : '(' case_value_range_list ')'
               | 'DEFAULT' ;
@@ -812,121 +812,121 @@
               | case_value ':' case_value ;
  case_value : scalar_constant_expr ;
  select_rank_construct : select_rank_stmt
-                   ( '<i>select-rank-case-stmt
-                   block</i>' )*
+                   ( '<i>select-rank-case-stmt'                   
+'block</i>' )*
                    end_select_rank_stmt ;
- select_rank_stmt : ( select_construct_name ':' )? 'SELECT RANK
-                   (' ( associate_name '=>' )? selector ')' ;
- select_rank_case_stmt : 'RANK (' scalar_int_constant_expr ')' ( select_construct_name )?
-              | 'RANK ( * )' ( select_construct_name )?
-              | 'RANK DEFAULT' ( select_construct_name )? ;
- end_select_rank_stmt : 'END SELECT' ( select_construct_name )? ;
+ select_rank_stmt : ( select_construct_name ':' )? 'SELECT' 'RANK'                   
+'(' ( associate_name '=>' )? selector ')' ;
+ select_rank_case_stmt : 'RANK' '(' scalar_int_constant_expr ')' ( select_construct_name )?
+              | 'RANK' '(' '*' ')' ( select_construct_name )?
+              | 'RANK' 'DEFAULT' ( select_construct_name )? ;
+ end_select_rank_stmt : 'END' 'SELECT' ( select_construct_name )? ;
  select_type_construct : select_type_stmt
-                   ( '<i>type-guard-stmt
-                     block</i>' )* 
+                   ( '<i>type-guard-stmt'                     
+'block</i>' )* 
                    end_select_type_stmt ;
- select_type_stmt : ( select_construct_name ':' )? 'SELECT TYPE
-                   (' ( associate_name '=>' )? selector ')' ;
- type_guard_stmt : 'TYPE IS (' type_spec ')' ( select_construct_name )?
-              | 'CLASS IS (' derived_type_spec ')' ( select_construct_name )?
-              | 'CLASS DEFAULT' ( select_construct_name )? ;
- end_select_type_stmt : 'END SELECT' ( select_construct_name )? ;
+ select_type_stmt : ( select_construct_name ':' )? 'SELECT' 'TYPE'                   
+'(' ( associate_name '=>' )? selector ')' ;
+ type_guard_stmt : 'TYPE' 'IS' '(' type_spec ')' ( select_construct_name )?
+              | 'CLASS' 'IS' '(' derived_type_spec ')' ( select_construct_name )?
+              | 'CLASS' 'DEFAULT' ( select_construct_name )? ;
+ end_select_type_stmt : 'END' 'SELECT' ( select_construct_name )? ;
  exit_stmt : 'EXIT' ( construct_name )? ;
- goto_stmt : 'GO TO' label ;
- computed_goto_stmt : 'GO TO (' label_list ')' ( ',' )? scalar_int_expr ;
+ goto_stmt : 'GO' 'TO' label ;
+ computed_goto_stmt : 'GO' 'TO' '(' label_list ')' ( ',' )? scalar_int_expr ;
  continue_stmt : 'CONTINUE' ;
- stop_stmt : 'STOP' ( stop_code )? ( ', QUIET =' scalar_logical_expr)? ;
- error_stop_stmt : 'ERROR STOP' ( stop_code )? ( ', QUIET =' scalar_logical_expr)? ;
+ stop_stmt : 'STOP' ( stop_code )? ( ',' 'QUIET' '=' scalar_logical_expr)? ;
+ error_stop_stmt : 'ERROR' 'STOP' ( stop_code )? ( ',' 'QUIET' '=' scalar_logical_expr)? ;
  stop_code : scalar_default_char_expr
               | scalar_int_expr ;
- fail_image_stmt : 'FAIL IMAGE' ;
- notify_wait_stmt : 'NOTIFY WAIT (' notify_variable ( ',' event_wait_spec_list )? ')' ;
+ fail_image_stmt : 'FAIL' 'IMAGE' ;
+ notify_wait_stmt : 'NOTIFY' 'WAIT' '(' notify_variable ( ',' event_wait_spec_list )? ')' ;
  notify_variable : scalar_variable ;
- sync_all_stmt : 'SYNC ALL' ( '(' ( sync_stat_list )? ')' )? ;
- sync_stat : 'STAT =' stat_variable
-              | 'ERRMSG =' errmsg_variable ;
- sync_images_stmt : 'SYNC IMAGES (' image_set ( ',' sync_stat_list )? ')' ;
+ sync_all_stmt : 'SYNC' 'ALL' ( '(' ( sync_stat_list )? ')' )? ;
+ sync_stat : 'STAT' '=' stat_variable
+              | 'ERRMSG' '=' errmsg_variable ;
+ sync_images_stmt : 'SYNC' 'IMAGES' '(' image_set ( ',' sync_stat_list )? ')' ;
  image_set : int_expr
               | '*' ;
- sync_memory_stmt : 'SYNC MEMORY' ( '(' ( sync_stat_list )? ')' )? ;
- sync_team_stmt : 'SYNC TEAM (' team_value ( ',' sync_stat_list )? ')' ;
- event_post_stmt : 'EVENT POST (' event_variable ( ',' sync_stat_list )? ')' ;
+ sync_memory_stmt : 'SYNC' 'MEMORY' ( '(' ( sync_stat_list )? ')' )? ;
+ sync_team_stmt : 'SYNC' 'TEAM' '(' team_value ( ',' sync_stat_list )? ')' ;
+ event_post_stmt : 'EVENT' 'POST' '(' event_variable ( ',' sync_stat_list )? ')' ;
  event_variable : scalar_variable ;
- event_wait_stmt : 'EVENT WAIT (' event_variable ( ',' event_wait_spec_list )? ')' ;
+ event_wait_stmt : 'EVENT' 'WAIT' '(' event_variable ( ',' event_wait_spec_list )? ')' ;
  event_wait_spec : until_spec
               | sync_stat ;
- until_spec : 'UNTIL_COUNT =' scalar_int_expr ;
- form_team_stmt : 'FORM TEAM (' team_number',' team_variable
+ until_spec : 'UNTIL_COUNT' '=' scalar_int_expr ;
+ form_team_stmt : 'FORM' 'TEAM' '(' team_number',' team_variable
                    ( ',' form_team_spec_list )? ')' ;
  team_number : scalar_int_expr ;
  team_variable : scalar_variable ;
- form_team_spec : 'NEW_INDEX =' scalar_int_expr
+ form_team_spec : 'NEW_INDEX' '=' scalar_int_expr
               | sync_stat ;
- lock_stmt : 'LOCK (' lock_variable ( ',' lock_stat_list )? ')' ;
- lock_stat : 'ACQUIRED_LOCK =' scalar_logical_variable
+ lock_stmt : 'LOCK' '(' lock_variable ( ',' lock_stat_list )? ')' ;
+ lock_stat : 'ACQUIRED_LOCK' '=' scalar_logical_variable
               | sync_stat ;
- unlock_stmt : 'UNLOCK (' lock_variable ( ',' sync_stat_list )? ')' ;
+ unlock_stmt : 'UNLOCK' '(' lock_variable ( ',' sync_stat_list )? ')' ;
  lock_variable : scalar_variable ;
  io_unit : file_unit_number
               | '*'
               | internal_file_variable ;
  file_unit_number : scalar_int_expr ;
  internal_file_variable : char_variable ;
- open_stmt : 'OPEN (' connect_spec_list ')' ;
- connect_spec : ( 'UNIT =' )? file_unit_number
-              | 'ACCESS =' scalar_default_char_expr
-              | 'ACTION =' scalar_default_char_expr
-              | 'ASYNCHRONOUS =' scalar_default_char_expr
-              | 'BLANK =' scalar_default_char_expr
-              | 'DECIMAL =' scalar_default_char_expr
-              | 'DELIM =' scalar_default_char_expr
-              | 'ENCODING =' scalar_default_char_expr
-              | 'ERR =' label
-              | 'FILE =' file_name_expr
-              | 'FORM =' scalar_default_char_expr
-              | 'IOMSG =' iomsg_variable
-              | 'IOSTAT =' stat_variable
-              | 'LEADING_ZERO =' scalar_default_char_expr
-              | 'NEWUNIT =' scalar_int_variable
-              | 'PAD =' scalar_default_char_expr
-              | 'POSITION =' scalar_default_char_expr
-              | 'RECL =' scalar_int_expr
-              | 'ROUND =' scalar_default_char_expr
-              | 'SIGN =' scalar_default_char_expr
-              | 'STATUS =' scalar_default_char_expr ;
+ open_stmt : 'OPEN' '(' connect_spec_list ')' ;
+ connect_spec : ( 'UNIT' '=' )? file_unit_number
+              | 'ACCESS' '=' scalar_default_char_expr
+              | 'ACTION' '=' scalar_default_char_expr
+              | 'ASYNCHRONOUS' '=' scalar_default_char_expr
+              | 'BLANK' '=' scalar_default_char_expr
+              | 'DECIMAL' '=' scalar_default_char_expr
+              | 'DELIM' '=' scalar_default_char_expr
+              | 'ENCODING' '=' scalar_default_char_expr
+              | 'ERR' '=' label
+              | 'FILE' '=' file_name_expr
+              | 'FORM' '=' scalar_default_char_expr
+              | 'IOMSG' '=' iomsg_variable
+              | 'IOSTAT' '=' stat_variable
+              | 'LEADING_ZERO' '=' scalar_default_char_expr
+              | 'NEWUNIT' '=' scalar_int_variable
+              | 'PAD' '=' scalar_default_char_expr
+              | 'POSITION' '=' scalar_default_char_expr
+              | 'RECL' '=' scalar_int_expr
+              | 'ROUND' '=' scalar_default_char_expr
+              | 'SIGN' '=' scalar_default_char_expr
+              | 'STATUS' '=' scalar_default_char_expr ;
  file_name_expr : scalar_default_char_expr ;
  iomsg_variable : scalar_default_char_variable ;
- close_stmt : 'CLOSE (' close_spec_list ')' ;
- close_spec : ( 'UNIT =' )? file_unit_number
-              | 'IOSTAT =' stat_variable
-              | 'IOMSG =' iomsg_variable
-              | 'ERR =' label
-              | 'STATUS =' scalar_default_char_expr ;
- read_stmt : 'READ (' io_control_spec_list ')' ( input_item_list )?
+ close_stmt : 'CLOSE' '(' close_spec_list ')' ;
+ close_spec : ( 'UNIT' '=' )? file_unit_number
+              | 'IOSTAT' '=' stat_variable
+              | 'IOMSG' '=' iomsg_variable
+              | 'ERR' '=' label
+              | 'STATUS' '=' scalar_default_char_expr ;
+ read_stmt : 'READ' '(' io_control_spec_list ')' ( input_item_list )?
               | 'READ' format ( ',' input_item_list )? ;
- write_stmt : 'WRITE (' io_control_spec_list ')' ( output_item_list )? ;
+ write_stmt : 'WRITE' '(' io_control_spec_list ')' ( output_item_list )? ;
  print_stmt : 'PRINT' format ( ',' output_item_list )? ;
- io_control_spec : ( 'UNIT =' )? io_unit
-              | ( 'FMT =' )? format
-              | ( 'NML =' )? namelist_group_name
-              | 'ADVANCE =' scalar_default_char_expr
-              | 'ASYNCHRONOUS =' scalar_default_char_constant_expr
-              | 'BLANK =' scalar_default_char_expr
-              | 'DECIMAL =' scalar_default_char_expr
-              | 'DELIM =' scalar_default_char_expr
-              | 'END =' label
-              | 'EOR =' label
-              | 'ERR =' label
-              | 'ID =' id_variable
-              | 'IOMSG =' iomsg_variable
-              | 'IOSTAT =' stat_variable
-              | 'LEADING_ZERO =' scalar_default_char_expr
-              | 'PAD =' scalar_default_char_expr
-              | 'POS =' scalar_int_expr
-              | 'REC =' scalar_int_expr
-              | 'ROUND =' scalar_default_char_expr
-              | 'SIGN =' scalar_default_char_expr
-              | 'SIZE =' scalar_int_variable ;
+ io_control_spec : ( 'UNIT' '=' )? io_unit
+              | ( 'FMT' '=' )? format
+              | ( 'NML' '=' )? namelist_group_name
+              | 'ADVANCE' '=' scalar_default_char_expr
+              | 'ASYNCHRONOUS' '=' scalar_default_char_constant_expr
+              | 'BLANK' '=' scalar_default_char_expr
+              | 'DECIMAL' '=' scalar_default_char_expr
+              | 'DELIM' '=' scalar_default_char_expr
+              | 'END' '=' label
+              | 'EOR' '=' label
+              | 'ERR' '=' label
+              | 'ID' '=' id_variable
+              | 'IOMSG' '=' iomsg_variable
+              | 'IOSTAT' '=' stat_variable
+              | 'LEADING_ZERO' '=' scalar_default_char_expr
+              | 'PAD' '=' scalar_default_char_expr
+              | 'POS' '=' scalar_int_expr
+              | 'REC' '=' scalar_int_expr
+              | 'ROUND' '=' scalar_default_char_expr
+              | 'SIGN' '=' scalar_default_char_expr
+              | 'SIZE' '=' scalar_int_variable ;
  id_variable : scalar_int_variable ;
  format : default_char_expr
               | label
@@ -942,70 +942,70 @@
                   scalar_int_expr ( ',' scalar_int_expr )? ;
  dtv_type_spec : 'TYPE(' derived_type_spec ')'
               | 'CLASS(' derived_type_spec ')' ;
- wait_stmt : 'WAIT ('wait_spec_list')' ;
- wait_spec : ( 'UNIT =' )? file_unit_number
-              | 'END =' label
-              | 'EOR =' label
-              | 'ERR =' label
-              | 'ID =' scalar_int_expr
-              | 'IOMSG =' iomsg_variable
-              | 'IOSTAT =' stat_variable ;
+ wait_stmt : 'WAIT' '('wait_spec_list')' ;
+ wait_spec : ( 'UNIT' '=' )? file_unit_number
+              | 'END' '=' label
+              | 'EOR' '=' label
+              | 'ERR' '=' label
+              | 'ID' '=' scalar_int_expr
+              | 'IOMSG' '=' iomsg_variable
+              | 'IOSTAT' '=' stat_variable ;
  backspace_stmt : 'BACKSPACE' file_unit_number
-              | 'BACKSPACE (' position_spec_list ')' ;
+              | 'BACKSPACE' '(' position_spec_list ')' ;
  endfile_stmt : 'ENDFILE' file_unit_number
-              | 'ENDFILE (' position_spec_list ')' ;
+              | 'ENDFILE' '(' position_spec_list ')' ;
  rewind_stmt : 'REWIND' file_unit_number
-              | 'REWIND (' position_spec_list ')' ;
- position_spec : ( 'UNIT =' )? file_unit_number
-              | 'IOMSG =' iomsg_variable
-              | 'IOSTAT =' stat_variable
-              | 'ERR =' label ;
+              | 'REWIND' '(' position_spec_list ')' ;
+ position_spec : ( 'UNIT' '=' )? file_unit_number
+              | 'IOMSG' '=' iomsg_variable
+              | 'IOSTAT' '=' stat_variable
+              | 'ERR' '=' label ;
  flush_stmt : 'FLUSH' file_unit_number
-              | 'FLUSH (' flush_spec_list ')' ;
- flush_spec : ( 'UNIT=')? file_unit_number
-              | 'IOSTAT =' stat_variable
-              | 'IOMSG =' iomsg_variable
-              | 'ERR =' label ;
- inquire_stmt : 'INQUIRE (' inquire_spec_list ')'
-              | 'INQUIRE ( IOLENGTH =' scalar_int_variable ')'
+              | 'FLUSH' '(' flush_spec_list ')' ;
+ flush_spec : ('UNIT' '=')? file_unit_number
+              | 'IOSTAT' '=' stat_variable
+              | 'IOMSG' '=' iomsg_variable
+              | 'ERR' '=' label ;
+ inquire_stmt : 'INQUIRE' '(' inquire_spec_list ')'
+              | 'INQUIRE' '(' 'IOLENGTH' '=' scalar_int_variable ')'
                   output_item_list ;
- inquire_spec : ( 'UNIT =' )? file_unit_number
-              | 'FILE =' file_name_expr
-              | 'ACCESS =' scalar_default_char_variable
-              | 'ACTION =' scalar_default_char_variable
-              | 'ASYNCHRONOUS =' scalar_default_char_variable
-              | 'BLANK =' scalar_default_char_variable
-              | 'DECIMAL =' scalar_default_char_variable
-              | 'DELIM =' scalar_default_char_variable
-              | 'DIRECT =' scalar_default_char_variable
-              | 'ENCODING =' scalar_default_char_variable
-              | 'ERR =' label
-              | 'EXIST =' scalar_logical_variable
-              | 'FORM =' scalar_default_char_variable
-              | 'FORMATTED =' scalar_default_char_variable
-              | 'ID =' scalar_int_expr
-              | 'IOMSG =' iomsg_variable
-              | 'IOSTAT =' stat_variable
-              | 'LEADING_ZERO =' scalar_default_char_variable
-              | 'NAME =' scalar_default_char_variable
-              | 'NAMED =' scalar_logical_variable
-              | 'NEXTREC =' scalar_int_variable
-              | 'NUMBER =' scalar_int_variable
-              | 'OPENED =' scalar_logical_variable
-              | 'PAD =' scalar_default_char_variable
-              | 'PENDING =' scalar_logical_variable
-              | 'POS =' scalar_int_variable
-              | 'POSITION =' scalar_default_char_variable
-              | 'READ =' scalar_default_char_variable
-              | 'READWRITE =' scalar_default_char_variable
-              | 'RECL =' scalar_int_variable
-              | 'ROUND =' scalar_default_char_variable
-              | 'SEQUENTIAL =' scalar_default_char_variable
-              | 'SIGN =' scalar_default_char_variable
-              | 'SIZE =' scalar_int_variable
-              | 'STREAM =' scalar_default_char_variable
-              | 'UNFORMATTED =' scalar_default_char_variable
-              | 'WRITE =' scalar_default_char_variable ;
+ inquire_spec : ( 'UNIT' '=' )? file_unit_number
+              | 'FILE' '=' file_name_expr
+              | 'ACCESS' '=' scalar_default_char_variable
+              | 'ACTION' '=' scalar_default_char_variable
+              | 'ASYNCHRONOUS' '=' scalar_default_char_variable
+              | 'BLANK' '=' scalar_default_char_variable
+              | 'DECIMAL' '=' scalar_default_char_variable
+              | 'DELIM' '=' scalar_default_char_variable
+              | 'DIRECT' '=' scalar_default_char_variable
+              | 'ENCODING' '=' scalar_default_char_variable
+              | 'ERR' '=' label
+              | 'EXIST' '=' scalar_logical_variable
+              | 'FORM' '=' scalar_default_char_variable
+              | 'FORMATTED' '=' scalar_default_char_variable
+              | 'ID' '=' scalar_int_expr
+              | 'IOMSG' '=' iomsg_variable
+              | 'IOSTAT' '=' stat_variable
+              | 'LEADING_ZERO' '=' scalar_default_char_variable
+              | 'NAME' '=' scalar_default_char_variable
+              | 'NAMED' '=' scalar_logical_variable
+              | 'NEXTREC' '=' scalar_int_variable
+              | 'NUMBER' '=' scalar_int_variable
+              | 'OPENED' '=' scalar_logical_variable
+              | 'PAD' '=' scalar_default_char_variable
+              | 'PENDING' '=' scalar_logical_variable
+              | 'POS' '=' scalar_int_variable
+              | 'POSITION' '=' scalar_default_char_variable
+              | 'READ' '=' scalar_default_char_variable
+              | 'READWRITE' '=' scalar_default_char_variable
+              | 'RECL' '=' scalar_int_variable
+              | 'ROUND' '=' scalar_default_char_variable
+              | 'SEQUENTIAL' '=' scalar_default_char_variable
+              | 'SIGN' '=' scalar_default_char_variable
+              | 'SIZE' '=' scalar_int_variable
+              | 'STREAM' '=' scalar_default_char_variable
+              | 'UNFORMATTED' '=' scalar_default_char_variable
+              | 'WRITE' '=' scalar_default_char_variable ;
  format_stmt : 'FORMAT' format_specification ;
  format_specification : '(' ( format_items )? ')'
               | '(' ( format_items',' )? unlimited_format_item ')' ;
@@ -1014,7 +1014,7 @@
               | control_edit_desc
               | char_string_edit_desc
               | ( r )? '(' format_items ')' ;
- unlimited_format_item : '* (' format_items ')' ;
+ unlimited_format_item : '*' '(' format_items ')' ;
  r : int_literal_constant ;
  data_edit_desc : 'I' w ( '.' m )?
               | 'B' w ( '.' m )?
@@ -1088,13 +1088,13 @@
               | subroutine_subprogram
               | separate_module_subprogram ;
  use_stmt : 'USE' ( ( ',' module_nature )? '::' )? module_name ( ',' rename_list )?
-              | 'USE' ( ( ',' module_nature )? '::' )? module_name ',
-                   ONLY :' ( only_list )? ;
+              | 'USE' ( ( ',' module_nature )? '::' )? module_name ','                   
+'ONLY' ':' ( only_list )? ;
  module_nature : 'INTRINSIC'
               | 'NON_INTRINSIC' ;
  rename : local_name '=>' use_name
-              | 'OPERATOR ('local_defined_operator ')=>
-                   OPERATOR ('use_defined_operator')' ;
+              | 'OPERATOR' '('local_defined_operator')' '=>'                   
+'OPERATOR' '('use_defined_operator')' ;
  only : generic_spec
               | only_use_name
               | rename ;
@@ -1107,22 +1107,22 @@
                     ( specification_part )?
                     ( module_subprogram_part )?
                    end_submodule_stmt ;
- submodule_stmt : 'SUBMODULE (' parent_identifier ')' submodule_name ;
+ submodule_stmt : 'SUBMODULE' '(' parent_identifier ')' submodule_name ;
  parent_identifier : ancestor_module_name ( ':' parent_submodule_name )? ;
  end_submodule_stmt : 'END' ( 'SUBMODULE' ( submodule_name )? )? ;
  block_data : block_data_stmt
                        ( specification_part )?
                       end_block_data_stmt ;
- block_data_stmt : 'BLOCK DATA' ( block_data_name )? ;
- end_block_data_stmt : 'END' ( 'BLOCK DATA' ( block_data_name )? )? ;
+ block_data_stmt : 'BLOCK' 'DATA' ( block_data_name )? ;
+ end_block_data_stmt : 'END' ( 'BLOCK' 'DATA' ( block_data_name )? )? ;
  interface_block : interface_stmt
                    ( interface_specification )* 
                    end_interface_stmt ;
  interface_specification : interface_body
               | procedure_stmt ;
  interface_stmt : 'INTERFACE' ( generic_spec )?
-              | 'ABSTRACT INTERFACE' ;
- end_interface_stmt : 'END INTERFACE' ( generic_spec )? ;
+              | 'ABSTRACT' 'INTERFACE' ;
+ end_interface_stmt : 'END' 'INTERFACE' ( generic_spec )? ;
  interface_body : function_stmt
                    ( specification_part )?
                    end_function_stmt
@@ -1132,22 +1132,22 @@
  procedure_stmt : ( 'MODULE' )? 'PROCEDURE' ( '::' )? specific_procedure_list ;
  specific_procedure : procedure_name ;
  generic_spec : generic_name
-              | 'OPERATOR (' defined_operator ')'
-              | 'ASSIGNMENT ( = )'
+              | 'OPERATOR' '(' defined_operator ')'
+              | 'ASSIGNMENT' '(' '=' ')'
               | defined_io_generic_spec ;
- defined_io_generic_spec : 'READ (FORMATTED)'
-              | 'READ (UNFORMATTED)'
-              | 'WRITE (FORMATTED)'
-              | 'WRITE (UNFORMATTED)' ;
+ defined_io_generic_spec : 'READ' '(FORMATTED)'
+              | 'READ' '(UNFORMATTED)'
+              | 'WRITE' '(FORMATTED)'
+              | 'WRITE' '(UNFORMATTED)' ;
  generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' specific_procedure_list ;
  external_stmt : 'EXTERNAL' ( '::' )? external_name_list ;
- procedure_declaration_stmt : 'PROCEDURE (' ( proc_interface )? ')'
+ procedure_declaration_stmt : 'PROCEDURE' '(' ( proc_interface )? ')'
                    ( ( ',' proc_attr_spec )*  '::' )? proc_decl_list ;
  proc_interface : interface_name
               | declaration_type_spec ;
  proc_attr_spec : access_spec
               | proc_language_binding_spec
-              | 'INTENT (' intent_spec ')'
+              | 'INTENT' '(' intent_spec ')'
               | 'OPTIONAL'
               | 'POINTER'
               | 'PROTECTED'
@@ -1192,11 +1192,11 @@
                    ( execution_part )?
                    ( internal_subprogram_part )?
                    end_function_stmt ;
- function_stmt : ( prefix )? 'FUNCTION' function_name '
-                  (' ( dummy_arg_name_list )? ')' ( suffix )? ;
+ function_stmt : ( prefix )? 'FUNCTION' function_name                   
+'(' ( dummy_arg_name_list )? ')' ( suffix )? ;
  dummy_arg_name : name ;
- suffix : proc_language_binding_spec ( 'RESULT (' result_name ')' )?
-              | 'RESULT (' result_name ')' ( proc_language_binding_spec )? ;
+ suffix : proc_language_binding_spec ( 'RESULT' '(' result_name ')' )?
+              | 'RESULT' '(' result_name ')' ( proc_language_binding_spec )? ;
  end_function_stmt : 'END' ( 'FUNCTION' ( function_name )? )? ;
  subroutine_subprogram : subroutine_stmt
                    ( specification_part )?
@@ -1213,12 +1213,12 @@
                    ( execution_part )?
                    ( internal_subprogram_part )?
                    end_mp_subprogram_stmt ;
- mp_subprogram_stmt : 'MODULE PROCEDURE' procedure_name ;
+ mp_subprogram_stmt : 'MODULE' 'PROCEDURE' procedure_name ;
  end_mp_subprogram_stmt : 'END' ('PROCEDURE' (procedure_name)?)? ;
  entry_stmt : 'ENTRY' entry_name ( '(' ( dummy_arg_list )? ')' ( suffix )? )? ;
  return_stmt : 'RETURN' ( scalar_int_expr )? ;
  contains_stmt : 'CONTAINS' ;
- stmt_function_stmt : function_name '(' ( dummy_arg_name_list )? ') =' scalar_expr ;
+ stmt_function_stmt : function_name '(' ( dummy_arg_name_list )? ')' '=' scalar_expr ;
 
 
 scalar_int_constant_expr : int_constant_expr ;

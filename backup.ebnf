@@ -380,8 +380,8 @@ R777 <i>array-constructor</i> <b>is</b> (/ <i>ac-spec</i> /)
               <b>or</b> <i>lbracket</i> <i>ac-spec</i> <i>rbracket</i>
 R778 <i>ac-spec</i> <b>is</b> <i>type-spec</i> ::
               <b>or</b> [<i>type-spec</i> ::] <i>ac-value-list</i>
-R779 <i>lbracket</i> <b>is</b> [
-R780 <i>rbracket</i> <b>is</b> ]
+R779 <i>lbracket</i> <b>is</b> '['
+R780 <i>rbracket</i> <b>is</b> ']'
 R781 <i>ac-value</i> <b>is</b> <i>expr</i>
               <b>or</b> <i>ac-implied-do</i>
 R782 <i>ac-implied-do</i> <b>is</b> ( <i>ac-value-list</i> , <i>ac-implied-do-control</i> )

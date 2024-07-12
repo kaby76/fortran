@@ -29,12 +29,12 @@ fi
 
 echo "Extracting rules from text $to."
 cat $to | ./extraction/bin/Debug/net8.0/RuleExtraction.exe > ebnf.ebnf
-cp ebnf.ebnf backup.ebnf
 
 echo "Change lines with brackets in order to make grammar and parse work."
 sed -i "s%R779 <i>lbracket</i> <b>is</b> \[%R779 <i>lbracket</i> <b>is</b> '['%" ebnf.ebnf
 sed -i "s%R780 <i>rbracket</i> <b>is</b> \]%R780 <i>rbracket</i> <b>is</b> ']'%" ebnf.ebnf
 dos2unix ebnf.ebnf
+cp ebnf.ebnf backup.ebnf
 
 echo "Adding rules that spec does not define."
 trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
@@ -239,7 +239,7 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 		delete //zero_or_more/DOT_DOT_DOT;
 		replace //zero_or_more/LEFT_SQUARE_BRACKET "(";
 		replace //zero_or_more/RIGHT_SQUARE_BRACKET ")*";
-		move //any/@WS[1] ..;
+		move //any/(@WS | @NL) ..;
 		insert before //any "'\''";
 		insert after //any "'\''";
 		insert after //rule_ " ;";' | \
