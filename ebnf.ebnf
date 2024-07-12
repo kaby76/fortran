@@ -79,8 +79,9 @@
                    ( internal_subprogram_part )?
                    end_mp_subprogram_stmt ;
  other_specification_stmt : access_stmt
-              | allocatable_stmt
-              | asynchronous_stmt
+              | allocatable_stmt '
+               <b>J3/23-007r1 39
+              or</b>' asynchronous_stmt
               | bind_stmt
               | codimension_stmt
               | contiguous_stmt
@@ -88,7 +89,7 @@
               | external_stmt
               | intent_stmt
               | intrinsic_stmt
-              | <i>namelist-stmt</i>
+              | namelist_stmt
               | optional_stmt
               | pointer_stmt
               | protected_stmt
@@ -117,7 +118,7 @@
               | close_stmt
               | continue_stmt
               | cycle_stmt
-              | <i>deallocate-stmt</i>
+              | deallocate_stmt
               | endfile_stmt
               | error_stop_stmt
               | event_post_stmt
@@ -133,22 +134,7 @@
               | notify_wait_stmt
               | nullify_stmt
               | open_stmt
-              | pointer_assignment_stmt
-              | print_stmt
-              | read_stmt
-              | return_stmt
-              | rewind_stmt
-              | stop_stmt
-              | sync_all_stmt
-              | sync_images_stmt
-              | sync_memory_stmt
-              | sync_team_stmt
-              | unlock_stmt
-              | wait_stmt
-              | where_stmt
-              | write_stmt
-              | computed_goto_stmt
-              | forall_stmt ;
+              | pointer_assignment_stmt ;
  keyword : name ;
  alphanumeric_character : letter
               | digit
@@ -162,7 +148,7 @@
               | complex_literal_constant
               | logical_literal_constant
               | char_literal_constant
-              | <i>boz-literal-constant</i> ;
+              | boz_literal_constant ;
  named_constant : name ;
  int_constant : constant ;
  intrinsic_operator : power_op
@@ -191,7 +177,8 @@
               | '<'
               | '<='
               | '>'
-              | '>=R1019' ; not_op : '.NOT.' ;
+              | '>=' ;
+ not_op : '.NOT.' ;
  and_op : '.AND.' ;
  or_op : '.OR.' ;
  equiv_op : '.EQV.'
@@ -231,7 +218,8 @@
  signed_int_literal_constant : ( sign )? int_literal_constant ;
  int_literal_constant : digit_string ( '_' kind_param )? ;
  kind_param : digit_string
-              | scalar_int_constant_name ;
+              | scalar_int_constant_name '
+               <b>J3/23-007r1 65</b>' ;
  signed_digit_string : ( sign )? digit_string ;
  digit_string : digit ( digit )*  ;
  sign : '+'
@@ -282,9 +270,11 @@
               | sequence_stmt ;
  end_type_stmt : 'END TYPE' ( type_name )? ;
  sequence_stmt : 'SEQUENCE' ;
- type_param_def_stmt : integer_type_spec',' <i>type-param-attr-spec</i> '::'
+ type_param_def_stmt : integer_type_spec',' type_param_attr_spec '::'
                   type_param_decl_list ;
  type_param_decl : type_param_name ( '=' scalar_int_constant_expr )? ;
+ type_param_attr_spec : 'KIND'
+              | 'LEN' ;
  component_part : ( component_def_stmt )*  ;
  component_def_stmt : data_component_def_stmt
               | proc_component_def_stmt ;
@@ -314,8 +304,11 @@
  private_components_stmt : 'PRIVATE' ;
  type_bound_procedure_part : contains_stmt
                    ( binding_private_stmt )?
-                   ( <i>type-bound-proc-binding</i> )*  ;
+                   ( type_bound_proc_binding )*  ;
  binding_private_stmt : 'PRIVATE' ;
+ type_bound_proc_binding : type_bound_procedure_stmt
+              | type_bound_generic_stmt
+              | final_procedure_stmt ;
  type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' binding_attr_list )? '::' )? <i>type-bound-proc-decl-list</i>
               | 'PROCEDURE ('interface_name'),' binding_attr_list '::' <i>binding-name-list</i> ;
  type_bound_proc_decl : binding_name ( '=<i>> procedure-name</i>' )? ;
@@ -328,7 +321,9 @@
  final_procedure_stmt : 'FINAL' ( '::' )? <i>final-subroutine-name-list</i> ;
  derived_type_spec : type_name ( '(' <i>type-param-spec-list</i> ')' )? ;
  type_param_spec : ( keyword '=' )? type_param_value ;
- structure_constructor : derived_type_spec '(' ( <i>component-spec-list</i> )? ')R757' ; component_spec : ( keyword '=' )? component_data_source ;
+ structure_constructor : derived_type_spec '(' ( <i>component-spec-list</i> )? ')
+                <b>J3/23-007r1 91</b>' ;
+ component_spec : ( keyword '=' )? component_data_source ;
  component_data_source : expr
               | data_target
               | proc_target ;
@@ -351,6 +346,9 @@
  end_enumeration_type_stmt : 'END ENUMERATION TYPE' ( <i>enumeration-type-name</i> )? ;
  enumeration_type_spec : <i>enumeration-type-name</i> ;
  enumeration_constructor : enumeration_type_spec '(' scalar_int_expr ')' ;
+ boz_literal_constant : binary_constant
+              | octal_constant
+              | hex_constant ;
  binary_constant : 'B' ' digit [ digit ] ... '
               | 'B' " digit [ digit ] ... " ;
  octal_constant : 'O' ' digit [ digit ] ... '
@@ -369,7 +367,9 @@
  ac_spec : type_spec '::'
               | (type_spec '::')? <i>ac-value-list</i> ;
  lbracket : '[' ;
- rbracket : ']''R781' ; ac_value : expr
+ rbracket : ']' '
+               <b>J3/23-007r1 99</b>' ;
+ ac_value : expr
               | ac_implied_do ;
  ac_implied_do : '(' <i>ac-value-list</i> ',' ac_implied_do_control ')' ;
  ac_implied_do_control : ( integer_type_spec '::' )? ac_do_variable '=' scalar_int_expr ','
@@ -431,11 +431,12 @@
               | explicit_bounds_expr ':' upper_bound ;
  explicit_bounds_expr : int_expr ;
  assumed_shape_spec : ( lower_bound )? ':' ;
- assumed_shape_bounds_spec : explicit_bounds_expr ':If the rank is not specified by a' rank_clause ',it is equal to the number of colons in the' <i>assumed-shape-spec-list</i>',' ;
+ assumed_shape_bounds_spec : explicit_bounds_expr ':' ;
  deferred_shape_spec : ':' ;
  assumed_implied_spec : ( lower_bound ':' )? '*' ;
  assumed_size_spec : explicit_shape_spec_list',' assumed_implied_spec ;
- implied_shape_or_assumed_size_spec : assumed_implied_spec ;
+ implied_shape_or_assumed_size_spec : assumed_implied_spec '
+               <b>J3/23-007r1 111</b>' ;
  implied_shape_spec : assumed_implied_spec',' <i>assumed-implied-spec-list</i> ;
  assumed_rank_spec : '..' ;
  intent_spec : 'IN'
@@ -511,6 +512,10 @@
               | 'IMPORT, ONLY :' <i>import-name-list</i>
               | 'IMPORT, NONE'
               | 'IMPORT, ALL' ;
+ namelist_stmt : 'NAMELIST
+                   /' namelist_group_name '/' <i>namelist-group-object-list</i>
+                   ( ( ',' )? '/' namelist_group_name '/'
+                  <i>namelist-group-object-list</i> )*  ;
  namelist_group_object : variable_name ;
  equivalence_stmt : 'EQUIVALENCE' <i>equivalence-set-list</i> ;
  equivalence_set : '(' equivalence_object ',' <i>equivalence-object-list</i> ')' ;
@@ -544,7 +549,7 @@
               | <i>scalar-constant</i> ;
  substring_range : ( scalar_int_expr )? ':' ( scalar_int_expr )? ;
  data_ref : part_ref ( '%' part_ref )*  ;
- part_ref : <i>part-name</i> ( '(' section_subscript_list ')' )? ( <i>image-selector</i> )? ;
+ part_ref : <i>part-name</i> ( '(' section_subscript_list ')' )? ( image_selector )? ;
  structure_component : data_ref ;
  coindexed_named_object : data_ref ;
  complex_part_designator : designator '% RE'
@@ -559,11 +564,13 @@
               | multiple_subscript
               | subscript_triplet
               | multiple_subscript_triplet
-              | vector_subscript ;
+              | vector_subscript '
+               <b>J3/23-007r1 139</b>' ;
  subscript_triplet : ( subscript )? ':' ( subscript )? ( ':' stride )? ;
  multiple_subscript_triplet : '@' ( int_expr )? ':' ( int_expr )? ( ':' int_expr )? ;
  stride : scalar_int_expr ;
  vector_subscript : int_expr ;
+ image_selector : '<i>lbracket cosubscript-list</i>' ( ',' <i>image-selector-spec-list</i> )? rbracket ;
  cosubscript : scalar_int_expr ;
  image_selector_spec : 'NOTIFY =' notify_variable
               | 'STAT =' stat_variable
@@ -594,6 +601,7 @@
  pointer_object : variable_name
               | structure_component
               | proc_pointer_name ;
+ deallocate_stmt : 'DEALLOCATE (' <i>allocate-object-list</i> ( ',' <i>dealloc-opt-list</i> )? ')' ;
  dealloc_opt : 'STAT =' stat_variable
               | 'ERRMSG =' errmsg_variable ;
  stat_variable : scalar_int_variable ;
@@ -616,7 +624,8 @@
  level_2_expr : ( ( level_2_expr )? add_op )? add_operand ;
  power_op : '**' ;
  mult_op : '*'
-              | '/R1010' ; add_op : '+'
+              | '/' ;
+ add_op : '+'
               | '-' ;
  level_3_expr : ( '<i>level-3-expr concat-op</i>' )? level_2_expr ;
  concat_op : ; //
@@ -632,7 +641,8 @@
               | '<'
               | '<='
               | '>'
-              | '>=<b>NOTE</b>' ;
+              | '>=
+                <b>J3/23-007r1 155' ;
  and_operand : ( not_op )? level_4_expr ;
  or_operand : ( '<i>or-operand and-op</i>' )? and_operand ;
  equiv_operand : ( '<i>equiv-operand or-op</i>' )? or_operand ;
@@ -647,6 +657,7 @@
  logical_expr : expr ;
  default_char_expr : expr ;
  int_expr : expr ;
+ numeric_expr : expr ;
  specification_expr : scalar_int_expr ;
  constant_expr : expr ;
  default_char_constant_expr : default_char_expr ;
@@ -713,7 +724,8 @@
                     ( block_specification_part )? '
                   <i>block
                    end-block-stmt</i>' ;
- block_stmt : ( <i>block-construct-name</i> ':' )? 'BLOCKR1109' ; block_specification_part : ( use_stmt )* 
+ block_stmt : ( <i>block-construct-name</i> ':' )? 'BLOCK' ;
+ block_specification_part : ( use_stmt )* 
                   ( import_stmt )* 
                   ( declaration_construct )*  ;
  end_block_stmt : 'END BLOCK' ( <i>block-construct-name</i> )? ;
@@ -745,7 +757,8 @@
  concurrent_header : '(' ( integer_type_spec '::' )? <i>concurrent-control-list</i> ( ',' <i>scalar-mask-expr</i> )? ')' ;
  concurrent_control : <i>index-name</i> '=' concurrent_limit ':' concurrent_limit ( ':' concurrent_step )? ;
  concurrent_limit : scalar_int_expr ;
- concurrent_step : scalar_int_expr ;
+ concurrent_step : scalar_int_expr '
+               <b>J3/23-007r1 195</b>' ;
  concurrent_locality : ( locality_spec )* ;
  locality_spec : 'LOCAL (' <i>variable-name-list</i> ')'
               | 'LOCAL_INIT (' <i>variable-name-list</i> ')'
@@ -763,8 +776,7 @@
  end_do : end_do_stmt
               | continue_stmt ;
  end_do_stmt : 'END DO' ( <i>do-construct-name</i> )? ;
- cycle_stmt : 'CYCLE' ( <i>do-construct-name</i> )? 'C1138If a' <i>do-construct-name</i> 'appears on a CYCLE statement, the CYCLE statement shall be within that'
-   do_construct ';otherwise, it shall be within at least one' do_construct'.' ;
+ cycle_stmt : 'CYCLE' ( <i>do-construct-name</i> )? ;
  if_construct : '<i>if-then-stmt
                      block</i>'
                    ( '<i>else-if-stmt
@@ -801,10 +813,8 @@
  select_rank_case_stmt : 'RANK (' scalar_int_constant_expr ')' ( select_construct_name )?
               | 'RANK ( * )' ( select_construct_name )?
               | 'RANK DEFAULT' ( select_construct_name )? ;
- end_select_rank_stmt : 'END SELECT' ( select_construct_name )? 'C1161If the' select_rank_stmt 'of a' select_rank_construct 'specifies a' select_construct_name ',the corresponding'
-   end_select_rank_stmt 'shall specify the same' select_construct_name '.If the' select_rank_stmt 'of a <i>select-
-   rank-construct</i> does not specify a' select_construct_name ',the corresponding' end_select_rank_stmt 'shall not
-   specify a' select_construct_name'.' ;
+ end_select_rank_stmt : 'END SELECT' ( select_construct_name )? '
+               <b>J3/23-007r1 207</b>' ;
  select_type_construct : select_type_stmt
                    ( '<i>type-guard-stmt
                      block</i>' )* 
@@ -841,11 +851,14 @@
               | sync_stat ;
  until_spec : 'UNTIL_COUNT =' scalar_int_expr ;
  form_team_stmt : 'FORM TEAM (' team_number',' team_variable
-                   ( ',' form_team_spec_list )? ')R1180' ; team_number : scalar_int_expr ;
+                   ( ',' form_team_spec_list )? ')
+                <b>J3/23-007r1 221</b>' ;
+ team_number : scalar_int_expr ;
  team_variable : scalar_variable ;
  form_team_spec : 'NEW_INDEX =' scalar_int_expr
               | sync_stat ;
- lock_stmt : 'LOCK (' lock_variable ( ',' lock_stat_list )? ')R1184' ; lock_stat : 'ACQUIRED_LOCK =' scalar_logical_variable
+ lock_stmt : 'LOCK (' lock_variable ( ',' lock_stat_list )? ')' ;
+ lock_stat : 'ACQUIRED_LOCK =' scalar_logical_variable
               | sync_stat ;
  unlock_stmt : 'UNLOCK (' lock_variable ( ',' sync_stat_list )? ')' ;
  lock_variable : scalar_variable ;
@@ -853,8 +866,10 @@
               | '*'
               | internal_file_variable ;
  file_unit_number : scalar_int_expr ;
- internal_file_variable : char_variable ;
- open_stmt : 'OPEN (' connect_spec_list ')R1205' ; connect_spec : ( 'UNIT =' )? file_unit_number
+ internal_file_variable : char_variable '
+               <b>J3/23-007r1 233</b>' ;
+ open_stmt : 'OPEN (' connect_spec_list ')' ;
+ connect_spec : ( 'UNIT =' )? file_unit_number
               | 'ACCESS =' scalar_default_char_expr
               | 'ACTION =' scalar_default_char_expr
               | 'ASYNCHRONOUS =' scalar_default_char_expr
@@ -905,9 +920,7 @@
               | 'PAD =' scalar_default_char_expr
               | 'POS =' scalar_int_expr
               | 'REC =' scalar_int_expr
-              | 'ROUND =' scalar_default_char_expr
-              | 'SIGN =' scalar_default_char_expr
-              | 'SIZE =' scalar_int_variable ;
+              | 'ROUND =' scalar_default_char_expr ;
  id_variable : scalar_int_variable ;
  format : default_char_expr
               | label
@@ -925,12 +938,7 @@
               | 'CLASS(' derived_type_spec ')' ;
  wait_stmt : 'WAIT ('wait_spec_list')' ;
  wait_spec : ( 'UNIT =' )? file_unit_number
-              | 'END =' label
-              | 'EOR =' label
-              | 'ERR =' label
-              | 'ID =' scalar_int_expr
-              | 'IOMSG =' iomsg_variable
-              | 'IOSTAT =' stat_variable ;
+              | 'END =' label ;
  backspace_stmt : 'BACKSPACE' file_unit_number
               | 'BACKSPACE (' position_spec_list ')' ;
  endfile_stmt : 'ENDFILE' file_unit_number
@@ -976,17 +984,7 @@
               | 'PAD =' scalar_default_char_variable
               | 'PENDING =' scalar_logical_variable
               | 'POS =' scalar_int_variable
-              | 'POSITION =' scalar_default_char_variable
-              | 'READ =' scalar_default_char_variable
-              | 'READWRITE =' scalar_default_char_variable
-              | 'RECL =' scalar_int_variable
-              | 'ROUND =' scalar_default_char_variable
-              | 'SEQUENTIAL =' scalar_default_char_variable
-              | 'SIGN =' scalar_default_char_variable
-              | 'SIZE =' scalar_int_variable
-              | 'STREAM =' scalar_default_char_variable
-              | 'UNFORMATTED =' scalar_default_char_variable
-              | 'WRITE =' scalar_default_char_variable ;
+              | 'POSITION =' scalar_default_char_variable ;
  format_stmt : 'FORMAT' format_specification ;
  format_specification : '(' ( format_items )? ')'
               | '(' ( format_items',' )? unlimited_format_item ')' ;
@@ -999,7 +997,9 @@
  r : int_literal_constant ;
  data_edit_desc : 'I' w ( '.' m )?
               | 'B' w ( '.' m )?
-              | 'O' w ( '.' m )?| 'Z' w ( '.' m )?
+              | 'O' w ( '.' m )? '
+               <b>J3/23-007r1 275
+              or</b> Z' w ( '.' m )?
               | 'F' w '.' d
               | 'E' w '.' d ( 'E' e )?
               | 'EN' w '.' d ( 'E' e )?
@@ -1056,6 +1056,10 @@
                    end_program_stmt ;
  program_stmt : 'PROGRAM' program_name ;
  end_program_stmt : 'END' ( 'PROGRAM' ( program_name )? )? ;
+ module : module_stmt
+                   ( specification_part )?
+                   ( module_subprogram_part )?
+                   end_module_stmt ;
  module_stmt : 'MODULE' module_name ;
  end_module_stmt : 'END' ( 'MODULE' ( module_name )? )? ;
  module_subprogram_part : contains_stmt
@@ -1122,8 +1126,9 @@
  proc_interface : interface_name
               | declaration_type_spec ;
  proc_attr_spec : access_spec
-              | proc_language_binding_spec
-              | 'INTENT (' intent_spec ')'
+              | proc_language_binding_spec '
+               <b>J3/23-007r1 317
+              or</b> INTENT (' intent_spec ')'
               | 'OPTIONAL'
               | 'POINTER'
               | 'PROTECTED'
@@ -1191,8 +1196,8 @@
                    end_mp_subprogram_stmt ;
  mp_subprogram_stmt : 'MODULE PROCEDURE' procedure_name ;
  end_mp_subprogram_stmt : 'END' ('PROCEDURE' (procedure_name)?)? ;
- entry_stmt : 'ENTRY' entry_name ( '(' ( dummy_arg_list )? ')' ( suffix )? )? 'C1579(R1544) If RESULT appears, the' entry_name 'shall not appear in any specification or type declaration statement in the
-    scoping unit of the function subprogram.' ;
+ entry_stmt : 'ENTRY' entry_name ( '(' ( dummy_arg_list )? ')' ( suffix )? )? '
+               <b>J3/23-007r1 341</b>' ;
  return_stmt : 'RETURN' ( scalar_int_expr )? ;
  contains_stmt : 'CONTAINS' ;
  stmt_function_stmt : function_name '(' ( dummy_arg_name_list )? ') =' scalar_expr ;
@@ -1314,7 +1319,7 @@ construct_name : name ;
 
 scalar_int_constant_expr : int_constant_expr ;
 
-type_attr_spec_list : <i>type-param-attr-spec</i> ( ',' <i>type-param-attr-spec</i> )*  ;
+type_attr_spec_list : type_param_attr_spec ( ',' type_param_attr_spec )*  ;
 
 type_param_name_list : type_param_name ( ',' type_param_name )*  ;
 

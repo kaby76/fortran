@@ -11,7 +11,7 @@ to="${@%%.*}".txt
 echo $to
 if [ ! -f $to ]
 then
-	tritext.exe --filter 'l1<50;l2>780;l2<68' --markup $@ > $to
+	tritext.exe --filter 's0<50 || e1>780 || e1<68' --markup $@ > $to
 	if [ $? -ne 0 ]
 	then
 		echo problem.
