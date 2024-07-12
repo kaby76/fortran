@@ -238,8 +238,8 @@
  sign : '+'
               | '-' ;
  signed_real_literal_constant : ( sign )? real_literal_constant ;
- real_literal_constant : significand ( '<i>exponent-letter exponent</i>' )? ( '_' kind_param )?
-              | '<i>digit-string exponent-letter exponent</i>' ( '_' kind_param )? ;
+ real_literal_constant : significand ( exponent_letter exponent )? ( '_' kind_param )?
+              | digit_string exponent_letter exponent ( '_' kind_param )? ;
  significand : digit_string '.' ( digit_string )?
               | '.' digit_string ;
  exponent_letter : 'E'
@@ -295,12 +295,12 @@
                   component_decl_list ;
  component_attr_spec : access_spec
               | 'ALLOCATABLE'
-              | 'CODIMENSION <i>lbracket coarray-spec rbracket</i>'
+              | 'CODIMENSION' lbracket coarray_spec rbracket
               | 'CONTIGUOUS'
               | 'DIMENSION (' component_array_spec ')'
               | 'POINTER' ;
  component_decl : component_name ( '(' component_array_spec ')' )?
-                   ( '<i>lbracket coarray-spec rbracket</i>' )?
+                   ( lbracket coarray_spec rbracket )?
                    ( '*' char_length )? ( component_initialization )? ;
  component_array_spec : explicit_shape_spec_list
               | deferred_shape_spec_list ;
@@ -311,8 +311,8 @@
               | 'PASS' ( '('arg_name')' )?
               | 'POINTER' ;
  component_initialization : '=' constant_expr
-              | '=<i>> null-init</i>'
-              | '=<i>> initial-data-target</i>' ;
+              | '=>' null_init
+              | '=>' initial_data_target ;
  initial_data_target : designator ;
  private_components_stmt : 'PRIVATE' ;
  type_bound_procedure_part : contains_stmt
@@ -324,8 +324,8 @@
               | final_procedure_stmt ;
  type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' binding_attr_list )? '::' )? <i>type-bound-proc-decl-list</i>
               | 'PROCEDURE ('interface_name'),' binding_attr_list '::' <i>binding-name-list</i> ;
- type_bound_proc_decl : binding_name ( '=<i>> procedure-name</i>' )? ;
- type_bound_generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=<i>> binding-name-list</i>' ;
+ type_bound_proc_decl : binding_name ( '=>' procedure_name )? ;
+ type_bound_generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' <i>binding-name-list</i> ;
  binding_attr : access_spec
               | 'DEFERRED'
               | 'NON_OVERRIDABLE'
@@ -375,7 +375,7 @@
               | 'E'
               | 'F' ;
  array_constructor : '(/' ac_spec '/)'
-              | '<i>lbracket ac-spec rbracket</i>' ;
+              | lbracket ac_spec rbracket ;
  ac_spec : type_spec '::'
               | (type_spec '::')? <i>ac-value-list</i> ;
  lbracket : '[' ;
@@ -390,7 +390,7 @@
  attr_spec : access_spec
               | 'ALLOCATABLE'
               | 'ASYNCHRONOUS'
-              | 'CODIMENSION <i>lbracket coarray-spec rbracket</i>'
+              | 'CODIMENSION' lbracket coarray_spec rbracket
               | 'CONTIGUOUS'
               | 'DIMENSION (' array_spec ')'
               | 'EXTERNAL'
@@ -407,13 +407,13 @@
               | 'VALUE'
               | 'VOLATILE' ;
  entity_decl : object_name ( '(' array_spec ')' )?
-                   ( '<i>lbracket coarray-spec rbracket</i>' )?
+                   ( lbracket coarray_spec rbracket )?
                    ( '*' char_length )? ( initialization )?
               | function_name ( '*' char_length )? ;
  object_name : name ;
  initialization : '=' constant_expr
-              | '=<i>> null-init</i>'
-              | '=<i>> initial-data-target</i>' ;
+              | '=>' null_init
+              | '=>' initial_data_target ;
  null_init : function_reference ;
  access_spec : 'PUBLIC'
               | 'PRIVATE' ;
@@ -458,13 +458,13 @@
               | generic_spec ;
  allocatable_stmt : 'ALLOCATABLE' ( '::' )? <i>allocatable-decl-list</i> ;
  allocatable_decl : object_name ( '(' array_spec ')' )?
-                   ( '<i>lbracket coarray-spec rbracket</i>' )? ;
+                   ( lbracket coarray_spec rbracket )? ;
  asynchronous_stmt : 'ASYNCHRONOUS' ( '::' )? <i>object-name-list</i> ;
  bind_stmt : language_binding_spec ( '::' )? <i>bind-entity-list</i> ;
  bind_entity : <i>entity-name</i>
               | '/' <i>common-block-name</i> '/' ;
  codimension_stmt : 'CODIMENSION' ( '::' )? <i>codimension-decl-list</i> ;
- codimension_decl : '<i>coarray-name lbracket coarray-spec rbracket</i>' ;
+ codimension_decl : <i>coarray-name</i> lbracket coarray_spec rbracket ;
  contiguous_stmt : 'CONTIGUOUS' ( '::' )? <i>object-name-list</i> ;
  data_stmt : 'DATA' data_stmt_set ( ( ',' )? data_stmt_set )*  ;
  data_stmt_set : <i>data-stmt-object-list</i> '/' <i>data-stmt-value-list</i> '/' ;
@@ -509,7 +509,7 @@
  proc_pointer_name : name ;
  target_stmt : 'TARGET' ( '::' )? <i>target-decl-list</i> ;
  target_decl : object_name ( '(' array_spec ')' )?
-                   ( '<i>lbracket coarray-spec rbracket</i>' )? ;
+                   ( lbracket coarray_spec rbracket )? ;
  value_stmt : 'VALUE' ( '::' )? dummy_arg_name_list ;
  volatile_stmt : 'VOLATILE' ( '::' )? <i>object-name-list</i> ;
  implicit_stmt : 'IMPLICIT' <i>implicit-spec-list</i>
@@ -579,7 +579,7 @@
  multiple_subscript_triplet : '@' ( int_expr )? ':' ( int_expr )? ( ':' int_expr )? ;
  stride : scalar_int_expr ;
  vector_subscript : int_expr ;
- image_selector : '<i>lbracket cosubscript-list</i>' ( ',' <i>image-selector-spec-list</i> )? rbracket ;
+ image_selector : lbracket <i>cosubscript-list</i> ( ',' <i>image-selector-spec-list</i> )? rbracket ;
  cosubscript : scalar_int_expr ;
  image_selector_spec : 'NOTIFY =' notify_variable
               | 'STAT =' stat_variable
@@ -594,9 +594,9 @@
  errmsg_variable : scalar_default_char_variable ;
  source_expr : expr ;
  allocation : allocate_object ( '(' <i>allocate-shape-spec-list</i> ')' )?
-                   ( '<i>lbracket allocate-coarray-spec rbracket</i>' )?
+                   ( lbracket allocate_coarray_spec rbracket )?
               | '(' ( lower_bounds_expr ':' )? upper_bounds_expr ')'
-                   ( '<i>lbracket allocate-coarray-spec rbracket</i>' )? ;
+                   ( lbracket allocate_coarray_spec rbracket )? ;
  allocate_object : variable_name
               | structure_component ;
  allocate_shape_spec : ( lower_bound_expr ':' )? upper_bound_expr ;
@@ -628,17 +628,17 @@
  conditional_expr : '(' scalar_logical_expr '?' expr ( ':' scalar_logical_expr '?' expr )* ':' expr ')' ;
  level_1_expr : ( defined_unary_op )? primary ;
  defined_unary_op : '.' letter ( letter )*  '.' ;
- mult_operand : level_1_expr ( '<i>power-op mult-operand</i>' )? ;
- add_operand : ( '<i>add-operand mult-op</i>' )? mult_operand ;
+ mult_operand : level_1_expr ( power_op mult_operand )? ;
+ add_operand : ( add_operand mult_op )? mult_operand ;
  level_2_expr : ( ( level_2_expr )? add_op )? add_operand ;
  power_op : '**' ;
  mult_op : '*'
               | '/' ;
  add_op : '+'
               | '-' ;
- level_3_expr : ( '<i>level-3-expr concat-op</i>' )? level_2_expr ;
+ level_3_expr : ( level_3_expr concat_op )? level_2_expr ;
  concat_op : ; //
- level_4_expr : ( '<i>level-3-expr rel-op</i>' )? level_3_expr ;
+ level_4_expr : ( level_3_expr rel_op )? level_3_expr ;
  rel_op : '.EQ.'
               | '.NE.'
               | '.LT.'
@@ -652,15 +652,15 @@
               | '>'
               | '>=' ;
  and_operand : ( not_op )? level_4_expr ;
- or_operand : ( '<i>or-operand and-op</i>' )? and_operand ;
- equiv_operand : ( '<i>equiv-operand or-op</i>' )? or_operand ;
- level_5_expr : ( '<i>level-5-expr equiv-op</i>' )? equiv_operand ;
+ or_operand : ( or_operand and_op )? and_operand ;
+ equiv_operand : ( equiv_operand or_op )? or_operand ;
+ level_5_expr : ( level_5_expr equiv_op )? equiv_operand ;
  not_op : '.NOT.' ;
  and_op : '.AND.' ;
  or_op : '.OR.' ;
  equiv_op : '.EQV.'
               | '.NEQV.' ;
- expr : ( '<i>expr defined-binary-op</i>' )? level_5_expr ;
+ expr : ( expr defined_binary_op )? level_5_expr ;
  defined_binary_op : '.' letter ( letter )*  '.' ;
  logical_expr : expr ;
  default_char_expr : expr ;
@@ -671,12 +671,12 @@
  default_char_constant_expr : default_char_expr ;
  int_constant_expr : int_expr ;
  assignment_stmt : variable '=' expr ;
- pointer_assignment_stmt : data_pointer_object ( '(' <i>bounds-spec-list</i> ')' )? '=<i>> data-target</i>'
-              | data_pointer_object '(' lower_bounds_expr ': ) =<i>> data-target</i>'
-              | data_pointer_object '(' <i>bounds-remapping-list</i> ') =<i>> data-target</i>'
+ pointer_assignment_stmt : data_pointer_object ( '(' <i>bounds-spec-list</i> ')' )? '=>' data_target
+              | data_pointer_object '(' lower_bounds_expr ': ) =>' data_target
+              | data_pointer_object '(' <i>bounds-remapping-list</i> ') =>' data_target
               | data_pointer_object '(' lower_bounds_expr ':' upper_bounds_expr ')
-                   =<i>> data-target</i>'
-              | proc_pointer_object '=<i>> proc-target</i>' ;
+                   =>' data_target
+              | proc_pointer_object '=>' proc_target ;
  data_pointer_object : variable_name
               | scalar_variable '%' <i>data-pointer-component-name</i> ;
  bounds_spec : lower_bound_expr ':' ;
@@ -717,14 +717,14 @@
  forall_assignment_stmt : assignment_stmt
               | pointer_assignment_stmt ;
  end_forall_stmt : 'END FORALL' (<i>forall-construct-name</i> )? ;
- forall_stmt : 'FORALL <i>concurrent-header forall-assignment-stmt</i>' ;
+ forall_stmt : 'FORALL' concurrent_header forall_assignment_stmt ;
  block : ( execution_part_construct )*  ;
  associate_construct : '<i>associate-stmt
                    block
                    end-associate-stmt</i>' ;
  associate_stmt : ( associate_construct_name ':' )? 'ASSOCIATE
                    ('<i>association-list</i> ')' ;
- association : associate_name '=<i>> selector</i>' ;
+ association : associate_name '=>' selector ;
  selector : expr
               | variable ;
  end_associate_stmt : 'END ASSOCIATE' ( associate_construct_name )? ;
@@ -742,7 +742,7 @@
                    end-change-team-stmt</i>' ;
  change_team_stmt : ( <i>team-construct-name</i> ':' )? 'CHANGE TEAM (' team_value
                    ( ',' <i>coarray-association-list</i> )? ( ',' sync_stat_list )? ')' ;
- coarray_association : codimension_decl '=<i>> selector</i>' ;
+ coarray_association : codimension_decl '=>' selector ;
  end_change_team_stmt : 'END TEAM' ( '(' ( sync_stat_list )? ')' )? ( <i>team-construct-name</i> )? ;
  team_value : scalar_expr ;
  critical_construct : '<i>critical-stmt
@@ -760,7 +760,7 @@
  loop_control : ( ',' )? do_variable '=' scalar_int_expr',' scalar_int_expr
                    ( ',' scalar_int_expr )?
               | ( ',' )? 'WHILE (' scalar_logical_expr ')'
-              | ( ',' )? 'CONCURRENT <i>concurrent-header concurrent-locality</i>' ;
+              | ( ',' )? 'CONCURRENT' concurrent_header concurrent_locality ;
  do_variable : <i>scalar-int-variable-name</i> ;
  concurrent_header : '(' ( integer_type_spec '::' )? <i>concurrent-control-list</i> ( ',' <i>scalar-mask-expr</i> )? ')' ;
  concurrent_control : <i>index-name</i> '=' concurrent_limit ':' concurrent_limit ( ':' concurrent_step )? ;
@@ -1092,7 +1092,7 @@
                    ONLY :' ( only_list )? ;
  module_nature : 'INTRINSIC'
               | 'NON_INTRINSIC' ;
- rename : local_name '=<i>> use-name</i>'
+ rename : local_name '=>' use_name
               | 'OPERATOR ('local_defined_operator ')=>
                    OPERATOR ('use_defined_operator')' ;
  only : generic_spec
@@ -1139,7 +1139,7 @@
               | 'READ (UNFORMATTED)'
               | 'WRITE (FORMATTED)'
               | 'WRITE (UNFORMATTED)' ;
- generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=<i>> specific-procedure-list</i>' ;
+ generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' specific_procedure_list ;
  external_stmt : 'EXTERNAL' ( '::' )? external_name_list ;
  procedure_declaration_stmt : 'PROCEDURE (' ( proc_interface )? ')'
                    ( ( ',' proc_attr_spec )*  '::' )? proc_decl_list ;
@@ -1152,7 +1152,7 @@
               | 'POINTER'
               | 'PROTECTED'
               | 'SAVE' ;
- proc_decl : procedure_entity_name ( '=<i>> proc-pointer-init</i>' )? ;
+ proc_decl : procedure_entity_name ( '=>' proc_pointer_init )? ;
  interface_name : name ;
  proc_pointer_init : null_init
               | initial_proc_target ;

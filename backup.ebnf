@@ -240,8 +240,8 @@ R711 <i>digit-string</i> <b>is</b> <i>digit</i> [ <i>digit</i> ] ...
 R712 <i>sign</i> <b>is</b> +
               <b>or</b> -
 R713 <i>signed-real-literal-constant</i> <b>is</b> [ <i>sign</i> ] <i>real-literal-constant</i>
-R714 <i>real-literal-constant</i> <b>is</b> <i>significand</i> [ <i>exponent-letter exponent</i> ] [ _ <i>kind-param</i> ]
-              <b>or</b> <i>digit-string exponent-letter exponent</i> [ _ <i>kind-param</i> ]
+R714 <i>real-literal-constant</i> <b>is</b> <i>significand</i> [ <i>exponent-letter</i> <i>exponent</i> ] [ _ <i>kind-param</i> ]
+              <b>or</b> <i>digit-string</i> <i>exponent-letter</i> <i>exponent</i> [ _ <i>kind-param</i> ]
 R715 <i>significand</i> <b>is</b> <i>digit-string</i> . [ <i>digit-string</i> ]
               <b>or</b> . <i>digit-string</i>
 R716 <i>exponent-letter</i> <b>is</b> E
@@ -297,12 +297,12 @@ R737 <i>data-component-def-stmt</i> <b>is</b> <i>declaration-type-spec</i> [ [ ,
                   <i>component-decl-list</i>
 R738 <i>component-attr-spec</i> <b>is</b> <i>access-spec</i>
               <b>or</b> ALLOCATABLE
-              <b>or</b> CODIMENSION <i>lbracket coarray-spec rbracket</i>
+              <b>or</b> CODIMENSION <i>lbracket</i> <i>coarray-spec</i> <i>rbracket</i>
               <b>or</b> CONTIGUOUS
               <b>or</b> DIMENSION ( <i>component-array-spec</i> )
               <b>or</b> POINTER
 R739 <i>component-decl</i> <b>is</b> <i>component-name</i> [ ( <i>component-array-spec</i> ) ]
-                   [ <i>lbracket coarray-spec rbracket</i> ]
+                   [ <i>lbracket</i> <i>coarray-spec</i> <i>rbracket</i> ]
                    [ * <i>char-length</i> ] [ <i>component-initialization</i> ]
 R740 <i>component-array-spec</i> <b>is</b> <i>explicit-shape-spec-list</i>
               <b>or</b> <i>deferred-shape-spec-list</i>
@@ -313,8 +313,8 @@ R742 <i>proc-component-attr-spec</i> <b>is</b> <i>access-spec</i>
               <b>or</b> PASS [ (<i>arg-name</i>) ]
               <b>or</b> POINTER
 R743 <i>component-initialization</i> <b>is</b> = <i>constant-expr</i>
-              <b>or</b> =<i>> null-init</i>
-              <b>or</b> =<i>> initial-data-target</i>
+              <b>or</b> =<i>></i> <i>null-init</i>
+              <b>or</b> =<i>></i> <i>initial-data-target</i>
 R744 <i>initial-data-target</i> <b>is</b> <i>designator</i>
 R745 <i>private-components-stmt</i> <b>is</b> PRIVATE
 R746 <i>type-bound-procedure-part</i> <b>is</b> <i>contains-stmt</i>
@@ -326,8 +326,8 @@ R748 <i>type-bound-proc-binding</i> <b>is</b> <i>type-bound-procedure-stmt</i>
               <b>or</b> <i>final-procedure-stmt</i>
 R749 <i>type-bound-procedure-stmt</i> <b>is</b> PROCEDURE [ [ , <i>binding-attr-list</i> ] :: ] <i>type-bound-proc-decl-list</i>
               <b>or</b> PROCEDURE (<i>interface-name</i>), <i>binding-attr-list</i> :: <i>binding-name-list</i>
-R750 <i>type-bound-proc-decl</i> <b>is</b> <i>binding-name</i> [ =<i>> procedure-name</i> ]
-R751 <i>type-bound-generic-stmt</i> <b>is</b> GENERIC [ , <i>access-spec</i> ] :: <i>generic-spec</i> =<i>> binding-name-list</i>
+R750 <i>type-bound-proc-decl</i> <b>is</b> <i>binding-name</i> [ =<i>></i> <i>procedure-name</i> ]
+R751 <i>type-bound-generic-stmt</i> <b>is</b> GENERIC [ , <i>access-spec</i> ] :: <i>generic-spec</i> =<i>></i> <i>binding-name-list</i>
 R752 <i>binding-attr</i> <b>is</b> <i>access-spec</i>
               <b>or</b> DEFERRED
               <b>or</b> NON_OVERRIDABLE
@@ -377,7 +377,7 @@ R776 <i>hex-digit</i> <b>is</b> <i>digit</i>
               <b>or</b> E
               <b>or</b> F
 R777 <i>array-constructor</i> <b>is</b> (/ <i>ac-spec</i> /)
-              <b>or</b> <i>lbracket ac-spec rbracket</i>
+              <b>or</b> <i>lbracket</i> <i>ac-spec</i> <i>rbracket</i>
 R778 <i>ac-spec</i> <b>is</b> <i>type-spec</i> ::
               <b>or</b> [<i>type-spec</i> ::] <i>ac-value-list</i>
 R779 <i>lbracket</i> <b>is</b> [
@@ -392,7 +392,7 @@ R801 <i>type-declaration-stmt</i> <b>is</b> <i>declaration-type-spec</i> [ [ , <
 R802 <i>attr-spec</i> <b>is</b> <i>access-spec</i>
               <b>or</b> ALLOCATABLE
               <b>or</b> ASYNCHRONOUS
-              <b>or</b> CODIMENSION <i>lbracket coarray-spec rbracket</i>
+              <b>or</b> CODIMENSION <i>lbracket</i> <i>coarray-spec</i> <i>rbracket</i>
               <b>or</b> CONTIGUOUS
               <b>or</b> DIMENSION ( <i>array-spec</i> )
               <b>or</b> EXTERNAL
@@ -409,13 +409,13 @@ R802 <i>attr-spec</i> <b>is</b> <i>access-spec</i>
               <b>or</b> VALUE
               <b>or</b> VOLATILE
 R803 <i>entity-decl</i> <b>is</b> <i>object-name</i> [ ( <i>array-spec</i> ) ]
-                   [ <i>lbracket coarray-spec rbracket</i> ]
+                   [ <i>lbracket</i> <i>coarray-spec</i> <i>rbracket</i> ]
                    [ * <i>char-length</i> ] [ <i>initialization</i> ]
               <b>or</b> <i>function-name</i> [ * <i>char-length</i> ]
 R804 <i>object-name</i> <b>is</b> <i>name</i>
 R805 <i>initialization</i> <b>is</b> = <i>constant-expr</i>
-              <b>or</b> =<i>> null-init</i>
-              <b>or</b> =<i>> initial-data-target</i>
+              <b>or</b> =<i>></i> <i>null-init</i>
+              <b>or</b> =<i>></i> <i>initial-data-target</i>
 R806 <i>null-init</i> <b>is</b> <i>function-reference</i>
 R807 <i>access-spec</i> <b>is</b> PUBLIC
               <b>or</b> PRIVATE
@@ -460,13 +460,13 @@ R831 <i>access-id</i> <b>is</b> <i>access-name</i>
               <b>or</b> <i>generic-spec</i>
 R832 <i>allocatable-stmt</i> <b>is</b> ALLOCATABLE [ :: ] <i>allocatable-decl-list</i>
 R833 <i>allocatable-decl</i> <b>is</b> <i>object-name</i> [ ( <i>array-spec</i> ) ]
-                   [ <i>lbracket coarray-spec rbracket</i> ]
+                   [ <i>lbracket</i> <i>coarray-spec</i> <i>rbracket</i> ]
 R834 <i>asynchronous-stmt</i> <b>is</b> ASYNCHRONOUS [ :: ] <i>object-name-list</i>
 R835 <i>bind-stmt</i> <b>is</b> <i>language-binding-spec</i> [ :: ] <i>bind-entity-list</i>
 R836 <i>bind-entity</i> <b>is</b> <i>entity-name</i>
               <b>or</b> / <i>common-block-name</i> /
 R837 <i>codimension-stmt</i> <b>is</b> CODIMENSION [ :: ] <i>codimension-decl-list</i>
-R838 <i>codimension-decl</i> <b>is</b> <i>coarray-name lbracket coarray-spec rbracket</i>
+R838 <i>codimension-decl</i> <b>is</b> <i>coarray-name</i> <i>lbracket</i> <i>coarray-spec</i> <i>rbracket</i>
 R839 <i>contiguous-stmt</i> <b>is</b> CONTIGUOUS [ :: ] <i>object-name-list</i>
 R840 <i>data-stmt</i> <b>is</b> DATA <i>data-stmt-set</i> [ [ , ] <i>data-stmt-set</i> ] ...
 R841 <i>data-stmt-set</i> <b>is</b> <i>data-stmt-object-list</i> / <i>data-stmt-value-list</i> /
@@ -511,7 +511,7 @@ R860 <i>saved-entity</i> <b>is</b> <i>object-name</i>
 R861 <i>proc-pointer-name</i> <b>is</b> <i>name</i>
 R862 <i>target-stmt</i> <b>is</b> TARGET [ :: ] <i>target-decl-list</i>
 R863 <i>target-decl</i> <b>is</b> <i>object-name</i> [ ( <i>array-spec</i> ) ]
-                   [ <i>lbracket coarray-spec rbracket</i> ]
+                   [ <i>lbracket</i> <i>coarray-spec</i> <i>rbracket</i> ]
 R864 <i>value-stmt</i> <b>is</b> VALUE [ :: ] <i>dummy-arg-name-list</i>
 R865 <i>volatile-stmt</i> <b>is</b> VOLATILE [ :: ] <i>object-name-list</i>
 R866 <i>implicit-stmt</i> <b>is</b> IMPLICIT <i>implicit-spec-list</i>
@@ -581,7 +581,7 @@ R922 <i>subscript-triplet</i> <b>is</b> [ <i>subscript</i> ] : [ <i>subscript</i
 R923 <i>multiple-subscript-triplet</i> <b>is</b> @ [ <i>int-expr</i> ] : [ <i>int-expr</i> ] [ : <i>int-expr</i> ]
 R924 <i>stride</i> <b>is</b> <i>scalar-int-expr</i>
 R925 <i>vector-subscript</i> <b>is</b> <i>int-expr</i>
-R926 <i>image-selector</i> <b>is</b> <i>lbracket cosubscript-list</i> [ , <i>image-selector-spec-list</i> ] <i>rbracket</i>
+R926 <i>image-selector</i> <b>is</b> <i>lbracket</i> <i>cosubscript-list</i> [ , <i>image-selector-spec-list</i> ] <i>rbracket</i>
 R927 <i>cosubscript</i> <b>is</b> <i>scalar-int-expr</i>
 R928 <i>image-selector-spec</i> <b>is</b> NOTIFY = <i>notify-variable</i>
               <b>or</b> STAT = <i>stat-variable</i>
@@ -596,9 +596,9 @@ R930 <i>alloc-opt</i> <b>is</b> ERRMSG = <i>errmsg-variable</i>
 R931 <i>errmsg-variable</i> <b>is</b> <i>scalar-default-char-variable</i>
 R932 <i>source-expr</i> <b>is</b> <i>expr</i>
 R933 <i>allocation</i> <b>is</b> <i>allocate-object</i> [ ( <i>allocate-shape-spec-list</i> ) ]
-                   [ <i>lbracket allocate-coarray-spec rbracket</i> ]
+                   [ <i>lbracket</i> <i>allocate-coarray-spec</i> <i>rbracket</i> ]
               <b>or</b> ( [ <i>lower-bounds-expr</i> : ] <i>upper-bounds-expr</i> )
-                   [ <i>lbracket allocate-coarray-spec rbracket</i> ]
+                   [ <i>lbracket</i> <i>allocate-coarray-spec</i> <i>rbracket</i> ]
 R934 <i>allocate-object</i> <b>is</b> <i>variable-name</i>
               <b>or</b> <i>structure-component</i>
 R935 <i>allocate-shape-spec</i> <b>is</b> [ <i>lower-bound-expr</i> : ] <i>upper-bound-expr</i>
@@ -630,17 +630,17 @@ R1001 <i>primary</i> <b>is</b> <i>literal-constant</i>
 R1002 <i>conditional-expr</i> <b>is</b> ( <i>scalar-logical-expr</i> ? <i>expr</i> [ : <i>scalar-logical-expr</i> ? <i>expr</i> ]... : <i>expr</i> )
 R1003 <i>level-1-expr</i> <b>is</b> [ <i>defined-unary-op</i> ] <i>primary</i>
 R1004 <i>defined-unary-op</i> <b>is</b> . <i>letter</i> [ <i>letter</i> ] ... .
-R1005 <i>mult-operand</i> <b>is</b> <i>level-1-expr</i> [ <i>power-op mult-operand</i> ]
-R1006 <i>add-operand</i> <b>is</b> [ <i>add-operand mult-op</i> ] <i>mult-operand</i>
+R1005 <i>mult-operand</i> <b>is</b> <i>level-1-expr</i> [ <i>power-op</i> <i>mult-operand</i> ]
+R1006 <i>add-operand</i> <b>is</b> [ <i>add-operand</i> <i>mult-op</i> ] <i>mult-operand</i>
 R1007 <i>level-2-expr</i> <b>is</b> [ [ <i>level-2-expr</i> ] <i>add-op</i> ] <i>add-operand</i>
 R1008 <i>power-op</i> <b>is</b> **
 R1009 <i>mult-op</i> <b>is</b> *
               <b>or</b> /
 R1010 <i>add-op</i> <b>is</b> +
               <b>or</b> -
-R1011 <i>level-3-expr</i> <b>is</b> [ <i>level-3-expr concat-op</i> ] <i>level-2-expr</i>
+R1011 <i>level-3-expr</i> <b>is</b> [ <i>level-3-expr</i> <i>concat-op</i> ] <i>level-2-expr</i>
 R1012 <i>concat-op</i> <b>is</b> //
-R1013 <i>level-4-expr</i> <b>is</b> [ <i>level-3-expr rel-op</i> ] <i>level-3-expr</i>
+R1013 <i>level-4-expr</i> <b>is</b> [ <i>level-3-expr</i> <i>rel-op</i> ] <i>level-3-expr</i>
 R1014 <i>rel-op</i> <b>is</b> .EQ.
               <b>or</b> .NE.
               <b>or</b> .LT.
@@ -654,15 +654,15 @@ R1014 <i>rel-op</i> <b>is</b> .EQ.
               <b>or</b> <i>></i>
               <b>or</b> <i>></i>=
 R1015 <i>and-operand</i> <b>is</b> [ <i>not-op</i> ] <i>level-4-expr</i>
-R1016 <i>or-operand</i> <b>is</b> [ <i>or-operand and-op</i> ] <i>and-operand</i>
-R1017 <i>equiv-operand</i> <b>is</b> [ <i>equiv-operand or-op</i> ] <i>or-operand</i>
-R1018 <i>level-5-expr</i> <b>is</b> [ <i>level-5-expr equiv-op</i> ] <i>equiv-operand</i>
+R1016 <i>or-operand</i> <b>is</b> [ <i>or-operand</i> <i>and-op</i> ] <i>and-operand</i>
+R1017 <i>equiv-operand</i> <b>is</b> [ <i>equiv-operand</i> <i>or-op</i> ] <i>or-operand</i>
+R1018 <i>level-5-expr</i> <b>is</b> [ <i>level-5-expr</i> <i>equiv-op</i> ] <i>equiv-operand</i>
 R1019 <i>not-op</i> <b>is</b> .NOT.
 R1020 <i>and-op</i> <b>is</b> .AND.
 R1021 <i>or-op</i> <b>is</b> .OR.
 R1022 <i>equiv-op</i> <b>is</b> .EQV.
               <b>or</b> .NEQV.
-R1023 <i>expr</i> <b>is</b> [ <i>expr defined-binary-op</i> ] <i>level-5-expr</i>
+R1023 <i>expr</i> <b>is</b> [ <i>expr</i> <i>defined-binary-op</i> ] <i>level-5-expr</i>
 R1024 <i>defined-binary-op</i> <b>is</b> . <i>letter</i> [ <i>letter</i> ] ... .
 R1025 <i>logical-expr</i> <b>is</b> <i>expr</i>
 R1026 <i>default-char-expr</i> <b>is</b> <i>expr</i>
@@ -673,12 +673,12 @@ R1030 <i>constant-expr</i> <b>is</b> <i>expr</i>
 R1031 <i>default-char-constant-expr</i> <b>is</b> <i>default-char-expr</i>
 R1032 <i>int-constant-expr</i> <b>is</b> <i>int-expr</i>
 R1033 <i>assignment-stmt</i> <b>is</b> <i>variable</i> = <i>expr</i>
-R1034 <i>pointer-assignment-stmt</i> <b>is</b> <i>data-pointer-object</i> [ ( <i>bounds-spec-list</i> ) ] =<i>> data-target</i>
-              <b>or</b> <i>data-pointer-object</i> ( <i>lower-bounds-expr</i> : ) =<i>> data-target</i>
-              <b>or</b> <i>data-pointer-object</i> ( <i>bounds-remapping-list</i> ) =<i>> data-target</i>
+R1034 <i>pointer-assignment-stmt</i> <b>is</b> <i>data-pointer-object</i> [ ( <i>bounds-spec-list</i> ) ] =<i>></i> <i>data-target</i>
+              <b>or</b> <i>data-pointer-object</i> ( <i>lower-bounds-expr</i> : ) =<i>></i> <i>data-target</i>
+              <b>or</b> <i>data-pointer-object</i> ( <i>bounds-remapping-list</i> ) =<i>></i> <i>data-target</i>
               <b>or</b> <i>data-pointer-object</i> ( <i>lower-bounds-expr</i> : <i>upper-bounds-expr</i> )
-                   =<i>> data-target</i>
-              <b>or</b> <i>proc-pointer-object</i> =<i>> proc-target</i>
+                   =<i>></i> <i>data-target</i>
+              <b>or</b> <i>proc-pointer-object</i> =<i>></i> <i>proc-target</i>
 R1035 <i>data-pointer-object</i> <b>is</b> <i>variable-name</i>
               <b>or</b> <i>scalar-variable</i> % <i>data-pointer-component-name</i>
 R1036 <i>bounds-spec</i> <b>is</b> <i>lower-bound-expr</i> :
@@ -719,14 +719,14 @@ R1053 <i>forall-body-construct</i> <b>is</b> <i>forall-assignment-stmt</i>
 R1054 <i>forall-assignment-stmt</i> <b>is</b> <i>assignment-stmt</i>
               <b>or</b> <i>pointer-assignment-stmt</i>
 R1055 <i>end-forall-stmt</i> <b>is</b> END FORALL [<i>forall-construct-name</i> ]
-R1056 <i>forall-stmt</i> <b>is</b> FORALL <i>concurrent-header forall-assignment-stmt</i>
+R1056 <i>forall-stmt</i> <b>is</b> FORALL <i>concurrent-header</i> <i>forall-assignment-stmt</i>
 R1101 <i>block</i> <b>is</b> [ <i>execution-part-construct</i> ] ...
 R1102 <i>associate-construct</i> <b>is</b> <i>associate-stmt
                    block
                    end-associate-stmt</i>
 R1103 <i>associate-stmt</i> <b>is</b> [ <i>associate-construct-name</i> : ] ASSOCIATE
                    (<i>association-list</i> )
-R1104 <i>association</i> <b>is</b> <i>associate-name</i> =<i>> selector</i>
+R1104 <i>association</i> <b>is</b> <i>associate-name</i> =<i>></i> <i>selector</i>
 R1105 <i>selector</i> <b>is</b> <i>expr</i>
               <b>or</b> <i>variable</i>
 R1106 <i>end-associate-stmt</i> <b>is</b> END ASSOCIATE [ <i>associate-construct-name</i> ]
@@ -744,7 +744,7 @@ R1111 <i>change-team-construct</i> <b>is</b> <i>change-team-stmt
                    end-change-team-stmt</i>
 R1112 <i>change-team-stmt</i> <b>is</b> [ <i>team-construct-name</i> : ] CHANGE TEAM ( <i>team-value</i>
                    [ , <i>coarray-association-list</i> ] [ , <i>sync-stat-list</i> ] )
-R1113 <i>coarray-association</i> <b>is</b> <i>codimension-decl</i> =<i>> selector</i>
+R1113 <i>coarray-association</i> <b>is</b> <i>codimension-decl</i> =<i>></i> <i>selector</i>
 R1114 <i>end-change-team-stmt</i> <b>is</b> END TEAM [ ( [ <i>sync-stat-list</i> ] ) ] [ <i>team-construct-name</i> ]
 R1115 <i>team-value</i> <b>is</b> <i>scalar-expr</i>
 R1116 <i>critical-construct</i> <b>is</b> <i>critical-stmt
@@ -762,7 +762,7 @@ R1122 <i>nonlabel-do-stmt</i> <b>is</b> [ <i>do-construct-name</i> : ] DO [ <i>l
 R1123 <i>loop-control</i> <b>is</b> [ , ] <i>do-variable</i> = <i>scalar-int-expr</i>, <i>scalar-int-expr</i>
                    [ , <i>scalar-int-expr</i> ]
               <b>or</b> [ , ] WHILE ( <i>scalar-logical-expr</i> )
-              <b>or</b> [ , ] CONCURRENT <i>concurrent-header concurrent-locality</i>
+              <b>or</b> [ , ] CONCURRENT <i>concurrent-header</i> <i>concurrent-locality</i>
 R1124 <i>do-variable</i> <b>is</b> <i>scalar-int-variable-name</i>
 R1125 <i>concurrent-header</i> <b>is</b> ( [ <i>integer-type-spec</i> :: ] <i>concurrent-control-list</i> [ , <i>scalar-mask-expr</i> ] )
 R1126 <i>concurrent-control</i> <b>is</b> <i>index-name</i> = <i>concurrent-limit</i> : <i>concurrent-limit</i> [ : <i>concurrent-step</i> ]
@@ -1094,7 +1094,7 @@ R1409 <i>use-stmt</i> <b>is</b> USE [ [ , <i>module-nature</i> ] :: ] <i>module-
                    ONLY : [ <i>only-list</i> ]
 R1410 <i>module-nature</i> <b>is</b> INTRINSIC
               <b>or</b> NON_INTRINSIC
-R1411 <i>rename</i> <b>is</b> <i>local-name</i> =<i>> use-name</i>
+R1411 <i>rename</i> <b>is</b> <i>local-name</i> =<i>></i> <i>use-name</i>
               <b>or</b> OPERATOR (<i>local-defined-operator</i>) =<i>></i>
                    OPERATOR (<i>use-defined-operator</i>)
 R1412 <i>only</i> <b>is</b> <i>generic-spec</i>
@@ -1141,7 +1141,7 @@ R1509 <i>defined-io-generic-spec</i> <b>is</b> READ (FORMATTED)
               <b>or</b> READ (UNFORMATTED)
               <b>or</b> WRITE (FORMATTED)
               <b>or</b> WRITE (UNFORMATTED)
-R1510 <i>generic-stmt</i> <b>is</b> GENERIC [ , <i>access-spec</i> ] :: <i>generic-spec</i> =<i>> specific-procedure-list</i>
+R1510 <i>generic-stmt</i> <b>is</b> GENERIC [ , <i>access-spec</i> ] :: <i>generic-spec</i> =<i>></i> <i>specific-procedure-list</i>
 R1511 <i>external-stmt</i> <b>is</b> EXTERNAL [ :: ] <i>external-name-list</i>
 R1512 <i>procedure-declaration-stmt</i> <b>is</b> PROCEDURE ( [ <i>proc-interface</i> ] )
                    [ [ , <i>proc-attr-spec</i> ] ... :: ] <i>proc-decl-list</i>
@@ -1154,7 +1154,7 @@ R1514 <i>proc-attr-spec</i> <b>is</b> <i>access-spec</i>
               <b>or</b> POINTER
               <b>or</b> PROTECTED
               <b>or</b> SAVE
-R1515 <i>proc-decl</i> <b>is</b> <i>procedure-entity-name</i> [ =<i>> proc-pointer-init</i> ]
+R1515 <i>proc-decl</i> <b>is</b> <i>procedure-entity-name</i> [ =<i>></i> <i>proc-pointer-init</i> ]
 R1516 <i>interface-name</i> <b>is</b> <i>name</i>
 R1517 <i>proc-pointer-init</i> <b>is</b> <i>null-init</i>
               <b>or</b> <i>initial-proc-target</i>
