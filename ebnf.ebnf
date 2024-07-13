@@ -263,8 +263,8 @@
               | '*' char_length ( ',' )? ;
  char_length : '(' type_param_value ')'
               | int_literal_constant ;
- char_literal_constant : ( kind_param '_' )? 'SQUOTE' ( <i>rep-char</i> )*  'SQUOTE'
-              | ( kind_param '_' )? 'DQUOTE' ( <i>rep-char</i> )*  'DQUOTE' ;
+ char_literal_constant : ( kind_param '_' )? <i>SQUOTE</i> ( <i>rep-char</i> )*  <i>SQUOTE</i>
+              | ( kind_param '_' )? <i>DQUOTE</i> ( <i>rep-char</i> )*  <i>DQUOTE</i> ;
  logical_literal_constant : '.TRUE.' ( '_' kind_param )?
               | '.FALSE.' ( '_' kind_param )? ;
  derived_type_def : derived_type_stmt
@@ -361,12 +361,12 @@
  boz_literal_constant : binary_constant
               | <i>octal-constant</i>
               | <i>hex-constant</i> ;
- binary_constant : 'B' ' digit [ digit ] ... SQUOTE
-              <b>or</b> B " digit [ digit ] ... DQUOTE
-R774 <i>octal-constant</i> <b>is</b> O ' digit ( digit )*  'SQUOTE'
-              | 'O' " digit [ digit ] ... DQUOTE
-R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... SQUOTE
-              <b>or</b> Z " hex_digit ( hex_digit )*  'DQUOTE' ;
+ binary_constant : 'B' ' digit [ digit ] ... <i>SQUOTE</i>
+              <b>or</b> B " digit [ digit ] ... <i>DQUOTE</i>
+R774 <i>octal-constant</i> <b>is</b> O ' digit ( digit )*  <i>SQUOTE</i>
+              | 'O' " digit [ digit ] ... <i>DQUOTE</i>
+R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
+              <b>or</b> Z " hex_digit ( hex_digit )*  <i>DQUOTE</i> ;
  hex_digit : digit
               | 'A'
               | 'B'

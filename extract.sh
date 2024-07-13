@@ -33,10 +33,10 @@ cat $to | ./extraction/bin/Debug/net8.0/RuleExtraction.exe > ebnf.ebnf
 echo "Change lines with brackets in order to make grammar and parse work."
 sed -i "s%R779 <i>lbracket</i> <b>is</b> \[%R779 <i>lbracket</i> <b>is</b> '['%" ebnf.ebnf
 sed -i "s%R780 <i>rbracket</i> <b>is</b> \]%R780 <i>rbracket</i> <b>is</b> ']'%" ebnf.ebnf
-sed -i 's/_ \] '"'"'/_ ] SQUOTE/' ebnf.ebnf
-sed -i 's/\] [.][.][.] '"'"'/] ... SQUOTE/' ebnf.ebnf
-sed -i 's/_ \] "/_ ] DQUOTE/' ebnf.ebnf
-sed -i 's/\] [.][.][.] "/] ... DQUOTE/' ebnf.ebnf
+sed -i 's%_ \] '"'"'%_ ] <i>SQUOTE</i>%' ebnf.ebnf
+sed -i 's%\] [.][.][.] '"'"'%] ... <i>SQUOTE</i>%' ebnf.ebnf
+sed -i 's%_ \] "%_ ] <i>DQUOTE</i>%' ebnf.ebnf
+sed -i 's%\] [.][.][.] "%] ... <i>DQUOTE</i>%' ebnf.ebnf
 dos2unix ebnf.ebnf
 cp ebnf.ebnf backup.ebnf
 
