@@ -102,7 +102,7 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 <i>io-control-spec-list</i> <b>is</b> <i>io-control-spec</i> [ , <i>io-control-spec</i> ] ...
 <i>io-implied-do-object-list</i> <b>is</b> <i>io-implied-do-object</i> [ , <i>io-implied-do</i> ] ...
 <i>label-list</i> <b>is</b> <i>label</i> [ , <i>label</i> ] ...
-<i>letter-spec-list</i> <b>is</b> <i>LETTERSPEC</i> [ , <i>LETTERSPEC</i> ] ...
+<i>letter-spec-list</i> <b>is</b> <i>LETTER-SPEC</i> [ , <i>LETTER-SPEC</i> ] ...
 <i>lock-stat-list</i> <b>is</b> <i>lock-stat</i> [ , <i>lock-stat</i> ] ...
 <i>named-constant-def-list</i> <b>is</b> <i>named-constant-def</i> [ , <i>named-constant-def</i> ] ...
 <i>namelist-group-object-list</i> <b>is</b> <i>namelist-group-object</i> [ , <i>namelist-group-object</i> ] ...
@@ -184,7 +184,6 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 <i>scalar-default-char-variable</i> <b>is</b> <i>default-char-variable</i>
 <i>scalar-expr</i> <b>is</b> <i>expr</i>
 <i>scalar-int-constant-expr</i> <b>is</b> <i>int-constant-expr</i>
-<i>scalar-int-constant-expr</i> <b>is</b> <i>int-constant-expr</i>
 <i>scalar-int-constant-name</i> <b>is</b> <i>int-constant-name</i>
 <i>scalar-int-constant-subobject</i> <b>is</b> <i>int-constant-subobject</i>
 <i>scalar-int-constant</i> <b>is</b> <i>int-constant</i>
@@ -235,6 +234,14 @@ mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf
 
 trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery 'delete //rule_[lhs/id_/ID/text() = "<i>alphanumeric-character</i>"];
+		' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+
+
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 	trquery 'delete //rule_[lhs/id_/ID/text() = "<i>binary-constant</i>"];' | \
 	trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf
@@ -248,6 +255,36 @@ dos2unix ebnf.ebnf
 
 trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 	trquery 'delete //rule_[lhs/id_/ID/text() = "<i>hex-constant</i>"];' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+
+
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery '
+	replace //rule_[lhs/id_/ID/text() = "<i>defined-unary-op</i>"]
+"
+<i>defined-unary-op</i> <b>is</b> <i>DEFINEDUNARYBINARYOP</i>
+";
+	replace //rule_[lhs/id_/ID/text() = "<i>defined-binary-op</i>"]
+"
+<i>defined-binary-op</i> <b>is</b> <i>DEFINEDUNARYBINARYOP</i>
+";
+	replace //rule_[lhs/id_/ID/text() = "<i>letter-spec</i>"]
+"
+<i>letter-spec</i> <b>is</b> <i>LETTER-SPEC</i>
+";
+	replace //rule_[lhs/id_/ID/text() = "<i>label</i>"]
+"
+<i>label</i> <b>is</b> <i>DIGITSTRING</i>
+";
+	replace //rule_[lhs/id_/ID/text() = "<i>digit-string</i>"]
+"
+<i>digit-string</i> <b>is</b> <i>DIGITSTRING</i>
+";
+	delete //rule_[lhs/id_/ID/text() = "<i>hex-digit</i>"];
+	delete //rule_[lhs/id_/ID/text() = "<i>hex-digit-string</i>"];
+' | \
 	trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf
@@ -284,12 +321,43 @@ s%[<]i[>][>][<]/i[>]%>%g
 EOF
 sed -f rename2.txt -i ebnf.ebnf
 
+echo "Delete duplicates."
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery '
+	delete //rule_[lhs/id_/ID/text() = "<i>scalar-constant</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>scalar-int-constant</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>defined-unary-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>power-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>module</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>module-subprogram</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>separate-module-subprogram</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>function-subprogram</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>subroutine-subprogram</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>module-subprogram-part</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>submodule</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>block-data</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>mult-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>add-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>concat-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>rel-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>not-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>and-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>or-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>equal-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>defined-binary-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>equiv-op</i>"][2];
+	delete //rule_[lhs/id_/ID/text() = "<i>main-program</i>"][2];
+	' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
 
 echo "Delete rule numbers from rules, and add semi-colon rule terminators."
 echo "Add function-name, which is missing from Spec EBNF."
 echo "Change syntax around for ASSIGN, ALT, zero_or_one, zero_or_more, and any."
 trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 	trquery '
+		delete //rule_[lhs/id_/ID/text() = "<i>name</i>"];
 		delete //RULE_NUMBER;
 		replace //ASSIGN ":";
 		replace //ALT "|";
@@ -326,10 +394,16 @@ s%[<]i[>]BINARY-CONSTANT[<]/i[>]%BINARY_CONSTANT%g
 s%[<]i[>]OCTAL-CONSTANT[<]/i[>]%OCTAL_CONSTANT%g
 s%[<]i[>]HEX-CONSTANT[<]/i[>]%HEX_CONSTANT%g
 s%[<]i[>]LETTER-SPEC[<]/i[>]%LETTER_SPEC%g
+s%[<]i[>]DEFINEDUNARYBINARYOP[<]/i[>]%DEFINEDUNARYBINARYOP%g
+s%[<]i[>]DIGITSTRING[<]/i[>]%DIGITSTRING%g
 EOF
 sed -f rename3.txt -i ebnf.ebnf
 
-cat >> ebnf.ebnf <<EOF
+cat > FortranLexer.g4 <<EOF
+lexer grammar FortranLexer;
+
+options { caseInsensitive=true; }
+
 LINE_COMMENT: '!' .*? '\r'? '\n' -> skip;
 
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
@@ -807,19 +881,19 @@ DEFINEDUNARYBINARYOP: DOT LETTER+? DOT;
 
 // R865 letter-spec -> letter [- letter]
 ///LEXER RULE: LetterSpec should only be defined as LETTER MINUS LETTER form and not in only LETTER form due to conflict with NAME
-LETTERSPEC: LETTER MINUS LETTER;
+LETTER_SPEC: LETTER MINUS LETTER;
 
 // R765 binary-constant -> B ' digit [digit]... ' | B " digit [digit]... "
-BINARYCONSTANT: B APOSTROPHE DIGIT+? APOSTROPHE | B QUOTE DIGIT+? QUOTE;
+BINARYCONSTANT: B SQUOTE DIGIT+? SQUOTE | B DQUOTE DIGIT+? DQUOTE;
 
 // R766 octal-constant -> O ' digit [digit]... ' | O " digit [digit]... "
-OCTALCONSTANT: O APOSTROPHE DIGIT+? APOSTROPHE | O QUOTE DIGIT+? QUOTE;
+OCTALCONSTANT: O SQUOTE DIGIT+? SQUOTE | O DQUOTE DIGIT+? DQUOTE;
 
 // R767 hex-constant -> Z ' hex-digit [hex-digit]... ' | Z " hex-digit [hex-digit]... "
-HEXCONSTANT: Z APOSTROPHE HEXDIGIT+? APOSTROPHE | Z QUOTE HEXDIGIT+? QUOTE;
+HEXCONSTANT: Z SQUOTE HEXDIGIT+? SQUOTE | Z DQUOTE HEXDIGIT+? DQUOTE;
 
 //R0003 RepChar
-SQUOTE_REF_CHAR: SQUOTE (~[\u0000-\u001F])*?  SQUOTE;
+SQUOTE_REP_CHAR: SQUOTE (~[\u0000-\u001F])*?  SQUOTE;
 
 DQUOTE_REP_CHAR: DQUOTE (~[\u0000-\u001F])*?  DQUOTE;
 
@@ -885,13 +959,13 @@ FORMAT_DIGITSTRING: FORMAT_DIGIT+  -> type(DIGITSTRING);
 
 FORMAT_DIGIT: '0'..'9' -> type(DIGIT);
 
-FORMAT_APOSTROPHE: '\'' -> type(APOSTROPHE);
+FORMAT_APOSTROPHE: '\'' -> type(SQUOTE);
 
-FORMAT_QUOTE: '"' -> type(QUOTE);
+FORMAT_QUOTE: '"' -> type(DQUOTE);
 
-FORMAT_APOSTROPHEREPCHAR: FORMAT_APOSTROPHE (~[\u0000-\u001F\u0027])*?  FORMAT_APOSTROPHE -> type(APOSTROPHEREPCHAR);
+FORMAT_APOSTROPHEREPCHAR: FORMAT_APOSTROPHE (~[\u0000-\u001F\u0027])*?  FORMAT_APOSTROPHE -> type(SQUOTE_REP_CHAR);
 
-FORMAT_QUOTEREPCHAR: FORMAT_QUOTE (~[\u0000-\u001F\u0022])*?  FORMAT_QUOTE -> type(QUOTEREPCHAR);
+FORMAT_QUOTEREPCHAR: FORMAT_QUOTE (~[\u0000-\u001F\u0022])*?  FORMAT_QUOTE -> type(DQUOTE_REP_CHAR);
 
 P: 'P';
 
@@ -982,12 +1056,29 @@ FORMAT_MINUS: '-' -> type(MINUS);
 FORMAT_DOT: '.' -> type(DOT);
 EOF
 
-mv ebnf.ebnf ebnf1.ebnf
-cat > Fortran.g4 <<EOF
-grammar Fortran;
+cat > FortranParser.g4 <<EOF
+parser grammar FortranParser;
+
+options { tokenVocab=FortranLexer; }
+
+name: NAME | PROGRAM | END| FUNCTION | SUBROUTINE | MODULE
+	 | SUBMODULE | BLOCK | DATA | INTRINSIC | NONINTRINSIC | OPERATOR
+	 | READ | FORMATTED | UNFORMATTED | WRITE | ASSIGNMENT | USE | ONLY | IMPORT |  NONE | ALL
+	 | KIND | INTEGER | LEN | REAL | DOUBLE | PRECISION | COMPLEX | CHARACTER | LOGICAL | TYPE | CLASS 
+	 | EXTERNAL | IMPLICIT | PARAMETER | FORMAT | BIND | NAME | RESULT | ENTRY | STAT | TEAM | TEAMNUMBER | RE | IM 
+	 | SEQUENCE | PRIVATE | PROCEDURE | NOPASS | PASS | POINTER | ALLOCATABLE | CODIMENSION | CONTIGUOUS | DIMENSION 
+	 | PUBLIC | CONTAINS | FINAL | GENERIC | DEFERRED | NONOVERRIDABLE | INTENT | OPTIONAL | PROTECTED | SAVE | IN | OUT | INOUT 
+	 | INTERFACE | ABSTRACT | ENUM | ENUMERATOR | ASYNCHRONOUS | TARGET | VALUE | VOLATILE | EQUIVALENCE | COMMON | NAMELIST | EVENT
+	 | WAIT | UNTILCOUNT | POST | ERRMSG | ERROR | STOP | QUIET | ENDFILE | DEALLOCATE | CYCLE | CONTINUE | CLOSE | UNIT | IOSTAT 
+	 | IOMSG | ERR | STATUS | CALL | BACKSPACE | ALLOCATE | MOLD | SOURCE | OPEN | ACCESS | ACTION | BLANK | DECIMAL | DELIM 
+	 | ENCODING | FILE | FORM | NEWUNIT | PAD | POSITION | RECL | ROUND | SIGN | NULLIFY | LOCK | ACQUIREDLOCK | INQUIRE | IOLENGTH
+	 | EXIST | ID | NAMED | NEXTREC | NUMBER | OPENED | PENDING | POS | READWRITE | SEQUENTIAL | SIZE | STREAM | IF | GOTO | NEWINDEX
+	 | FLUSH | FAIL | IMAGE | EXIT | FORALL | WHERE | EOR | UNLOCK | SYNC | MEMORY | IMAGES | REWIND | RETURN | FMT | NML | ADVANCE | REC
+	 | PRINT | CRITICAL | CHANGE | SELECT | CASE | DEFAULT | ASSOCIATE | ELSEWHERE | IS | RANK | ELSE | THEN | DO | CONCURRENT | WHILE
+	 | SHARED | LOCAL | LOCALINIT | RECURSIVE | PURE | NONRECURSIVE | IMPURE | ELEMENTAL | NOTIFY | TYPEOF | CLASSOF | ENUMERATION
+	 | DIRECT | LEADINGZERO | REDUCE | SIMPLE;
 
 EOF
-cat ebnf1.ebnf >> Fortran.g4
-cp Fortran.g4 ebnf.ebnf
+cat ebnf.ebnf >> FortranParser.g4
 
 rm -f rename.txt rename2.txt rename3.txt ids.txt updated_ids.txt ebnf1.ebnf

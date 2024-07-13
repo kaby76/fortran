@@ -1,4 +1,23 @@
-grammar Fortran;
+parser grammar FortranParser;
+
+options { tokenVocab=FortranLexer; }
+
+name: NAME | PROGRAM | END| FUNCTION | SUBROUTINE | MODULE
+	 | SUBMODULE | BLOCK | DATA | INTRINSIC | NONINTRINSIC | OPERATOR
+	 | READ | FORMATTED | UNFORMATTED | WRITE | ASSIGNMENT | USE | ONLY | IMPORT |  NONE | ALL
+	 | KIND | INTEGER | LEN | REAL | DOUBLE | PRECISION | COMPLEX | CHARACTER | LOGICAL | TYPE | CLASS 
+	 | EXTERNAL | IMPLICIT | PARAMETER | FORMAT | BIND | NAME | RESULT | ENTRY | STAT | TEAM | TEAMNUMBER | RE | IM 
+	 | SEQUENCE | PRIVATE | PROCEDURE | NOPASS | PASS | POINTER | ALLOCATABLE | CODIMENSION | CONTIGUOUS | DIMENSION 
+	 | PUBLIC | CONTAINS | FINAL | GENERIC | DEFERRED | NONOVERRIDABLE | INTENT | OPTIONAL | PROTECTED | SAVE | IN | OUT | INOUT 
+	 | INTERFACE | ABSTRACT | ENUM | ENUMERATOR | ASYNCHRONOUS | TARGET | VALUE | VOLATILE | EQUIVALENCE | COMMON | NAMELIST | EVENT
+	 | WAIT | UNTILCOUNT | POST | ERRMSG | ERROR | STOP | QUIET | ENDFILE | DEALLOCATE | CYCLE | CONTINUE | CLOSE | UNIT | IOSTAT 
+	 | IOMSG | ERR | STATUS | CALL | BACKSPACE | ALLOCATE | MOLD | SOURCE | OPEN | ACCESS | ACTION | BLANK | DECIMAL | DELIM 
+	 | ENCODING | FILE | FORM | NEWUNIT | PAD | POSITION | RECL | ROUND | SIGN | NULLIFY | LOCK | ACQUIREDLOCK | INQUIRE | IOLENGTH
+	 | EXIST | ID | NAMED | NEXTREC | NUMBER | OPENED | PENDING | POS | READWRITE | SEQUENTIAL | SIZE | STREAM | IF | GOTO | NEWINDEX
+	 | FLUSH | FAIL | IMAGE | EXIT | FORALL | WHERE | EOR | UNLOCK | SYNC | MEMORY | IMAGES | REWIND | RETURN | FMT | NML | ADVANCE | REC
+	 | PRINT | CRITICAL | CHANGE | SELECT | CASE | DEFAULT | ASSOCIATE | ELSEWHERE | IS | RANK | ELSE | THEN | DO | CONCURRENT | WHILE
+	 | SHARED | LOCAL | LOCALINIT | RECURSIVE | PURE | NONRECURSIVE | IMPURE | ELEMENTAL | NOTIFY | TYPEOF | CLASSOF | ENUMERATION
+	 | DIRECT | LEADINGZERO | REDUCE | SIMPLE;
 
 
  program : program_unit
@@ -152,11 +171,7 @@ grammar Fortran;
               | computed_goto_stmt
               | forall_stmt ;
  keyword : name ;
- alphanumeric_character : letter
-              | digit
-              | underscore ;
  underscore : '_' ;
- name : letter ( alphanumeric_character )*  ;
  constant : literal_constant
               | named_constant ;
  literal_constant : int_literal_constant
@@ -202,10 +217,13 @@ grammar Fortran;
  defined_operator : defined_unary_op
               | defined_binary_op
               | extended_intrinsic_op ;
- defined_unary_op : '.' letter ( letter )*  '.' ;
- defined_binary_op : '.' letter ( letter )*  '.' ;
+defined_unary_op : DEFINEDUNARYBINARYOP ;
+
+defined_binary_op : DEFINEDUNARYBINARYOP ;
+
  extended_intrinsic_op : intrinsic_operator ;
- label : digit ( digit ( digit ( digit ( digit )? )? )? )? ;
+label : DIGITSTRING ;
+
  type_param_value : scalar_int_expr
               | '*'
               | ':' ;
@@ -236,7 +254,8 @@ grammar Fortran;
  kind_param : digit_string
               | scalar_int_constant_name ;
  signed_digit_string : ( sign )? digit_string ;
- digit_string : digit ( digit )*  ;
+digit_string : DIGITSTRING ;
+
  sign : '+'
               | '-' ;
  signed_real_literal_constant : ( sign )? real_literal_constant ;
@@ -363,13 +382,6 @@ char_literal_constant :
  enumeration_type_spec : enumeration_type_name ;
  enumeration_constructor : enumeration_type_spec '(' scalar_int_expr ')' ;
 boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
- hex_digit : digit
-              | 'A'
-              | 'B'
-              | 'C'
-              | 'D'
-              | 'E'
-              | 'F' ;
  array_constructor : '(/' ac_spec '/)'
               | lbracket ac_spec rbracket ;
  ac_spec : type_spec '::'
@@ -511,7 +523,8 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
  implicit_stmt : 'IMPLICIT' implicit_spec_list
               | 'IMPLICIT' 'NONE' ( '(' ( implicit_none_spec_list )? ')' )? ;
  implicit_spec : declaration_type_spec '(' letter_spec_list ')' ;
- letter_spec : letter ( '-' letter )? ;
+letter_spec : LETTER_SPEC ;
+
  implicit_none_spec : 'EXTERNAL'
               | 'TYPE' ;
  import_stmt : 'IMPORT' (( '::' )? import_name_list )?
@@ -623,41 +636,18 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
               | conditional_expr ;
  conditional_expr : '(' scalar_logical_expr '?' expr ( ':' scalar_logical_expr '?' expr )* ':' expr ')' ;
  level_1_expr : ( defined_unary_op )? primary ;
- defined_unary_op : '.' letter ( letter )*  '.' ;
+
  mult_operand : level_1_expr ( power_op mult_operand )? ;
  add_operand : ( add_operand mult_op )? mult_operand ;
  level_2_expr : ( ( level_2_expr )? add_op )? add_operand ;
- power_op : '**' ;
- mult_op : '*'
-              | '/' ;
- add_op : '+'
-              | '-' ;
- level_3_expr : ( level_3_expr concat_op )? level_2_expr ;
- concat_op : ; //
+ level_3_expr : ( level_3_expr concat_op )? level_2_expr ; //
  level_4_expr : ( level_3_expr rel_op )? level_3_expr ;
- rel_op : '.EQ.'
-              | '.NE.'
-              | '.LT.'
-              | '.LE.'
-              | '.GT.'
-              | '.GE.'
-              | '=='
-              | '/='
-              | '<'
-              | '<='
-              | '>'
-              | '>=' ;
  and_operand : ( not_op )? level_4_expr ;
  or_operand : ( or_operand and_op )? and_operand ;
  equiv_operand : ( equiv_operand or_op )? or_operand ;
  level_5_expr : ( level_5_expr equiv_op )? equiv_operand ;
- not_op : '.NOT.' ;
- and_op : '.AND.' ;
- or_op : '.OR.' ;
- equiv_op : '.EQV.'
-              | '.NEQV.' ;
  expr : ( expr defined_binary_op )? level_5_expr ;
- defined_binary_op : '.' letter ( letter )*  '.' ;
+
  logical_expr : expr ;
  default_char_expr : expr ;
  int_expr : expr ;
@@ -1064,25 +1054,10 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
               | 'SP'
               | 'S' ;
  char_string_edit_desc : char_literal_constant ;
- hex_digit_string : hex_digit ( hex_digit )*  ;
- main_program : ( program_stmt )?
-                   ( specification_part )?
-                   ( execution_part )?
-                   ( internal_subprogram_part )?
-                   end_program_stmt ;
  program_stmt : 'PROGRAM' program_name ;
  end_program_stmt : 'END' ( 'PROGRAM' ( program_name )? )? ;
- module : module_stmt
-                   ( specification_part )?
-                   ( module_subprogram_part )?
-                   end_module_stmt ;
  module_stmt : 'MODULE' module_name ;
  end_module_stmt : 'END' ( 'MODULE' ( module_name )? )? ;
- module_subprogram_part : contains_stmt
-                                   ( module_subprogram )*  ;
- module_subprogram : function_subprogram
-              | subroutine_subprogram
-              | separate_module_subprogram ;
  use_stmt : 'USE' ( ( ',' module_nature )? '::' )? module_name ( ',' rename_list )?
               | 'USE' ( ( ',' module_nature )? '::' )? module_name ','                   
 'ONLY' ':' ( only_list )? ;
@@ -1099,16 +1074,9 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
               | defined_binary_op ;
  use_defined_operator : defined_unary_op
               | defined_binary_op ;
- submodule : submodule_stmt
-                    ( specification_part )?
-                    ( module_subprogram_part )?
-                   end_submodule_stmt ;
  submodule_stmt : 'SUBMODULE' '(' parent_identifier ')' submodule_name ;
  parent_identifier : ancestor_module_name ( ':' parent_submodule_name )? ;
  end_submodule_stmt : 'END' ( 'SUBMODULE' ( submodule_name )? )? ;
- block_data : block_data_stmt
-                       ( specification_part )?
-                      end_block_data_stmt ;
  block_data_stmt : 'BLOCK' 'DATA' ( block_data_name )? ;
  end_block_data_stmt : 'END' ( 'BLOCK' 'DATA' ( block_data_name )? )? ;
  interface_block : interface_stmt
@@ -1183,32 +1151,17 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
               | 'RECURSIVE'
               | 'SIMPLE' ;
  proc_language_binding_spec : language_binding_spec ;
- function_subprogram : function_stmt
-                   ( specification_part )?
-                   ( execution_part )?
-                   ( internal_subprogram_part )?
-                   end_function_stmt ;
  function_stmt : ( prefix )? 'FUNCTION' function_name                   
 '(' ( dummy_arg_name_list )? ')' ( suffix )? ;
  dummy_arg_name : name ;
  suffix : proc_language_binding_spec ( 'RESULT' '(' result_name ')' )?
               | 'RESULT' '(' result_name ')' ( proc_language_binding_spec )? ;
  end_function_stmt : 'END' ( 'FUNCTION' ( function_name )? )? ;
- subroutine_subprogram : subroutine_stmt
-                   ( specification_part )?
-                   ( execution_part )?
-                   ( internal_subprogram_part )?
-                   end_subroutine_stmt ;
  subroutine_stmt : ( prefix )? 'SUBROUTINE' subroutine_name
                    ( '(' ( dummy_arg_list )? ')' ( proc_language_binding_spec )? )? ;
  dummy_arg : dummy_arg_name
               | '*' ;
  end_subroutine_stmt : 'END' ( 'SUBROUTINE' ( subroutine_name )? )? ;
- separate_module_subprogram : mp_subprogram_stmt
-                   ( specification_part )?
-                   ( execution_part )?
-                   ( internal_subprogram_part )?
-                   end_mp_subprogram_stmt ;
  mp_subprogram_stmt : 'MODULE' 'PROCEDURE' procedure_name ;
  end_mp_subprogram_stmt : 'END' ('PROCEDURE' (procedure_name)?)? ;
  entry_stmt : 'ENTRY' entry_name ( '(' ( dummy_arg_list )? ')' ( suffix )? )? ;
@@ -1275,7 +1228,7 @@ intrinsic_procedure_name_list : intrinsic_procedure_name ( ',' intrinsic_procedu
 io_control_spec_list : io_control_spec ( ',' io_control_spec )*  ;
 io_implied_do_object_list : io_implied_do_object ( ',' io_implied_do )*  ;
 label_list : label ( ',' label )*  ;
-letter_spec_list : <i>LETTERSPEC</i> ( ',' <i>LETTERSPEC</i> )*  ;
+letter_spec_list : LETTER_SPEC ( ',' LETTER_SPEC )*  ;
 lock_stat_list : lock_stat ( ',' lock_stat )*  ;
 named_constant_def_list : named_constant_def ( ',' named_constant_def )*  ;
 namelist_group_object_list : namelist_group_object ( ',' namelist_group_object )*  ;
@@ -1351,12 +1304,10 @@ result_name : name ;
 scalar_constant_expr : constant_expr ;
 scalar_constant_subobject : constant_subobject ;
 scalar_constant : constant ;
-scalar_constant : constant ;
 scalar_default_char_constant_expr : default_char_constant_expr ;
 scalar_default_char_expr : default_char_expr ;
 scalar_default_char_variable : default_char_variable ;
 scalar_expr : expr ;
-scalar_int_constant_expr : int_constant_expr ;
 scalar_int_constant_expr : int_constant_expr ;
 scalar_int_constant_name : int_constant_name ;
 scalar_int_constant_subobject : int_constant_subobject ;
@@ -1387,653 +1338,6 @@ where_construct_name : name ;
 
 
 
-LINE_COMMENT: '!' .*? '\r'? '\n' -> skip;
 
-BLOCK_COMMENT: '/*' .*? '*/' -> skip;
 
-SPACE: [ ] -> skip;
 
-WS: [\t\r\n]+ -> skip;
-
-PROGRAM: 'PROGRAM';
-
-END: 'END';
-
-COMMA: ',';
-
-FUNCTION: 'FUNCTION';
-
-LPAREN: '(';
-
-RPAREN: ')';
-
-ASTERIK: '*';
-
-SUBROUTINE: 'SUBROUTINE';
-
-MODULE: 'MODULE';
-
-SUBMODULE: 'SUBMODULE';
-
-BLOCK: 'BLOCK';
-
-DATA: 'DATA';
-
-COLON : ':';
-
-INTRINSIC: 'INTRINSIC';
-
-NONINTRINSIC: 'NON_INTRINSIC';
-
-IMPLIES: '=>';
-
-OPERATOR: 'OPERATOR';
-
-POWER: '**';
-
-SLASH: '/';
-
-PLUS: '+';
-
-MINUS: '-';
-
-CONCAT: '//';
-
-EQ: '.EQ.';
-
-NE: '.NE.';
-
-LT: '.LT.';
-
-LE: '.LE.';
-
-GT: '.GT.';
-
-GE: '.GE.';
-
-EQUAL: '==';
-
-NOTEQUAL: '/=';
-
-LESSTHAN: '<';
-
-LESSEQUAL: '<=';
-
-GREATERTHAN: '>';
-
-GREATEREQUAL: '>=';
-
-NOT: '.NOT.';
-
-AND: '.AND.';
-
-OR: '.OR.';
-
-EQV: '.EQV.';
-
-NEQV: '.NEQV.';
-
-READ: 'READ';
-
-FORMATTED: 'FORMATTED';
-
-UNFORMATTED: 'UNFORMATTED';
-
-WRITE: 'WRITE';
-
-ASSIGNMENT: 'ASSIGNMENT';
-
-ASSIGN: '=';
-
-USE: 'USE';
-
-DOUBLECOLON: '::';
-
-ONLY: 'ONLY';
-
-IMPORT : 'IMPORT';
-
-NONE: 'NONE';
-
-ALL: 'ALL';
-
-KIND: 'KIND';
-
-INTEGER: 'INTEGER';
-
-LEN: 'LEN';
-
-REAL: 'REAL';
-
-DOUBLE: 'DOUBLE';
-
-PRECISION: 'PRECISION';
-
-COMPLEX: 'COMPLEX';
-
-CHARACTER: 'CHARACTER';
-
-LOGICAL: 'LOGICAL';
-
-TYPE: 'TYPE';
-
-CLASS: 'CLASS';
-
-EXTERNAL: 'EXTERNAL';
-
-IMPLICIT: 'IMPLICIT';
-
-PARAMETER: 'PARAMETER';
-
-FORMATIN : FORMAT (SPACE)* LPAREN -> pushMode(FORMAT_MODE);
-
-FORMAT: 'FORMAT';
-
-BINDC: BIND SPACE* LPAREN SPACE* C;
-
-BIND: 'BIND';
-
-NAAM: 'NAME';
-
-RESULT: 'RESULT';
-
-ENTRY: 'ENTRY';
-
-DOT: '.';
-
-TRUE: '.TRUE.';
-
-FALSE: '.FALSE.';
-
-SQUOTE: '\'';
-
-DQUOTE: '"';
-
-STAT: 'STAT';
-
-TEAM: 'TEAM';
-
-TEAMNUMBER: 'TEAM_NUMBER';
-
-LBRACKET: '[';
-
-RBRACKET: ']';
-
-RE: 'RE';
-
-IM: 'IM';
-
-PERCENT: '%';
-
-LPARENSLASH: '(/';
-
-RPARENSLASH: '/)';
-
-// R602 UNDERSCORE -> _
-UNDERSCORE: '_';
-
-SEQUENCE: 'SEQUENCE';
-
-PRIVATE: 'PRIVATE';
-
-PROCEDURE: 'PROCEDURE';
-
-NOPASS: 'NOPASS';
-
-PASS: 'PASS';
-
-POINTER: 'POINTER';
-
-ALLOCATABLE: 'ALLOCATABLE';
-
-CODIMENSION: 'CODIMENSION';
-
-CONTIGUOUS: 'CONTIGUOUS';
-
-DIMENSION: 'DIMENSION';
-
-PUBLIC: 'PUBLIC';
-
-CONTAINS: 'CONTAINS';
-
-FINAL: 'FINAL';
-
-GENERIC: 'GENERIC';
-
-DEFERRED: 'DEFERRED';
-
-NONOVERRIDABLE: 'NON_OVERRIDABLE';
-
-INTENT: 'INTENT';
-
-OPTIONAL: 'OPTIONAL';
-
-PROTECTED: 'PROTECTED';
-
-SAVE: 'SAVE';
-
-IN: 'IN';
-
-OUT: 'OUT';
-
-INOUT: 'INOUT';
-
-INTERFACE: 'INTERFACE';
-
-ABSTRACT: 'ABSTRACT';
-
-ENUM: 'ENUM';
-
-ENUMERATOR: 'ENUMERATOR';
-
-ASYNCHRONOUS: 'ASYNCHRONOUS';
-
-TARGET: 'TARGET';
-
-VALUE: 'VALUE';
-
-VOLATILE: 'VOLATILE';
-
-EQUIVALENCE: 'EQUIVALENCE';
-
-COMMON: 'COMMON';
-
-NAMELIST: 'NAMELIST';
-
-DOUBLEDOT: '..';
-
-EVENT: 'EVENT';
-
-WAIT: 'WAIT';
-
-UNTILCOUNT: 'UNTIL_COUNT';
-
-POST: 'POST';
-
-ERRMSG: 'ERRMSG';
-
-ERROR: 'ERROR';
-
-STOP: 'STOP';
-
-QUIET: 'QUIET';
-
-ENDFILE: 'ENDFILE';
-
-DEALLOCATE: 'DEALLOCATE';
-
-CYCLE: 'CYCLE';
-
-CONTINUE: 'CONTINUE';
-
-CLOSE: 'CLOSE';
-
-UNIT: 'UNIT';
-
-IOSTAT: 'IOSTAT';
-
-IOMSG: 'IOMSG';
-
-ERR: 'ERR';
-
-STATUS: 'STATUS';
-
-CALL: 'CALL';
-
-BACKSPACE: 'BACKSPACE';
-
-ALLOCATE: 'ALLOCATE';
-
-MOLD: 'MOLD';
-
-SOURCE: 'SOURCE';
-
-OPEN: 'OPEN';
-
-ACCESS: 'ACCESS';
-
-ACTION: 'ACTION';
-
-BLANK: 'BLANK';
-
-DECIMAL: 'DECIMAL';
-
-DELIM: 'DELIM';
-
-ENCODING: 'ENCODING';
-
-FILE: 'FILE';
-
-FORM: 'FORM';
-
-NEWUNIT: 'NEWUNIT';
-
-PAD: 'PAD';
-
-POSITION: 'POSITION';
-
-RECL: 'RECL';
-
-ROUND: 'ROUND';
-
-SIGN: 'SIGN';
-
-NULLIFY: 'NULLIFY';
-
-LOCK: 'LOCK';
-
-ACQUIREDLOCK: 'ACQUIRED_LOCK';
-
-INQUIRE: 'INQUIRE';
-
-IOLENGTH: 'IOLENGTH';
-
-EXIST: 'EXIST';
-
-ID: 'ID';
-
-NAMED: 'NAMED';
-
-NEXTREC: 'NEXTREC';
-
-NUMBER: 'NUMBER';
-
-OPENED: 'OPENED';
-
-PENDING: 'PENDING';
-
-POS: 'POS';
-
-READWRITE: 'READWRITE';
-
-SEQUENTIAL: 'SEQUENTIAL';
-
-SIZE: 'SIZE';
-
-STREAM: 'STREAM';
-
-IF: 'IF';
-
-GOTO: 'GOTO';
-
-NEWINDEX: 'NEW_INDEX';
-
-FLUSH: 'FLUSH';
-
-FAIL: 'FAIL';
-
-IMAGE: 'IMAGE';
-
-EXIT: 'EXIT';
-
-FORALL: 'FORALL';
-
-WHERE: 'WHERE';
-
-EOR: 'EOR';
-
-UNLOCK: 'UNLOCK';
-
-SYNC: 'SYNC';
-
-MEMORY: 'MEMORY';
-
-IMAGES: 'IMAGES';
-
-REWIND: 'REWIND';
-
-RETURN: 'RETURN';
-
-FMT: 'FMT';
-
-NML: 'NML';
-
-ADVANCE: 'ADVANCE';
-
-REC: 'REC';
-
-PRINT: 'PRINT';
-
-CRITICAL: 'CRITICAL';
-
-CHANGE: 'CHANGE';
-
-SELECT: 'SELECT';
-
-CASE: 'CASE';
-
-DEFAULT: 'DEFAULT';
-
-ASSOCIATE: 'ASSOCIATE';
-
-ELSEWHERE: 'ELSEWHERE';
-
-IS: 'IS';
-
-RANK: 'RANK';
-
-ELSE: 'ELSE';
-
-THEN: 'THEN';
-
-DO: 'DO';
-
-CONCURRENT: 'CONCURRENT';
-
-WHILE: 'WHILE';
-
-SHARED: 'SHARED';
-
-LOCAL: 'LOCAL';
-
-LOCALINIT: 'LOCAL_INIT';
-
-RECURSIVE: 'RECURSIVE';
-
-PURE: 'PURE';
-
-NONRECURSIVE: 'NON_RECURSIVE';
-
-IMPURE: 'IMPURE';
-
-ELEMENTAL: 'ELEMENTAL';
-
-ATSYMBOL: '@';
-
-NIL: '.NIL';
-
-QUESTION: '?';
-
-NOTIFY: 'NOTIFY';
-
-TYPEOF: 'TYPEOF';
-
-CLASSOF: 'CLASSOF';
-
-ENUMERATION: 'ENUMERATION';
-
-DIRECT: 'DIRECT';
-
-LEADINGZERO: 'LEADING_ZERO';
-
-REDUCE: 'REDUCE';
-
-SIMPLE: 'SIMPLE';
-
-DEFINEDUNARYBINARYOP: DOT LETTER+? DOT;
-
-// R865 letter-spec -> letter [- letter]
-///LEXER RULE: LetterSpec should only be defined as LETTER MINUS LETTER form and not in only LETTER form due to conflict with NAME
-LETTERSPEC: LETTER MINUS LETTER;
-
-// R765 binary-constant -> B ' digit [digit]... ' | B " digit [digit]... "
-BINARYCONSTANT: B APOSTROPHE DIGIT+? APOSTROPHE | B QUOTE DIGIT+? QUOTE;
-
-// R766 octal-constant -> O ' digit [digit]... ' | O " digit [digit]... "
-OCTALCONSTANT: O APOSTROPHE DIGIT+? APOSTROPHE | O QUOTE DIGIT+? QUOTE;
-
-// R767 hex-constant -> Z ' hex-digit [hex-digit]... ' | Z " hex-digit [hex-digit]... "
-HEXCONSTANT: Z APOSTROPHE HEXDIGIT+? APOSTROPHE | Z QUOTE HEXDIGIT+? QUOTE;
-
-//R0003 RepChar
-SQUOTE_REF_CHAR: SQUOTE (~[\u0000-\u001F])*?  SQUOTE;
-
-DQUOTE_REP_CHAR: DQUOTE (~[\u0000-\u001F])*?  DQUOTE;
-
-REALEXPONENTLETTER: DIGITSTRING DOT DIGITSTRING? EXPONENTLETTER | DOT DIGITSTRING EXPONENTLETTER | DIGITSTRING EXPONENTLETTER;
-
-// R603 name -> letter [alphanumeric-character]...
-NAME: LETTER (ALPHANUMERICCHARACTER)*;
-
-// R0002 Letter ->
-//         A | B | C | D | E | F | G | H | I | J | K | L | M |
-//         N | O | P | Q | R | S | T | U | V | W | X | Y | Z
-LETTER: 'A'..'Z'; 
-
-// R711 digit-string -> digit [digit]...
-DIGITSTRING: DIGIT+; 
-
-// R0001 Digit -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-DIGIT: '0'..'9';
-
-// R601 alphanumeric-character -> letter | digit | underscore
-ALPHANUMERICCHARACTER: LETTER | DIGIT | UNDERSCORE;
-
-C: 'C';
-
-E: 'E';
-
-D: 'D';
-
-// R716 exponent-letter -> E | D
-EXPONENTLETTER: E | D;
-
-B: 'B';
-
-O: 'O';
-
-Z: 'Z';
-
-A: 'A';
-
-F: 'F';
-
-// R768 hex-digit -> digit | A | B | C | D | E | F
-HEXDIGIT: DIGIT | A | B | C | D | E | F;
-
-
-///FORMAT MODE
-
-mode FORMAT_MODE;
-
-FORMAT_LPAREN: '(' -> pushMode(FORMAT_MODE), type(LPAREN);
-
-FORMAT_RPAREN: ')' -> popMode, type(RPAREN);
-
-FORMAT_SPACE: ' ' -> skip;
-
-FORMAT_COMMA: ',' -> type(COMMA);
-
-FORMAT_ASTERIK: '*' -> type(ASTERIK);
-
-FORMAT_UNDERSCORE: '_' -> type(UNDERSCORE);
-
-FORMAT_DIGITSTRING: FORMAT_DIGIT+  -> type(DIGITSTRING);
-
-FORMAT_DIGIT: '0'..'9' -> type(DIGIT);
-
-FORMAT_APOSTROPHE: '\'' -> type(APOSTROPHE);
-
-FORMAT_QUOTE: '"' -> type(QUOTE);
-
-FORMAT_APOSTROPHEREPCHAR: FORMAT_APOSTROPHE (~[\u0000-\u001F\u0027])*?  FORMAT_APOSTROPHE -> type(APOSTROPHEREPCHAR);
-
-FORMAT_QUOTEREPCHAR: FORMAT_QUOTE (~[\u0000-\u001F\u0022])*?  FORMAT_QUOTE -> type(QUOTEREPCHAR);
-
-P: 'P';
-
-DC: 'DC';
-
-DP: 'DP';
-
-LZS: 'LZS';
-
-LZP: 'LZP';
-
-LZ: 'LZ';
-
-RU: 'RU';
-
-RD: 'RD';
-
-RZ: 'RZ';
-
-RN: 'RN';
-
-RC: 'RC';
-
-RP: 'RP';
-
-BN: 'BN';
-
-BZ: 'BZ';
-
-SS: 'SS';
-
-SP: 'SP';
-
-S: 'S';
-
-T: 'T';
-
-TL: 'TL';
-
-TR: 'TR';
-
-X: 'X';
-
-I: 'I';
-
-FORMAT_B: 'B' -> type(B);
-
-FORMAT_O: 'O' -> type(O);
-
-FORMAT_Z: 'Z' -> type(Z);
-
-FORMAT_F: 'F' -> type(F);
-
-FORMAT_E: 'E' -> type(E);
-
-EN: 'EN';
-
-ES: 'ES';
-
-EX: 'EX';
-
-G: 'G';
-
-L: 'L';
-
-FORMAT_A: 'A' -> type(A);
-
-AT: 'AT';
-
-FORMAT_D: 'D' -> type(D);
-
-DT: 'DT';
-
-FORMAT_NAME: FORMAT_LETTER (FORMAT_ALPHANUMERICCHARACTER)* -> type(NAME);
-
-FORMAT_LETTER: 'A'..'Z' -> type(LETTER); 
-
-FORMAT_ALPHANUMERICCHARACTER: (FORMAT_LETTER | FORMAT_DIGIT | FORMAT_UNDERSCORE) -> type(ALPHANUMERICCHARACTER);
-
-FORMAT_SLASH: '/' -> type(SLASH);
-
-FORMAT_COLON: ':' -> type(COLON);
-
-FORMAT_PLUS: '+' -> type(PLUS);
-
-FORMAT_MINUS: '-' -> type(MINUS);
-
-FORMAT_DOT: '.' -> type(DOT);
