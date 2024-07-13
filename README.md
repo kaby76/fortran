@@ -43,3 +43,6 @@ constraints and text.`
 to yank out text from a PDF file. Then, it calls a custom-written program just for
 extracting the EBNF from the text, [extraction](https://github.com/kaby76/fortran/tree/main/extraction).
 The script also uses an [ENBF in Antlr](https://github.com/kaby76/fortran/tree/main/ebnf) to parse and modify the scraped Fortran EBNF.
+* There are many rules that end in `-list`. These are currently enumerated in the extract.sh script, but the rules
+should be generated.
+
