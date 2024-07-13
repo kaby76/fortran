@@ -420,7 +420,7 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  access_spec : 'PUBLIC'
               | 'PRIVATE' ;
  language_binding_spec : 'BIND' '(C' ( ',' 'NAME' '=' scalar_default_char_constant_expr )?')' ;
- coarray_spec : <i>deferred-coshape-spec-list</i>
+ coarray_spec : deferred_coshape_spec_list
               | explicit_coshape_spec ;
  deferred_coshape_spec : ':' ;
  explicit_coshape_spec : ( ( lower_cobound ':' )? upper_cobound',' )*
@@ -472,19 +472,19 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  data_stmt_set : data_stmt_object_list '/' data_stmt_value_list '/' ;
  data_stmt_object : variable
               | data_implied_do ;
- data_implied_do : '(' <i>data-i-do-object-list</i> ',' ( integer_type_spec '::' )? data_i_do_variable '='
+ data_implied_do : '(' data_i_do_object_list ',' ( integer_type_spec '::' )? data_i_do_variable '='
                   scalar_int_constant_expr ','
                   scalar_int_constant_expr
                    ( ',' scalar_int_constant_expr )? ')' ;
  data_i_do_object : array_element
-              | <i>scalar-structure-component</i>
+              | scalar_structure_component
               | data_implied_do ;
  data_i_do_variable : do_variable ;
  data_stmt_value : ( data_stmt_repeat '*' )? data_stmt_constant ;
- data_stmt_repeat : <i>scalar-int-constant</i>
-              | <i>scalar-int-constant-subobject</i> ;
- data_stmt_constant : <i>scalar-constant</i>
-              | <i>scalar-constant-subobject</i>
+ data_stmt_repeat : scalar_int_constant
+              | scalar_int_constant_subobject ;
+ data_stmt_constant : scalar_constant
+              | scalar_constant_subobject
               | signed_int_literal_constant
               | signed_real_literal_constant
               | null_init
@@ -520,24 +520,24 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  letter_spec : letter ( '-' letter )? ;
  implicit_none_spec : 'EXTERNAL'
               | 'TYPE' ;
- import_stmt : 'IMPORT' (( '::' )? <i>import-name-list</i> )?
-              | 'IMPORT,' 'ONLY' ':' <i>import-name-list</i>
+ import_stmt : 'IMPORT' (( '::' )? import_name_list )?
+              | 'IMPORT,' 'ONLY' ':' import_name_list
               | 'IMPORT,' 'NONE'
               | 'IMPORT,' 'ALL' ;
  namelist_stmt : 'NAMELIST'                   
-'/' namelist_group_name '/' <i>namelist-group-object-list</i>
+'/' namelist_group_name '/' namelist_group_object_list
                    ( ( ',' )? '/' namelist_group_name '/'
-                  <i>namelist-group-object-list</i> )*  ;
+                  namelist_group_object_list )*  ;
  namelist_group_object : variable_name ;
- equivalence_stmt : 'EQUIVALENCE' <i>equivalence-set-list</i> ;
- equivalence_set : '(' equivalence_object ',' <i>equivalence-object-list</i> ')' ;
+ equivalence_stmt : 'EQUIVALENCE' equivalence_set_list ;
+ equivalence_set : '(' equivalence_object ',' equivalence_object_list ')' ;
  equivalence_object : variable_name
               | array_element
               | substring ;
  common_stmt : 'COMMON'
-                      ( '/' ( common_block_name )? '/' )? <i>common-block-object-list</i>
+                      ( '/' ( common_block_name )? '/' )? common_block_object_list
                       ( ( ',' )? '/' ( common_block_name )? '/'
-                     <i>common-block-object-list</i> )*  ;
+                     common_block_object_list )*  ;
  common_block_object : variable_name ( '(' array_spec ')' )? ;
  designator : object_name
               | array_element
@@ -554,14 +554,14 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  default_char_variable : variable ;
  int_variable : variable ;
  substring : parent_string '(' substring_range ')' ;
- parent_string : <i>scalar-variable-name</i>
+ parent_string : scalar_variable_name
               | array_element
               | coindexed_named_object
-              | <i>scalar-structure-component</i>
-              | <i>scalar-constant</i> ;
+              | scalar_structure_component
+              | scalar_constant ;
  substring_range : ( scalar_int_expr )? ':' ( scalar_int_expr )? ;
  data_ref : part_ref ( '%' part_ref )*  ;
- part_ref : <i>part-name</i> ( '(' section_subscript_list ')' )? ( image_selector )? ;
+ part_ref : part_name ( '(' section_subscript_list ')' )? ( image_selector )? ;
  structure_component : data_ref ;
  coindexed_named_object : data_ref ;
  complex_part_designator : designator '%' 'RE'
@@ -581,21 +581,21 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  multiple_subscript_triplet : '@' ( int_expr )? ':' ( int_expr )? ( ':' int_expr )? ;
  stride : scalar_int_expr ;
  vector_subscript : int_expr ;
- image_selector : lbracket <i>cosubscript-list</i> ( ',' <i>image-selector-spec-list</i> )? rbracket ;
+ image_selector : lbracket cosubscript_list ( ',' image_selector_spec_list )? rbracket ;
  cosubscript : scalar_int_expr ;
  image_selector_spec : 'NOTIFY' '=' notify_variable
               | 'STAT' '=' stat_variable
               | 'TEAM' '=' team_value
               | 'TEAM_NUMBER' '=' scalar_int_expr ;
- allocate_stmt : 'ALLOCATE' '(' ( type_spec '::' )? <i>allocation-list</i>
-                   ( ',' <i>alloc-opt-list</i> )? ')' ;
+ allocate_stmt : 'ALLOCATE' '(' ( type_spec '::' )? allocation_list
+                   ( ',' alloc_opt_list )? ')' ;
  alloc_opt : 'ERRMSG' '=' errmsg_variable
               | 'MOLD' '=' source_expr
               | 'SOURCE' '=' source_expr
               | 'STAT' '=' stat_variable ;
  errmsg_variable : scalar_default_char_variable ;
  source_expr : expr ;
- allocation : allocate_object ( '(' <i>allocate-shape-spec-list</i> ')' )?
+ allocation : allocate_object ( '(' allocate_shape_spec_list ')' )?
                    ( lbracket allocate_coarray_spec rbracket )?
               | '(' ( lower_bounds_expr ':' )? upper_bounds_expr ')'
                    ( lbracket allocate_coarray_spec rbracket )? ;
@@ -606,13 +606,13 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  lower_bounds_expr : int_expr ;
  upper_bound_expr : scalar_int_expr ;
  upper_bounds_expr : int_expr ;
- allocate_coarray_spec : ( <i>allocate-coshape-spec-list</i> ',' )? ( lower_bound_expr ':' )? '*' ;
+ allocate_coarray_spec : ( allocate_coshape_spec_list ',' )? ( lower_bound_expr ':' )? '*' ;
  allocate_coshape_spec : ( lower_bound_expr ':' )? upper_bound_expr ;
- nullify_stmt : 'NULLIFY' '(' <i>pointer-object-list</i> ')' ;
+ nullify_stmt : 'NULLIFY' '(' pointer_object_list ')' ;
  pointer_object : variable_name
               | structure_component
               | proc_pointer_name ;
- deallocate_stmt : 'DEALLOCATE' '(' <i>allocate-object-list</i> ( ',' <i>dealloc-opt-list</i> )? ')' ;
+ deallocate_stmt : 'DEALLOCATE' '(' allocate_object_list ( ',' dealloc_opt_list )? ')' ;
  dealloc_opt : 'STAT' '=' stat_variable
               | 'ERRMSG' '=' errmsg_variable ;
  stat_variable : scalar_int_variable ;
@@ -673,9 +673,9 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  default_char_constant_expr : default_char_expr ;
  int_constant_expr : int_expr ;
  assignment_stmt : variable '=' expr ;
- pointer_assignment_stmt : data_pointer_object ( '(' <i>bounds-spec-list</i> ')' )? '=>' data_target
+ pointer_assignment_stmt : data_pointer_object ( '(' bounds_spec_list ')' )? '=>' data_target
               | data_pointer_object '(' lower_bounds_expr ':' ')' '=>' data_target
-              | data_pointer_object '(' <i>bounds-remapping-list</i> ')' '=>' data_target
+              | data_pointer_object '(' bounds_remapping_list ')' '=>' data_target
               | data_pointer_object '(' lower_bounds_expr ':' upper_bounds_expr ')'                   
 '=>' data_target
               | proc_pointer_object '=>' proc_target ;
@@ -725,7 +725,7 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
                    block
                    end_associate_stmt ;
  associate_stmt : ( associate_construct_name ':' )? 'ASSOCIATE'                   
-'('<i>association-list</i> ')' ;
+'('association_list ')' ;
  association : associate_name '=>' selector ;
  selector : expr
               | variable ;
@@ -763,8 +763,8 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
                    ( ',' scalar_int_expr )?
               | ( ',' )? 'WHILE' '(' scalar_logical_expr ')'
               | ( ',' )? 'CONCURRENT' concurrent_header concurrent_locality ;
- do_variable : <i>scalar-int-variable-name</i> ;
- concurrent_header : '(' ( integer_type_spec '::' )? concurrent_control_list ( ',' <i>scalar-mask-expr</i> )? ')' ;
+ do_variable : scalar_int_variable_name ;
+ concurrent_header : '(' ( integer_type_spec '::' )? concurrent_control_list ( ',' scalar_mask_expr )? ')' ;
  concurrent_control : index_name '=' concurrent_limit ':' concurrent_limit ( ':' concurrent_step )? ;
  concurrent_limit : scalar_int_expr ;
  concurrent_step : scalar_int_expr ;
@@ -775,7 +775,7 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
               | 'SHARED' '(' variable_name_list ')'
               | 'DEFAULT' '(' 'NONE' ')' ;
  reduce_operation : binary_reduce_op
-              | <i>function-reduction-name</i> ;
+              | function_reduction_name ;
  binary_reduce_op : '+'
               | '*'
               | '.AND.'
@@ -1431,7 +1431,7 @@ type_bound_proc_decl_list : type_bound_proc_decl ( ',' type_bound_proc_decl )*  
 
 binding_name_list : binding_name ( ',' binding_name )*  ;
 
-final_subroutine_name_list : <i>final-subroutine-name</i> ( ',' <i>final-subroutine-name</i> )*  ;
+final_subroutine_name_list : final_subroutine_name ( ',' final_subroutine_name )*  ;
 
 type_param_spec_list : type_param_spec ( ',' type_param_spec )*  ;
 
@@ -1443,7 +1443,9 @@ enumerator_list : enumerator ( ',' enumerator )*  ;
 
 enumeration_type_name : name ;
 
-enumerator_name_list : <i>enumerator-name</i> ( ',' <i>enumeratorName</i> )*  ;
+enumerator_name_list : enumerator_name ( ',' enumerator_name )*  ;
+
+enumerator_name : name ;
 
 ac_value_list : ac_value ( ',' ac_value )*  ;
 
@@ -1472,6 +1474,72 @@ implicit_spec_list : implicit_spec ( ',' implicit_spec )*  ;
 implicit_none_spec_list : implicit_none_spec ( ',' implicit_none_spec )*  ;
 
 letter_spec_list : <i>LETTERSPEC</i> ( ',' <i>LETTERSPEC</i> )*  ;
+
+final_subroutine_name : name ;
+
+function_reduction_name : name ;
+
+scalar_mask_expr : mask_expr ;
+
+scalar_int_variable_name : int_variable_name ;
+
+association_list : association ( ',' association )*  ;
+
+bounds_remapping_list : bounds_remapping ( ',' bounds_remapping )*  ;
+
+bounds_spec_list : bounds_spec ( ',' bounds_spec )*  ;
+
+dealloc_opt_list : dealloc_opt ( ',' dealloc_opt )*  ;
+
+allocate_object_list : allocate_object ( ',' allocate_object )*  ;
+
+pointer_object_list : pointer_object ( ',' pointer_object )*  ;
+
+allocate_coshape_spec_list : allocate_coshape_spec ( ',' allocate_coshape_spec )*  ;
+
+allocate_shape_spec_list : allocate_shape_spec ( ',' allocate_shape_spec )*  ;
+
+alloc_opt_list : alloc_opt ( ',' alloc_opt )*  ;
+
+allocation_list : allocation ( ',' allocation )*  ;
+
+image_selector_spec_list : image_selector_spec ( ',' image_selector_spec )*  ;
+
+cosubscript_list : cosubscript ( ',' cosubscript )*  ;
+
+part_name : name ;
+
+scalar_constant : constant ;
+
+scalar_structure_component : structure_component ;
+
+scalar_variable_name : variable_name ;
+
+common_block_object_list : common_block_object ( ',' common_block_object )*  ;
+
+equivalence_object_list : equivalence_object ( ',' equivalence_object )*  ;
+
+equivalence_set_list : equivalence_set ( ',' equivalence_set )*  ;
+
+namelist_group_object_list : namelist_group_object ( ',' namelist_group_object )*  ;
+
+import_name_list : import_name ( ',' import_name )*  ;
+
+import_name : name ;
+
+scalar_constant_subobject : constant_subobject ;
+
+scalar_constant : constant ;
+
+int_variable_name : name ;
+
+scalar_int_constant : int_constant ;
+
+scalar_int_constant_subobject : int_constant_subobject ;
+
+deferred_coshape_spec_list : deferred_coshape_spec ( ',' deferred_coshape_spec )*  ;
+
+data_i_do_object_list : data_i_do_object ( ',' data_i_do_object )*  ;
 
 
 

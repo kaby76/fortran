@@ -264,7 +264,9 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 
 <i>enumeration-type-name</i> <b>is</b> <i>name</i>
 
-<i>enumerator-name-list</i> <b>is</b> <i>enumerator-name</i> [ , <i>enumeratorName</i> ] ...
+<i>enumerator-name-list</i> <b>is</b> <i>enumerator-name</i> [ , <i>enumerator-name</i> ] ...
+
+<i>enumerator-name</i> <b>is</b> <i>name</i>
 
 <i>ac-value-list</i> <b>is</b> <i>ac-value</i> [ , <i>ac-value</i> ] ...
 
@@ -293,6 +295,72 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 <i>implicit-none-spec-list</i> <b>is</b> <i>implicit-none-spec</i> [ , <i>implicit-none-spec</i> ] ...
 
 <i>letter-spec-list</i> <b>is</b> <i>LETTERSPEC</i> [ , <i>LETTERSPEC</i> ] ...
+
+<i>final-subroutine-name</i> <b>is</b> <i>name</i>
+
+<i>function-reduction-name</i> <b>is</b> <i>name</i>
+
+<i>scalar-mask-expr</i> <b>is</b> <i>mask-expr</i>
+
+<i>scalar-int-variable-name</i> <b>is</b> <i>int-variable-name</i>
+
+<i>association-list</i> <b>is</b> <i>association</i> [ , <i>association</i> ] ...
+
+<i>bounds-remapping-list</i> <b>is</b> <i>bounds-remapping</i> [ , <i>bounds-remapping</i> ] ...
+
+<i>bounds-spec-list</i> <b>is</b> <i>bounds-spec</i> [ , <i>bounds-spec</i> ] ...
+
+<i>dealloc-opt-list</i> <b>is</b> <i>dealloc-opt</i> [ , <i>dealloc-opt</i> ] ...
+
+<i>allocate-object-list</i> <b>is</b> <i>allocate-object</i> [ , <i>allocate-object</i> ] ...
+
+<i>pointer-object-list</i> <b>is</b> <i>pointer-object</i> [ , <i>pointer-object</i> ] ...
+
+<i>allocate-coshape-spec-list</i> <b>is</b> <i>allocate-coshape-spec</i> [ , <i>allocate-coshape-spec</i> ] ...
+
+<i>allocate-shape-spec-list</i> <b>is</b> <i>allocate-shape-spec</i> [ , <i>allocate-shape-spec</i> ] ...
+
+<i>alloc-opt-list</i> <b>is</b> <i>alloc-opt</i> [ , <i>alloc-opt</i> ] ...
+
+<i>allocation-list</i> <b>is</b> <i>allocation</i> [ , <i>allocation</i> ] ...
+
+<i>image-selector-spec-list</i> <b>is</b> <i>image-selector-spec</i> [ , <i>image-selector-spec</i> ] ...
+
+<i>cosubscript-list</i> <b>is</b> <i>cosubscript</i> [ , <i>cosubscript</i> ] ...
+
+<i>part-name</i> <b>is</b> <i>name</i>
+
+<i>scalar-constant</i> <b>is</b> <i>constant</i>
+
+<i>scalar-structure-component</i> <b>is</b> <i>structure-component</i>
+
+<i>scalar-variable-name</i> <b>is</b> <i>variable-name</i>
+
+<i>common-block-object-list</i> <b>is</b> <i>common-block-object</i> [ , <i>common-block-object</i> ] ...
+
+<i>equivalence-object-list</i> <b>is</b> <i>equivalence-object</i> [ , <i>equivalence-object</i> ] ...
+
+<i>equivalence-set-list</i> <b>is</b> <i>equivalence-set</i> [ , <i>equivalence-set</i> ] ...
+
+<i>namelist-group-object-list</i> <b>is</b> <i>namelist-group-object</i> [ , <i>namelist-group-object</i> ] ...
+
+<i>import-name-list</i> <b>is</b> <i>import-name</i> [ , <i>import-name</i> ] ...
+
+<i>import-name</i> <b>is</b> <i>name</i>
+
+<i>scalar-constant-subobject</i> <b>is</b> <i>constant-subobject</i>
+
+<i>scalar-constant</i> <b>is</b> <i>constant</i>
+
+<i>int-variable-name</i> <b>is</b> <i>name</i>
+
+<i>scalar-int-constant</i> <b>is</b> <i>int-constant</i>
+
+<i>scalar-int-constant-subobject</i> <b>is</b> <i>int-constant-subobject</i>
+
+<i>deferred-coshape-spec-list</i> <b>is</b> <i>deferred-coshape-spec</i> [ , <i>deferred-coshape-spec</i> ] ...
+
+<i>data-i-do-object-list</i> <b>is</b> <i>data-i-do-object</i> [ , <i>data-i-do-object</i> ] ...
 
 ";' | trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf
