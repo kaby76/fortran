@@ -341,8 +341,8 @@ R757 <i>component-spec</i> <b>is</b> [ <i>keyword</i> = ] <i>component-data-sour
 R758 <i>component-data-source</i> <b>is</b> <i>expr</i>
               <b>or</b> <i>data-target</i>
               <b>or</b> <i>proc-target</i>
-R759 <i>enum-def</i> <b>is</b> <i>enum-def-stmt
-                   enumerator-def-stmt</i>
+R759 <i>enum-def</i> <b>is</b> <i>enum-def-stmt</i>
+                   <i>enumerator-def-stmt</i>
                    [ <i>enumerator-def-stmt</i> ] ...
                    <i>end-enum-stmt</i>
 R760 <i>enum-def-stmt</i> <b>is</b> ENUM, BIND(C) [ :: <i>enum-type-name</i> ]
@@ -351,8 +351,8 @@ R762 <i>enumerator</i> <b>is</b> <i>named-constant</i> [ = <i>scalar-int-constan
 R763 <i>end-enum-stmt</i> <b>is</b> END ENUM
 R764 <i>enum-type-spec</i> <b>is</b> <i>enum-type-name</i>
 R765 <i>enum-constructor</i> <b>is</b> <i>enum-type-spec</i> ( <i>scalar-expr</i> )
-R766 <i>enumeration-type-def</i> <b>is</b> <i>enumeration-type-stmt
-                   enumeration-enumerator-stmt</i>
+R766 <i>enumeration-type-def</i> <b>is</b> <i>enumeration-type-stmt</i>
+                   <i>enumeration-enumerator-stmt</i>
                    [ <i>enumeration-enumerator-stmt</i> ]...
                    <i>end-enumeration-type-stmt</i>
 R767 <i>enumeration-type-stmt</i> <b>is</b> ENUMERATION TYPE [ [ , <i>access-spec</i> ] :: ] <i>enumeration-type-name</i>
@@ -721,9 +721,9 @@ R1054 <i>forall-assignment-stmt</i> <b>is</b> <i>assignment-stmt</i>
 R1055 <i>end-forall-stmt</i> <b>is</b> END FORALL [<i>forall-construct-name</i> ]
 R1056 <i>forall-stmt</i> <b>is</b> FORALL <i>concurrent-header</i> <i>forall-assignment-stmt</i>
 R1101 <i>block</i> <b>is</b> [ <i>execution-part-construct</i> ] ...
-R1102 <i>associate-construct</i> <b>is</b> <i>associate-stmt
-                   block
-                   end-associate-stmt</i>
+R1102 <i>associate-construct</i> <b>is</b> <i>associate-stmt</i>
+                   <i>block</i>
+                   <i>end-associate-stmt</i>
 R1103 <i>associate-stmt</i> <b>is</b> [ <i>associate-construct-name</i> : ] ASSOCIATE
                    (<i>association-list</i> )
 R1104 <i>association</i> <b>is</b> <i>associate-name</i> =<i>></i> <i>selector</i>
@@ -732,29 +732,29 @@ R1105 <i>selector</i> <b>is</b> <i>expr</i>
 R1106 <i>end-associate-stmt</i> <b>is</b> END ASSOCIATE [ <i>associate-construct-name</i> ]
 R1107 <i>block-construct</i> <b>is</b> <i>block-stmt</i>
                     [ <i>block-specification-part</i> ]
-                   <i>block
-                   end-block-stmt</i>
+                   <i>block</i>
+                   <i>end-block-stmt</i>
 R1108 <i>block-stmt</i> <b>is</b> [ <i>block-construct-name</i> : ] BLOCK
 R1109 <i>block-specification-part</i> <b>is</b> [ <i>use-stmt</i> ] ...
                   [ <i>import-stmt</i> ] ...
                   [ <i>declaration-construct</i> ] ...
 R1110 <i>end-block-stmt</i> <b>is</b> END BLOCK [ <i>block-construct-name</i> ]
-R1111 <i>change-team-construct</i> <b>is</b> <i>change-team-stmt
-                   block
-                   end-change-team-stmt</i>
+R1111 <i>change-team-construct</i> <b>is</b> <i>change-team-stmt</i>
+                   <i>block</i>
+                   <i>end-change-team-stmt</i>
 R1112 <i>change-team-stmt</i> <b>is</b> [ <i>team-construct-name</i> : ] CHANGE TEAM ( <i>team-value</i>
                    [ , <i>coarray-association-list</i> ] [ , <i>sync-stat-list</i> ] )
 R1113 <i>coarray-association</i> <b>is</b> <i>codimension-decl</i> =<i>></i> <i>selector</i>
 R1114 <i>end-change-team-stmt</i> <b>is</b> END TEAM [ ( [ <i>sync-stat-list</i> ] ) ] [ <i>team-construct-name</i> ]
 R1115 <i>team-value</i> <b>is</b> <i>scalar-expr</i>
-R1116 <i>critical-construct</i> <b>is</b> <i>critical-stmt
-                   block
-                   end-critical-stmt</i>
+R1116 <i>critical-construct</i> <b>is</b> <i>critical-stmt</i>
+                   <i>block</i>
+                   <i>end-critical-stmt</i>
 R1117 <i>critical-stmt</i> <b>is</b> [ <i>critical-construct-name</i> : ] CRITICAL [ ( [ <i>sync-stat-list</i> ] ) ]
 R1118 <i>end-critical-stmt</i> <b>is</b> END CRITICAL [ <i>critical-construct-name</i> ]
-R1119 <i>do-construct</i> <b>is</b> <i>do-stmt
-                   block
-                   end-do</i>
+R1119 <i>do-construct</i> <b>is</b> <i>do-stmt</i>
+                   <i>block</i>
+                   <i>end-do</i>
 R1120 <i>do-stmt</i> <b>is</b> <i>nonlabel-do-stmt</i>
               <b>or</b> <i>label-do-stmt</i>
 R1121 <i>label-do-stmt</i> <b>is</b> [ <i>do-construct-name</i> : ] DO <i>label</i> [ <i>loop-control</i> ]
@@ -786,12 +786,12 @@ R1133 <i>end-do</i> <b>is</b> <i>end-do-stmt</i>
               <b>or</b> <i>continue-stmt</i>
 R1134 <i>end-do-stmt</i> <b>is</b> END DO [ <i>do-construct-name</i> ]
 R1135 <i>cycle-stmt</i> <b>is</b> CYCLE [ <i>do-construct-name</i> ]
-R1136 <i>if-construct</i> <b>is</b> <i>if-then-stmt
-                     block</i>
-                   [ <i>else-if-stmt
-                     block</i> ] ...
-                   [ <i>else-stmt
-                     block</i> ]
+R1136 <i>if-construct</i> <b>is</b> <i>if-then-stmt</i>
+                     <i>block</i>
+                   [ <i>else-if-stmt</i>
+                     <i>block</i> ] ...
+                   [ <i>else-stmt</i>
+                     <i>block</i> ]
                    <i>end-if-stmt</i>
 R1137 <i>if-then-stmt</i> <b>is</b> [ <i>if-construct-name</i> : ] IF ( <i>scalar-logical-expr</i> ) THEN
 R1138 <i>else-if-stmt</i> <b>is</b> ELSE IF ( <i>scalar-logical-expr</i> ) THEN [ <i>if-construct-name</i> ]
@@ -799,8 +799,8 @@ R1139 <i>else-stmt</i> <b>is</b> ELSE [ <i>if-construct-name</i> ]
 R1140 <i>end-if-stmt</i> <b>is</b> END IF [ <i>if-construct-name</i> ]
 R1141 <i>if-stmt</i> <b>is</b> IF ( <i>scalar-logical-expr</i> ) <i>action-stmt</i>
 R1142 <i>case-construct</i> <b>is</b> <i>select-case-stmt</i>
-                   [ <i>case-stmt
-                     block</i> ] ...
+                   [ <i>case-stmt</i>
+                     <i>block</i> ] ...
                    <i>end-select-stmt</i>
 R1143 <i>select-case-stmt</i> <b>is</b> [ <i>case-construct-name</i> : ] SELECT CASE ( <i>case-expr</i> )
 R1144 <i>case-stmt</i> <b>is</b> CASE <i>case-selector</i> [<i>case-construct-name</i>]
@@ -814,8 +814,8 @@ R1148 <i>case-value-range</i> <b>is</b> <i>case-value</i>
               <b>or</b> <i>case-value</i> : <i>case-value</i>
 R1149 <i>case-value</i> <b>is</b> <i>scalar-constant-expr</i>
 R1150 <i>select-rank-construct</i> <b>is</b> <i>select-rank-stmt</i>
-                   [ <i>select-rank-case-stmt
-                   block</i> ]...
+                   [ <i>select-rank-case-stmt</i>
+                   <i>block</i> ]...
                    <i>end-select-rank-stmt</i>
 R1151 <i>select-rank-stmt</i> <b>is</b> [ <i>select-construct-name</i> : ] SELECT RANK
                    ( [ <i>associate-name</i> =<i>></i> ] <i>selector</i> )
@@ -824,8 +824,8 @@ R1152 <i>select-rank-case-stmt</i> <b>is</b> RANK ( <i>scalar-int-constant-expr<
               <b>or</b> RANK DEFAULT [ <i>select-construct-name</i> ]
 R1153 <i>end-select-rank-stmt</i> <b>is</b> END SELECT [ <i>select-construct-name</i> ]
 R1154 <i>select-type-construct</i> <b>is</b> <i>select-type-stmt</i>
-                   [ <i>type-guard-stmt
-                     block</i> ] ...
+                   [ <i>type-guard-stmt</i>
+                     <i>block</i> ] ...
                    <i>end-select-type-stmt</i>
 R1155 <i>select-type-stmt</i> <b>is</b> [ <i>select-construct-name</i> : ] SELECT TYPE
                    ( [ <i>associate-name</i> =<i>></i> ] <i>selector</i> )

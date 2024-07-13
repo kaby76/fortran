@@ -339,8 +339,8 @@
  component_data_source : expr
               | data_target
               | proc_target ;
- enum_def : '<i>enum-def-stmt'                   
-'enumerator-def-stmt</i>'
+ enum_def : enum_def_stmt
+                   enumerator_def_stmt
                    ( enumerator_def_stmt )* 
                    end_enum_stmt ;
  enum_def_stmt : 'ENUM,' 'BIND(C)' ( '::' enum_type_name )? ;
@@ -349,8 +349,8 @@
  end_enum_stmt : 'END' 'ENUM' ;
  enum_type_spec : enum_type_name ;
  enum_constructor : enum_type_spec '(' scalar_expr ')' ;
- enumeration_type_def : '<i>enumeration-type-stmt'                   
-'enumeration-enumerator-stmt</i>'
+ enumeration_type_def : enumeration_type_stmt
+                   enumeration_enumerator_stmt
                    ( enumeration_enumerator_stmt )*
                    end_enumeration_type_stmt ;
  enumeration_type_stmt : 'ENUMERATION' 'TYPE' ( ( ',' access_spec )? '::' )? enumeration_type_name ;
@@ -719,9 +719,9 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  end_forall_stmt : 'END' 'FORALL' (forall_construct_name )? ;
  forall_stmt : 'FORALL' concurrent_header forall_assignment_stmt ;
  block : ( execution_part_construct )*  ;
- associate_construct : '<i>associate-stmt'                   
-'block'                   
-'end-associate-stmt</i>' ;
+ associate_construct : associate_stmt
+                   block
+                   end_associate_stmt ;
  associate_stmt : ( associate_construct_name ':' )? 'ASSOCIATE'                   
 '('<i>association-list</i> ')' ;
  association : associate_name '=>' selector ;
@@ -729,30 +729,30 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
               | variable ;
  end_associate_stmt : 'END' 'ASSOCIATE' ( associate_construct_name )? ;
  block_construct : block_stmt
-                    ( block_specification_part )?                   
-'<i>block'                   
-'end-block-stmt</i>' ;
+                    ( block_specification_part )?
+                   block
+                   end_block_stmt ;
  block_stmt : ( block_construct_name ':' )? 'BLOCK' ;
  block_specification_part : ( use_stmt )* 
                   ( import_stmt )* 
                   ( declaration_construct )*  ;
  end_block_stmt : 'END' 'BLOCK' ( block_construct_name )? ;
- change_team_construct : '<i>change-team-stmt'                   
-'block'                   
-'end-change-team-stmt</i>' ;
+ change_team_construct : change_team_stmt
+                   block
+                   end_change_team_stmt ;
  change_team_stmt : ( team_construct_name ':' )? 'CHANGE' 'TEAM' '(' team_value
                    ( ',' coarray_association_list )? ( ',' sync_stat_list )? ')' ;
  coarray_association : codimension_decl '=>' selector ;
  end_change_team_stmt : 'END' 'TEAM' ( '(' ( sync_stat_list )? ')' )? ( team_construct_name )? ;
  team_value : scalar_expr ;
- critical_construct : '<i>critical-stmt'                   
-'block'                   
-'end-critical-stmt</i>' ;
+ critical_construct : critical_stmt
+                   block
+                   end_critical_stmt ;
  critical_stmt : ( critical_construct_name ':' )? 'CRITICAL' ( '(' ( sync_stat_list )? ')' )? ;
  end_critical_stmt : 'END' 'CRITICAL' ( critical_construct_name )? ;
- do_construct : '<i>do-stmt'                   
-'block'                   
-'end-do</i>' ;
+ do_construct : do_stmt
+                   block
+                   end_do ;
  do_stmt : nonlabel_do_stmt
               | label_do_stmt ;
  label_do_stmt : ( do_construct_name ':' )? 'DO' label ( loop_control )? ;
@@ -784,12 +784,12 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
               | continue_stmt ;
  end_do_stmt : 'END' 'DO' ( do_construct_name )? ;
  cycle_stmt : 'CYCLE' ( do_construct_name )? ;
- if_construct : '<i>if-then-stmt'                     
-'block</i>'
-                   ( '<i>else-if-stmt'                     
-'block</i>' )* 
-                   ( '<i>else-stmt'                     
-'block</i>' )?
+ if_construct : if_then_stmt
+                     block
+                   ( else_if_stmt
+                     block )* 
+                   ( else_stmt
+                     block )?
                    end_if_stmt ;
  if_then_stmt : ( if_construct_name ':' )? 'IF' '(' scalar_logical_expr ')' 'THEN' ;
  else_if_stmt : 'ELSE' 'IF' '(' scalar_logical_expr ')' 'THEN' ( if_construct_name )? ;
@@ -797,8 +797,8 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  end_if_stmt : 'END' 'IF' ( if_construct_name )? ;
  if_stmt : 'IF' '(' scalar_logical_expr ')' action_stmt ;
  case_construct : select_case_stmt
-                   ( '<i>case-stmt'                     
-'block</i>' )* 
+                   ( case_stmt
+                     block )* 
                    end_select_stmt ;
  select_case_stmt : ( case_construct_name ':' )? 'SELECT' 'CASE' '(' case_expr ')' ;
  case_stmt : 'CASE' case_selector (case_construct_name)? ;
@@ -812,8 +812,8 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
               | case_value ':' case_value ;
  case_value : scalar_constant_expr ;
  select_rank_construct : select_rank_stmt
-                   ( '<i>select-rank-case-stmt'                   
-'block</i>' )*
+                   ( select_rank_case_stmt
+                   block )*
                    end_select_rank_stmt ;
  select_rank_stmt : ( select_construct_name ':' )? 'SELECT' 'RANK'                   
 '(' ( associate_name '=>' )? selector ')' ;
@@ -822,8 +822,8 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
               | 'RANK' 'DEFAULT' ( select_construct_name )? ;
  end_select_rank_stmt : 'END' 'SELECT' ( select_construct_name )? ;
  select_type_construct : select_type_stmt
-                   ( '<i>type-guard-stmt'                     
-'block</i>' )* 
+                   ( type_guard_stmt
+                     block )* 
                    end_select_type_stmt ;
  select_type_stmt : ( select_construct_name ':' )? 'SELECT' 'TYPE'                   
 '(' ( associate_name '=>' )? selector ')' ;
