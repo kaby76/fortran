@@ -1223,323 +1223,166 @@ R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
  stmt_function_stmt : function_name '(' ( dummy_arg_name_list )? ')' '=' scalar_expr ;
 
 
-scalar_int_constant_expr : int_constant_expr ;
-
-function_name : name ;
-
-select_construct_name : name ;
-
-scalar_int_expr : int_expr ;
-
-scalar_expr : expr ;
-
-section_subscript_list : section_subscript ( ',' section_subscript )*  ;
-
-dummy_arg_list : dummy_arg ( ',' dummy_arg )*  ;
-
-dummy_arg_name_list : dummy_arg_name ( ',' dummy_arg_name )*  ;
-
-result_name : name ;
-
-entry_name : name ;
-
-procedure_name : name ;
-
-subroutine_name : name ;
-
-scalar_logical_expr : logical_expr ;
-
-binding_name : name ;
-
+ac_value_list : ac_value ( ',' ac_value )*  ;
+access_id_list : access_id ( ',' access_id )*  ;
 actual_arg_spec_list : actual_arg_spec ( ',' actual_arg_spec )*  ;
-
-intrinsic_procedure_name : name ;
-
-intrinsic_procedure_name_list : intrinsic_procedure_name ( ',' intrinsic_procedure_name )*  ;
-
-proc_decl_list : proc_decl ( ',' proc_decl )*  ;
-
+alloc_opt_list : alloc_opt ( ',' alloc_opt )*  ;
+allocatable_decl_list : allocatable_decl ( ',' allocatable_decl )*  ;
+allocate_coshape_spec_list : allocate_coshape_spec ( ',' allocate_coshape_spec )*  ;
+allocate_object_list : allocate_object ( ',' allocate_object )*  ;
+allocate_shape_spec_list : allocate_shape_spec ( ',' allocate_shape_spec )*  ;
+allocation_list : allocation ( ',' allocation )*  ;
+association_list : association ( ',' association )*  ;
+assumed_implied_spec_list : assumed_implied_spec ( ',' assumed_implied_spec )*  ;
+assumed_shape_spec_list : assumed_shape_spec ( ',' assumed_shape_spec )*  ;
+bind_entity_list : bind_entity ( ',' bind_entity )*  ;
+binding_attr_list : binding_attr ( ',' binding_attr )*  ;
+binding_name_list : binding_name ( ',' binding_name )*  ;
+bounds_remapping_list : bounds_remapping ( ',' bounds_remapping )*  ;
+bounds_spec_list : bounds_spec ( ',' bounds_spec )*  ;
+case_value_range_list : case_value_range ( ',' case_value_range )*  ;
+close_spec_list : close_spec ( ',' close_spec )*  ;
+coarray_association_list : coarray_association ( ',' coarray_association )*  ;
+codimension_decl_list : codimension_decl ( ',' codimension_decl )*  ;
+common_block_object_list : common_block_object ( ',' common_block_object )*  ;
+component_attr_spec_list : component_attr_spec ( ',' component_attr_spec )*  ;
+component_decl_list : component_decl ( ',' component_decl )*  ;
+component_spec_list : component_spec ( ',' component_spec )*  ;
+concurrent_control_list : concurrent_control ( ',' concurrent_control )*  ;
+connect_spec_list : connect_spec ( ',' connect_spec )*  ;
+cosubscript_list : cosubscript ( ',' cosubscript )*  ;
+data_i_do_object_list : data_i_do_object ( ',' data_i_do_object )*  ;
+data_stmt_object_list : data_stmt_object ( ',' data_stmt_object )*  ;
+data_stmt_value_list : data_stmt_value ( ',' data_stmt_value )*  ;
+dealloc_opt_list : dealloc_opt ( ',' dealloc_opt )*  ;
+deferred_coshape_spec_list : deferred_coshape_spec ( ',' deferred_coshape_spec )*  ;
+deferred_shape_spec_list : deferred_shape_spec ( ',' deferred_shape_spec )*  ;
+dummy_arg_list : dummy_arg ( ',' dummy_arg )*  ;
+dummy_arg_name_list : dummy_arg_name ( ',' dummy_arg_name )*  ;
+entity_decl_list : entity_decl ( ',' entity_decl )*  ;
+entity_name_list : entity_name ( ',' entity_name )*  ;
+enumerator_list : enumerator ( ',' enumerator )*  ;
+enumerator_name_list : enumerator_name ( ',' enumerator_name )*  ;
+equivalence_object_list : equivalence_object ( ',' equivalence_object )*  ;
+equivalence_set_list : equivalence_set ( ',' equivalence_set )*  ;
+event_wait_spec_list : event_wait_spec ( ',' event_wait_spec )*  ;
+explicit_shape_spec_list : explicit_shape_spec ( ',' explicit_shape_spec )*  ;
 external_name_list : external_name ( ',' external_name )*  ;
-
-specific_procedure_list : specific_procedure ( ',' specific_procedure )*  ;
-
-block_data_name : name ;
-
-submodule_name : name ;
-
-output_item_list : output_item ( ',' output_item )*  ;
-
-input_item_list : input_item ( ',' input_item )*  ;
-
-module_name : name ;
-
-rename_list : rename ( ',' rename )*  ;
-
-local_name : name ;
-
-use_name : name ;
-
-ancestor_module_name : name ;
-
-parent_submodule_name : name ;
-
-generic_name : name ;
-
-procedure_entity_name : name ;
-
-external_name : name ;
-
-only_list : only ( ',' only )*  ;
-
-v_list : v ( ',' v )*  ;
-
-program_name : name ;
-
-scalar_default_char_variable : default_char_variable ;
-
-scalar_int_variable : int_variable ;
-
-scalar_logical_variable : logical_variable ;
-
-inquire_spec_list : inquire_spec ( ',' inquire_spec )*  ;
-
+final_subroutine_name_list : final_subroutine_name ( ',' final_subroutine_name )*  ;
 flush_spec_list : flush_spec ( ',' flush_spec )*  ;
-
+form_team_spec_list : form_team_spec ( ',' form_team_spec )*  ;
+image_selector_spec_list : image_selector_spec ( ',' image_selector_spec )*  ;
+implicit_none_spec_list : implicit_none_spec ( ',' implicit_none_spec )*  ;
+implicit_spec_list : implicit_spec ( ',' implicit_spec )*  ;
+import_name_list : import_name ( ',' import_name )*  ;
+input_item_list : input_item ( ',' input_item )*  ;
+inquire_spec_list : inquire_spec ( ',' inquire_spec )*  ;
+intrinsic_procedure_name_list : intrinsic_procedure_name ( ',' intrinsic_procedure_name )*  ;
+io_control_spec_list : io_control_spec ( ',' io_control_spec )*  ;
+io_implied_do_object_list : io_implied_do_object ( ',' io_implied_do )*  ;
+label_list : label ( ',' label )*  ;
+letter_spec_list : <i>LETTERSPEC</i> ( ',' <i>LETTERSPEC</i> )*  ;
+lock_stat_list : lock_stat ( ',' lock_stat )*  ;
+named_constant_def_list : named_constant_def ( ',' named_constant_def )*  ;
+namelist_group_object_list : namelist_group_object ( ',' namelist_group_object )*  ;
+object_name_list : object_name ( ',' object_name )*  ;
+only_list : only ( ',' only )*  ;
+output_item_list : output_item ( ',' output_item )*  ;
+pointer_decl_list : pointer_decl ( ',' pointer_decl )*  ;
+pointer_object_list : pointer_object ( ',' pointer_object )*  ;
 position_spec_list : position_spec ( ',' position_spec )*  ;
-
+proc_component_attr_spec_list : proc_component_attr_spec ( ',' proc_component_attr_spec )*  ;
+proc_decl_list : proc_decl ( ',' proc_decl )*  ;
+rename_list : rename ( ',' rename )*  ;
+saved_entity_list : saved_entity ( ',' saved_entity )*  ;
+section_subscript_list : section_subscript ( ',' section_subscript )*  ;
+specific_procedure_list : specific_procedure ( ',' specific_procedure )*  ;
+sync_stat_list : sync_stat ( ',' sync_stat )*  ;
+target_decl_list : target_decl ( ',' target_decl )*  ;
+type_attr_spec_list : type_param_attr_spec ( ',' type_param_attr_spec )*  ;
+type_bound_proc_decl_list : type_bound_proc_decl ( ',' type_bound_proc_decl )*  ;
+type_param_decl_list : type_param_decl ( ',' type_param_decl )*  ;
+type_param_name_list : type_param_name ( ',' type_param_name )*  ;
+type_param_spec_list : type_param_spec ( ',' type_param_spec )*  ;
+v_list : v ( ',' v )*  ;
+variable_name_list : variable_name ( ',' variable_name )*  ;
 wait_spec_list : wait_spec ( ',' wait_spec )*  ;
 
-io_implied_do_object_list : io_implied_do_object ( ',' io_implied_do )*  ;
-
-scalar_default_char_expr : default_char_expr ;
-
-scalar_default_char_constant_expr : default_char_constant_expr ;
-
-namelist_group_name : name ;
-
-io_control_spec_list : io_control_spec ( ',' io_control_spec )*  ;
-
-close_spec_list : close_spec ( ',' close_spec )*  ;
-
-connect_spec_list : connect_spec ( ',' connect_spec )*  ;
-
-scalar_variable : variable ;
-
-sync_stat_list : sync_stat ( ',' sync_stat )*  ;
-
-lock_stat_list : lock_stat ( ',' lock_stat )*  ;
-
-event_wait_spec_list : event_wait_spec ( ',' event_wait_spec )*  ;
-
-label_list : label ( ',' label )*  ;
-
-form_team_spec_list : form_team_spec ( ',' form_team_spec )*  ;
-
-construct_name : name ;
-
-scalar_int_constant_expr : int_constant_expr ;
-
-type_attr_spec_list : type_param_attr_spec ( ',' type_param_attr_spec )*  ;
-
-type_param_name_list : type_param_name ( ',' type_param_name )*  ;
-
-type_name : name ;
-
-type_param_decl_list : type_param_decl ( ',' type_param_decl )*  ;
-
-type_param_name : name ;
-
-component_attr_spec_list : component_attr_spec ( ',' component_attr_spec )*  ;
-
-component_name : name ;
-
-deferred_shape_spec_list : deferred_shape_spec ( ',' deferred_shape_spec )*  ;
-
-explicit_shape_spec_list : explicit_shape_spec ( ',' explicit_shape_spec )*  ;
-
-proc_component_attr_spec_list : proc_component_attr_spec ( ',' proc_component_attr_spec )*  ;
-
-arg_name : name ;
-
-component_decl_list : component_decl ( ',' component_decl )*  ;
-
-scalar_int_constant_name : int_constant_name ;
-
-int_constant_name : name ;
-
-associate_construct_name : name ;
-
-associate_name : name ;
-
-case_value_range_list : case_value_range ( ',' case_value_range )*  ;
-
-case_construct_name : name ;
-
-scalar_constant_expr : constant_expr ;
-
-binding_attr_list : binding_attr ( ',' binding_attr )*  ;
-
-assumed_implied_spec_list : assumed_implied_spec ( ',' assumed_implied_spec )*  ;
-
-access_id_list : access_id ( ',' access_id )*  ;
-
 access_name : name ;
-
-allocatable_decl_list : allocatable_decl ( ',' allocatable_decl )*  ;
-
-object_name_list : object_name ( ',' object_name )*  ;
-
-bind_entity_list : bind_entity ( ',' bind_entity )*  ;
-
-entity_name : name ;
-
-common_block_name : name ;
-
-codimension_decl_list : codimension_decl ( ',' codimension_decl )*  ;
-
-assumed_shape_spec_list : assumed_shape_spec ( ',' assumed_shape_spec )*  ;
-
-coarray_name : name ;
-
-if_construct_name : name ;
-
-variable_name_list : variable_name ( ',' variable_name )*  ;
-
-concurrent_control_list : concurrent_control ( ',' concurrent_control )*  ;
-
-index_name : name ;
-
-do_construct_name : name ;
-
-critical_construct_name : name ;
-
-coarray_association_list : coarray_association ( ',' coarray_association )*  ;
-
-team_construct_name : name ;
-
-block_construct_name : name ;
-
-where_construct_name : name ;
-
-forall_construct_name : name ;
-
-procedure_component_name : name ;
-
-data_pointer_component_name : name ;
-
-type_bound_proc_decl_list : type_bound_proc_decl ( ',' type_bound_proc_decl )*  ;
-
-binding_name_list : binding_name ( ',' binding_name )*  ;
-
-final_subroutine_name_list : final_subroutine_name ( ',' final_subroutine_name )*  ;
-
-type_param_spec_list : type_param_spec ( ',' type_param_spec )*  ;
-
-component_spec_list : component_spec ( ',' component_spec )*  ;
-
-enum_type_name : name ;
-
-enumerator_list : enumerator ( ',' enumerator )*  ;
-
-enumeration_type_name : name ;
-
-enumerator_name_list : enumerator_name ( ',' enumerator_name )*  ;
-
-enumerator_name : name ;
-
-ac_value_list : ac_value ( ',' ac_value )*  ;
-
-entity_decl_list : entity_decl ( ',' entity_decl )*  ;
-
-data_stmt_object_list : data_stmt_object ( ',' data_stmt_object )*  ;
-
-data_stmt_value_list : data_stmt_value ( ',' data_stmt_value )*  ;
-
+ancestor_module_name : name ;
+arg_name : name ;
 array_name : name ;
-
-named_constant_def_list : named_constant_def ( ',' named_constant_def )*  ;
-
-pointer_decl_list : pointer_decl ( ',' pointer_decl )*  ;
-
-procptr_entity_name : name ;
-
-entity_name_list : entity_name ( ',' entity_name )*  ;
-
-saved_entity_list : saved_entity ( ',' saved_entity )*  ;
-
-target_decl_list : target_decl ( ',' target_decl )*  ;
-
-implicit_spec_list : implicit_spec ( ',' implicit_spec )*  ;
-
-implicit_none_spec_list : implicit_none_spec ( ',' implicit_none_spec )*  ;
-
-letter_spec_list : <i>LETTERSPEC</i> ( ',' <i>LETTERSPEC</i> )*  ;
-
+associate_construct_name : name ;
+associate_name : name ;
+binding_name : name ;
+block_construct_name : name ;
+block_data_name : name ;
+case_construct_name : name ;
+coarray_name : name ;
+common_block_name : name ;
+component_name : name ;
+construct_name : name ;
+critical_construct_name : name ;
+data_pointer_component_name : name ;
+do_construct_name : name ;
+entity_name : name ;
+entry_name : name ;
+enum_type_name : name ;
+enumeration_type_name : name ;
+enumerator_name : name ;
+external_name : name ;
 final_subroutine_name : name ;
-
+forall_construct_name : name ;
+function_name : name ;
 function_reduction_name : name ;
-
-scalar_mask_expr : mask_expr ;
-
-scalar_int_variable_name : int_variable_name ;
-
-association_list : association ( ',' association )*  ;
-
-bounds_remapping_list : bounds_remapping ( ',' bounds_remapping )*  ;
-
-bounds_spec_list : bounds_spec ( ',' bounds_spec )*  ;
-
-dealloc_opt_list : dealloc_opt ( ',' dealloc_opt )*  ;
-
-allocate_object_list : allocate_object ( ',' allocate_object )*  ;
-
-pointer_object_list : pointer_object ( ',' pointer_object )*  ;
-
-allocate_coshape_spec_list : allocate_coshape_spec ( ',' allocate_coshape_spec )*  ;
-
-allocate_shape_spec_list : allocate_shape_spec ( ',' allocate_shape_spec )*  ;
-
-alloc_opt_list : alloc_opt ( ',' alloc_opt )*  ;
-
-allocation_list : allocation ( ',' allocation )*  ;
-
-image_selector_spec_list : image_selector_spec ( ',' image_selector_spec )*  ;
-
-cosubscript_list : cosubscript ( ',' cosubscript )*  ;
-
-part_name : name ;
-
-scalar_constant : constant ;
-
-scalar_structure_component : structure_component ;
-
-scalar_variable_name : variable_name ;
-
-common_block_object_list : common_block_object ( ',' common_block_object )*  ;
-
-equivalence_object_list : equivalence_object ( ',' equivalence_object )*  ;
-
-equivalence_set_list : equivalence_set ( ',' equivalence_set )*  ;
-
-namelist_group_object_list : namelist_group_object ( ',' namelist_group_object )*  ;
-
-import_name_list : import_name ( ',' import_name )*  ;
-
+generic_name : name ;
+if_construct_name : name ;
 import_name : name ;
-
-scalar_constant_subobject : constant_subobject ;
-
-scalar_constant : constant ;
-
+index_name : name ;
+int_constant_name : name ;
 int_variable_name : name ;
-
-scalar_int_constant : int_constant ;
-
+intrinsic_procedure_name : name ;
+local_name : name ;
+module_name : name ;
+namelist_group_name : name ;
+parent_submodule_name : name ;
+part_name : name ;
+procedure_component_name : name ;
+procedure_entity_name : name ;
+procedure_name : name ;
+procptr_entity_name : name ;
+program_name : name ;
+result_name : name ;
+scalar_constant_expr : constant_expr ;
+scalar_constant_subobject : constant_subobject ;
+scalar_constant : constant ;
+scalar_constant : constant ;
+scalar_default_char_constant_expr : default_char_constant_expr ;
+scalar_default_char_expr : default_char_expr ;
+scalar_default_char_variable : default_char_variable ;
+scalar_expr : expr ;
+scalar_int_constant_expr : int_constant_expr ;
+scalar_int_constant_expr : int_constant_expr ;
+scalar_int_constant_name : int_constant_name ;
 scalar_int_constant_subobject : int_constant_subobject ;
-
-deferred_coshape_spec_list : deferred_coshape_spec ( ',' deferred_coshape_spec )*  ;
-
-data_i_do_object_list : data_i_do_object ( ',' data_i_do_object )*  ;
+scalar_int_constant : int_constant ;
+scalar_int_expr : int_expr ;
+scalar_int_variable_name : int_variable_name ;
+scalar_int_variable : int_variable ;
+scalar_logical_expr : logical_expr ;
+scalar_logical_variable : logical_variable ;
+scalar_mask_expr : mask_expr ;
+scalar_structure_component : structure_component ;
+scalar_variable_name : variable_name ;
+scalar_variable : variable ;
+select_construct_name : name ;
+submodule_name : name ;
+subroutine_name : name ;
+team_construct_name : name ;
+type_name : name ;
+type_param_name : name ;
+use_name : name ;
+where_construct_name : name ;
 
 
 
