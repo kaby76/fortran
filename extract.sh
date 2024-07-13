@@ -30,7 +30,7 @@ fi
 echo "Extracting rules from text $to."
 cat $to | ./extraction/bin/Debug/net8.0/RuleExtraction.exe > ebnf.ebnf
 
-echo "Change lines with brackets in order to make grammar and parse work."
+echo "Change lines with meta characters, which interfere with parsing simplified EBNF."
 sed -i "s%R779 <i>lbracket</i> <b>is</b> \[%R779 <i>lbracket</i> <b>is</b> '['%" ebnf.ebnf
 sed -i "s%R780 <i>rbracket</i> <b>is</b> \]%R780 <i>rbracket</i> <b>is</b> ']'%" ebnf.ebnf
 sed -i 's%_ \] '"'"'%_ ] <i>SQUOTE</i>%' ebnf.ebnf
@@ -298,7 +298,31 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf
 
-echo "From here on, we use trparse to parse the EBNF and convert it to Antlr format."
+echo "Replace certain rules that straddle parser/lexer boundary."
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery 'replace //rule_[lhs/id_/ID/text() = "<i>char-literal-constant</i>"]
+		"
+<i>char-literal-constant</i> <b>is</b>
+	[ <i>kind-param</i> _ ] <i>SQUOTE-REP-CHAR</i>
+	<b>or</b> [ <i>kind-param</i> _ ] <i>DQUOTE-REP-CHAR</i>
+";
+		' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+
+echo "Deleting several rules involving 'xyz', which should not be in the EBNF."
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery '
+		delete //rule_[lhs/id_/ID/text() = "<i>xyz</i>"];
+		delete //rule_[lhs/id_/ID/text() = "<i>xyz-list</i>"];
+		delete //rule_[lhs/id_/ID/text() = "<i>xyz-name</i>"];
+		delete //rule_[lhs/id_/ID/text() = "<i>scalar-xyz</i>"];
+		' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+		
 echo "Get names of symbols."
 trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 	trquery 'grep  //lhs/id_/ID' | trtext | sort -u > ids.txt
@@ -320,17 +344,11 @@ EOF
 sed -f rename2.txt -i ebnf.ebnf
 
 
-
-echo "Deleting several rules involving 'xyz', which should not be in the EBNF."
 echo "Delete rule numbers from rules, and add semi-colon rule terminators."
 echo "Add function-name, which is missing from Spec EBNF."
 echo "Change syntax around for ASSIGN, ALT, zero_or_one, zero_or_more, and any."
 trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 	trquery '
-		delete //rule_[lhs/id_/ID/text() = "<i>xyz</i>"];
-		delete //rule_[lhs/id_/ID/text() = "<i>xyz-list</i>"];
-		delete //rule_[lhs/id_/ID/text() = "<i>xyz-name</i>"];
-		delete //rule_[lhs/id_/ID/text() = "<i>scalar-xyz</i>"];
 		delete //RULE_NUMBER;
 		replace //ASSIGN ":";
 		replace //ALT "|";
@@ -342,7 +360,8 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 		move //any/(@WS | @NL) ..;
 		insert before //any "'\''";
 		insert after //any "'\''";
-		insert after //rule_ " ;";' | \
+		insert after //rule_ " ;";
+		' | \
 	trtext > ebnf1.ebnf
 mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf

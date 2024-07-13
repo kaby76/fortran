@@ -263,8 +263,10 @@
               | '*' char_length ( ',' )? ;
  char_length : '(' type_param_value ')'
               | int_literal_constant ;
- char_literal_constant : ( kind_param '_' )? <i>SQUOTE</i> ( <i>rep-char</i> )*  <i>SQUOTE</i>
-              | ( kind_param '_' )? <i>DQUOTE</i> ( <i>rep-char</i> )*  <i>DQUOTE</i> ;
+char_literal_constant :
+	( kind_param '_' )? <i>SQUOTE-REP-CHAR</i>
+	| ( kind_param '_' )? <i>DQUOTE-REP-CHAR</i> ;
+
  logical_literal_constant : '.TRUE.' ( '_' kind_param )?
               | '.FALSE.' ( '_' kind_param )? ;
  derived_type_def : derived_type_stmt
@@ -1470,6 +1472,8 @@ implicit_spec_list : implicit_spec ( ',' implicit_spec )*  ;
 implicit_none_spec_list : implicit_none_spec ( ',' implicit_none_spec )*  ;
 
 letter_spec_list : <i>LETTERSPEC</i> ( ',' <i>LETTERSPEC</i> )*  ;
+
+
 
 
 
