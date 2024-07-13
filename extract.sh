@@ -222,6 +222,35 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf
 
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery 'replace //rule_[lhs/id_/ID/text() = "<i>boz-literal-constant</i>"]
+		"
+<i>boz-literal-constant</i> <b>is</b> <i>BINARYCONSTANT</i> <b>or</b> <i>OCTALCONSTANT</i> <b>or</b> <i>HEXCONSTANT</i>
+
+";
+		' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery 'delete //rule_[lhs/id_/ID/text() = "<i>binary-constant</i>"];' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery 'delete //rule_[lhs/id_/ID/text() = "<i>octal-constant</i>"];' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+
+trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
+	trquery 'delete //rule_[lhs/id_/ID/text() = "<i>hex-constant</i>"];' | \
+	trtext > ebnf1.ebnf
+mv ebnf1.ebnf ebnf.ebnf
+dos2unix ebnf.ebnf
+
 echo "Deleting several rules involving 'xyz', which should not be in the EBNF."
 trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 	trquery '

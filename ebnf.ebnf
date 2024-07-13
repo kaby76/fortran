@@ -360,15 +360,7 @@ char_literal_constant :
  end_enumeration_type_stmt : 'END' 'ENUMERATION' 'TYPE' ( enumeration_type_name )? ;
  enumeration_type_spec : enumeration_type_name ;
  enumeration_constructor : enumeration_type_spec '(' scalar_int_expr ')' ;
- boz_literal_constant : binary_constant
-              | <i>octal-constant</i>
-              | <i>hex-constant</i> ;
- binary_constant : 'B' ' digit [ digit ] ... <i>SQUOTE</i>
-              <b>or</b> B " digit [ digit ] ... <i>DQUOTE</i>
-R774 <i>octal-constant</i> <b>is</b> O ' digit ( digit )*  <i>SQUOTE</i>
-              | 'O' " digit [ digit ] ... <i>DQUOTE</i>
-R775 <i>hex-constant</i> <b>is</b> Z ' hex_digit [ hex_digit ] ... <i>SQUOTE</i>
-              <b>or</b> Z " hex_digit ( hex_digit )*  <i>DQUOTE</i> ;
+boz_literal_constant : <i>BINARYCONSTANT</i> | <i>OCTALCONSTANT</i> | <i>HEXCONSTANT</i> ;
  hex_digit : digit
               | 'A'
               | 'B'
@@ -1383,6 +1375,10 @@ type_name : name ;
 type_param_name : name ;
 use_name : name ;
 where_construct_name : name ;
+
+
+
+
 
 
 
