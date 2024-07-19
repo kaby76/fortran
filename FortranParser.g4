@@ -13,7 +13,7 @@ name: NAME | PROGRAM | END| FUNCTION | SUBROUTINE | MODULE
 	 | WAIT | UNTILCOUNT | POST | ERRMSG | ERROR | STOP | QUIET | ENDFILE | DEALLOCATE | CYCLE | CONTINUE | CLOSE | UNIT | IOSTAT 
 	 | IOMSG | ERR | STATUS | CALL | BACKSPACE | ALLOCATE | MOLD | SOURCE | OPEN | ACCESS | ACTION | BLANK | DECIMAL | DELIM 
 	 | ENCODING | FILE | FORM | NEWUNIT | PAD | POSITION | RECL | ROUND | SIGN | NULLIFY | LOCK | ACQUIREDLOCK | INQUIRE | IOLENGTH
-	 | EXIST | ID | NAMED | NEXTREC | NUMBER | OPENED | PENDING | POS | READWRITE | SEQUENTIAL | SIZE | STREAM | IF | GOTO | NEWINDEX
+	 | EXIST | ID | NAMED | NEXTREC | NUMBER | OPENED | PENDING | POS | READWRITE | SEQUENTIAL | SIZE | STREAM | IF | GO | TO | NEWINDEX
 	 | FLUSH | FAIL | IMAGE | EXIT | FORALL | WHERE | EOR | UNLOCK | SYNC | MEMORY | IMAGES | REWIND | RETURN | FMT | NML | ADVANCE | REC
 	 | PRINT | CRITICAL | CHANGE | SELECT | CASE | DEFAULT | ASSOCIATE | ELSEWHERE | IS | RANK | ELSE | THEN | DO | CONCURRENT | WHILE
 	 | SHARED | LOCAL | LOCALINIT | RECURSIVE | PURE | NONRECURSIVE | IMPURE | ELEMENTAL | NOTIFY | TYPEOF | CLASSOF | ENUMERATION
@@ -171,7 +171,7 @@ name: NAME | PROGRAM | END| FUNCTION | SUBROUTINE | MODULE
               | computed_goto_stmt
               | forall_stmt ;
  keyword : name ;
- underscore : '_' ;
+ underscore :  UNDERSCORE  ;
  constant : literal_constant
               | named_constant ;
  literal_constant : int_literal_constant
@@ -192,10 +192,10 @@ name: NAME | PROGRAM | END| FUNCTION | SUBROUTINE | MODULE
               | or_op
               | equiv_op ;
  power_op : '**' ;
- mult_op : '*'
-              | '/' ;
- add_op : '+'
-              | '-' ;
+ mult_op :  ASTERIK 
+              |  SLASH  ;
+ add_op :  PLUS 
+              |  MINUS  ;
  concat_op : ; //
  rel_op : '.EQ.'
               | '.NE.'
@@ -225,22 +225,22 @@ defined_binary_op : DEFINEDUNARYBINARYOP ;
 label : DIGITSTRING ;
 
  type_param_value : scalar_int_expr
-              | '*'
-              | ':' ;
+              |  ASTERIK 
+              |  COLON  ;
  type_spec : intrinsic_type_spec
               | derived_type_spec
               | enum_type_spec
               | enumeration_type_spec ;
  declaration_type_spec : intrinsic_type_spec
-              | 'TYPE' '(' intrinsic_type_spec ')'
-              | 'TYPE' '(' derived_type_spec ')'
-              | 'TYPE' '(' enum_type_spec ')'
-              | 'TYPE' '(' enumeration_type_spec ')'
-              | 'CLASS' '(' derived_type_spec ')'
-              | 'CLASS' '(' '*' ')'
-              | 'TYPE' '(' '*' ')'
-              | 'TYPEOF' '(' data_ref ')'
-              | 'CLASSOF' '(' data_ref ')' ;
+              | 'TYPE'  LPAREN  intrinsic_type_spec  RPAREN 
+              | 'TYPE'  LPAREN  derived_type_spec  RPAREN 
+              | 'TYPE'  LPAREN  enum_type_spec  RPAREN 
+              | 'TYPE'  LPAREN  enumeration_type_spec  RPAREN 
+              | 'CLASS'  LPAREN  derived_type_spec  RPAREN 
+              | 'CLASS'  LPAREN   ASTERIK   RPAREN 
+              | 'TYPE'  LPAREN   ASTERIK   RPAREN 
+              | 'TYPEOF'  LPAREN  data_ref  RPAREN 
+              | 'CLASSOF'  LPAREN  data_ref  RPAREN  ;
  intrinsic_type_spec : integer_type_spec
               | 'REAL' ( kind_selector )?
               | 'DOUBLE' 'PRECISION'
@@ -248,25 +248,25 @@ label : DIGITSTRING ;
               | 'CHARACTER' ( char_selector )?
               | 'LOGICAL' ( kind_selector )? ;
  integer_type_spec : 'INTEGER' ( kind_selector )? ;
- kind_selector : '(' ( 'KIND' '=' )? scalar_int_constant_expr ')' ;
+ kind_selector :  LPAREN  ( 'KIND' '=' )? scalar_int_constant_expr  RPAREN  ;
  signed_int_literal_constant : ( sign )? int_literal_constant ;
- int_literal_constant : digit_string ( '_' kind_param )? ;
+ int_literal_constant : digit_string (  UNDERSCORE  kind_param )? ;
  kind_param : digit_string
               | scalar_int_constant_name ;
  signed_digit_string : ( sign )? digit_string ;
 digit_string : DIGITSTRING ;
 
- sign : '+'
-              | '-' ;
+ sign :  PLUS 
+              |  MINUS  ;
  signed_real_literal_constant : ( sign )? real_literal_constant ;
- real_literal_constant : significand ( exponent_letter exponent )? ( '_' kind_param )?
-              | digit_string exponent_letter exponent ( '_' kind_param )? ;
- significand : digit_string '.' ( digit_string )?
-              | '.' digit_string ;
- exponent_letter : 'E'
-              | 'D' ;
+ real_literal_constant : significand ( exponent_letter exponent )? (  UNDERSCORE  kind_param )?
+              | digit_string exponent_letter exponent (  UNDERSCORE  kind_param )? ;
+ significand : digit_string  DOT  ( digit_string )?
+              |  DOT  digit_string ;
+ exponent_letter :  E 
+              |  D  ;
  exponent : signed_digit_string ;
- complex_literal_constant : '(' real_part ',' imag_part ')' ;
+ complex_literal_constant :  LPAREN  real_part  COMMA  imag_part  RPAREN  ;
  real_part : signed_int_literal_constant
               | signed_real_literal_constant
               | named_constant ;
@@ -274,39 +274,39 @@ digit_string : DIGITSTRING ;
               | signed_real_literal_constant
               | named_constant ;
  char_selector : length_selector
-              | '(' 'LEN' '=' type_param_value ','                   
-'KIND' '=' scalar_int_constant_expr ')'
-              | '(' type_param_value ','
-                   ( 'KIND' '=' )? scalar_int_constant_expr ')'
-              | '(' 'KIND' '=' scalar_int_constant_expr
-                   ( ',' 'LEN' '='type_param_value )? ')' ;
- length_selector : '(' ( 'LEN' '=' )? type_param_value ')'
-              | '*' char_length ( ',' )? ;
- char_length : '(' type_param_value ')'
+              |  LPAREN  'LEN' '=' type_param_value  COMMA                    
+'KIND' '=' scalar_int_constant_expr  RPAREN 
+              |  LPAREN  type_param_value  COMMA 
+                   ( 'KIND' '=' )? scalar_int_constant_expr  RPAREN 
+              |  LPAREN  'KIND' '=' scalar_int_constant_expr
+                   (  COMMA  'LEN' '='type_param_value )?  RPAREN  ;
+ length_selector :  LPAREN  ( 'LEN' '=' )? type_param_value  RPAREN 
+              |  ASTERIK  char_length (  COMMA  )? ;
+ char_length :  LPAREN  type_param_value  RPAREN 
               | int_literal_constant ;
 char_literal_constant :
-	( kind_param '_' )? SQUOTE_REP_CHAR
-	| ( kind_param '_' )? DQUOTE_REP_CHAR ;
+	( kind_param  UNDERSCORE  )? SQUOTE_REP_CHAR
+	| ( kind_param  UNDERSCORE  )? DQUOTE_REP_CHAR ;
 
- logical_literal_constant : '.TRUE.' ( '_' kind_param )?
-              | '.FALSE.' ( '_' kind_param )? ;
+ logical_literal_constant : '.TRUE.' (  UNDERSCORE  kind_param )?
+              | '.FALSE.' (  UNDERSCORE  kind_param )? ;
  derived_type_def : derived_type_stmt
                    ( type_param_def_stmt )* 
                    ( private_or_sequence )* 
                    ( component_part )?
                    ( type_bound_procedure_part )?
                    end_type_stmt ;
- derived_type_stmt : 'TYPE' ( ( ',' type_attr_spec_list )? '::' )? type_name
-                   ( '(' type_param_name_list ')' )? ;
+ derived_type_stmt : 'TYPE' ( (  COMMA  type_attr_spec_list )? '::' )? type_name
+                   (  LPAREN  type_param_name_list  RPAREN  )? ;
  type_attr_spec : 'ABSTRACT'
               | access_spec
-              | 'BIND' '(C)'
-              | 'EXTENDS' '(' parent_type_name ')' ;
+              | 'BIND'  LPAREN C RPAREN 
+              | 'EXTENDS'  LPAREN  parent_type_name  RPAREN  ;
  private_or_sequence : private_components_stmt
               | sequence_stmt ;
  end_type_stmt : 'END' 'TYPE' ( type_name )? ;
  sequence_stmt : 'SEQUENCE' ;
- type_param_def_stmt : integer_type_spec',' type_param_attr_spec '::'
+ type_param_def_stmt : integer_type_spec COMMA  type_param_attr_spec '::'
                   type_param_decl_list ;
  type_param_decl : type_param_name ( '=' scalar_int_constant_expr )? ;
  type_param_attr_spec : 'KIND'
@@ -314,24 +314,24 @@ char_literal_constant :
  component_part : ( component_def_stmt )*  ;
  component_def_stmt : data_component_def_stmt
               | proc_component_def_stmt ;
- data_component_def_stmt : declaration_type_spec ( ( ',' component_attr_spec_list )? '::' )?
+ data_component_def_stmt : declaration_type_spec ( (  COMMA  component_attr_spec_list )? '::' )?
                   component_decl_list ;
  component_attr_spec : access_spec
               | 'ALLOCATABLE'
               | 'CODIMENSION' lbracket coarray_spec rbracket
               | 'CONTIGUOUS'
-              | 'DIMENSION' '(' component_array_spec ')'
+              | 'DIMENSION'  LPAREN  component_array_spec  RPAREN 
               | 'POINTER' ;
- component_decl : component_name ( '(' component_array_spec ')' )?
+ component_decl : component_name (  LPAREN  component_array_spec  RPAREN  )?
                    ( lbracket coarray_spec rbracket )?
-                   ( '*' char_length )? ( component_initialization )? ;
+                   (  ASTERIK  char_length )? ( component_initialization )? ;
  component_array_spec : explicit_shape_spec_list
               | deferred_shape_spec_list ;
- proc_component_def_stmt : 'PROCEDURE' '(' ( proc_interface )? ')' ','
+ proc_component_def_stmt : 'PROCEDURE'  LPAREN  ( proc_interface )?  RPAREN   COMMA 
                   proc_component_attr_spec_list '::' proc_decl_list ;
  proc_component_attr_spec : access_spec
               | 'NOPASS'
-              | 'PASS' ( '('arg_name')' )?
+              | 'PASS' (  LPAREN arg_name RPAREN  )?
               | 'POINTER' ;
  component_initialization : '=' constant_expr
               | '=>' null_init
@@ -345,19 +345,19 @@ char_literal_constant :
  type_bound_proc_binding : type_bound_procedure_stmt
               | type_bound_generic_stmt
               | final_procedure_stmt ;
- type_bound_procedure_stmt : 'PROCEDURE' ( ( ',' binding_attr_list )? '::' )? type_bound_proc_decl_list
-              | 'PROCEDURE' '('interface_name'),' binding_attr_list '::' binding_name_list ;
+ type_bound_procedure_stmt : 'PROCEDURE' ( (  COMMA  binding_attr_list )? '::' )? type_bound_proc_decl_list
+              | 'PROCEDURE'  LPAREN interface_name RPAREN COMMA  binding_attr_list '::' binding_name_list ;
  type_bound_proc_decl : binding_name ( '=>' procedure_name )? ;
- type_bound_generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' binding_name_list ;
+ type_bound_generic_stmt : 'GENERIC' (  COMMA  access_spec )? '::' generic_spec '=>' binding_name_list ;
  binding_attr : access_spec
               | 'DEFERRED'
               | 'NON_OVERRIDABLE'
               | 'NOPASS'
-              | 'PASS' ( '('arg_name')' )? ;
+              | 'PASS' (  LPAREN arg_name RPAREN  )? ;
  final_procedure_stmt : 'FINAL' ( '::' )? final_subroutine_name_list ;
- derived_type_spec : type_name ( '(' type_param_spec_list ')' )? ;
+ derived_type_spec : type_name (  LPAREN  type_param_spec_list  RPAREN  )? ;
  type_param_spec : ( keyword '=' )? type_param_value ;
- structure_constructor : derived_type_spec '(' ( component_spec_list )? ')' ;
+ structure_constructor : derived_type_spec  LPAREN  ( component_spec_list )?  RPAREN  ;
  component_spec : ( keyword '=' )? component_data_source ;
  component_data_source : expr
               | data_target
@@ -366,21 +366,21 @@ char_literal_constant :
                    enumerator_def_stmt
                    ( enumerator_def_stmt )* 
                    end_enum_stmt ;
- enum_def_stmt : 'ENUM,' 'BIND(C)' ( '::' enum_type_name )? ;
+ enum_def_stmt :  ENUM COMMA   BIND LPAREN C RPAREN  ( '::' enum_type_name )? ;
  enumerator_def_stmt : 'ENUMERATOR' ( '::' )? enumerator_list ;
  enumerator : named_constant ( '=' scalar_int_constant_expr )? ;
  end_enum_stmt : 'END' 'ENUM' ;
  enum_type_spec : enum_type_name ;
- enum_constructor : enum_type_spec '(' scalar_expr ')' ;
+ enum_constructor : enum_type_spec  LPAREN  scalar_expr  RPAREN  ;
  enumeration_type_def : enumeration_type_stmt
                    enumeration_enumerator_stmt
                    ( enumeration_enumerator_stmt )*
                    end_enumeration_type_stmt ;
- enumeration_type_stmt : 'ENUMERATION' 'TYPE' ( ( ',' access_spec )? '::' )? enumeration_type_name ;
+ enumeration_type_stmt : 'ENUMERATION' 'TYPE' ( (  COMMA  access_spec )? '::' )? enumeration_type_name ;
  enumeration_enumerator_stmt : 'ENUMERATOR' ( '::' )? enumerator_name_list ;
  end_enumeration_type_stmt : 'END' 'ENUMERATION' 'TYPE' ( enumeration_type_name )? ;
  enumeration_type_spec : enumeration_type_name ;
- enumeration_constructor : enumeration_type_spec '(' scalar_int_expr ')' ;
+ enumeration_constructor : enumeration_type_spec  LPAREN  scalar_int_expr  RPAREN  ;
 boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
  array_constructor : '(/' ac_spec '/)'
               | lbracket ac_spec rbracket ;
@@ -390,19 +390,19 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
  rbracket : ']' ;
  ac_value : expr
               | ac_implied_do ;
- ac_implied_do : '(' ac_value_list ',' ac_implied_do_control ')' ;
- ac_implied_do_control : ( integer_type_spec '::' )? ac_do_variable '=' scalar_int_expr ','
-                  scalar_int_expr ( ',' scalar_int_expr )? ;
+ ac_implied_do :  LPAREN  ac_value_list  COMMA  ac_implied_do_control  RPAREN  ;
+ ac_implied_do_control : ( integer_type_spec '::' )? ac_do_variable '=' scalar_int_expr  COMMA 
+                  scalar_int_expr (  COMMA  scalar_int_expr )? ;
  ac_do_variable : do_variable ;
- type_declaration_stmt : declaration_type_spec ( ( ',' attr_spec )*  '::' )? entity_decl_list ;
+ type_declaration_stmt : declaration_type_spec ( (  COMMA  attr_spec )*  '::' )? entity_decl_list ;
  attr_spec : access_spec
               | 'ALLOCATABLE'
               | 'ASYNCHRONOUS'
               | 'CODIMENSION' lbracket coarray_spec rbracket
               | 'CONTIGUOUS'
-              | 'DIMENSION' '(' array_spec ')'
+              | 'DIMENSION'  LPAREN  array_spec  RPAREN 
               | 'EXTERNAL'
-              | 'INTENT' '(' intent_spec ')'
+              | 'INTENT'  LPAREN  intent_spec  RPAREN 
               | 'INTRINSIC'
               | language_binding_spec
               | 'OPTIONAL'
@@ -414,10 +414,10 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
               | 'TARGET'
               | 'VALUE'
               | 'VOLATILE' ;
- entity_decl : object_name ( '(' array_spec ')' )?
+ entity_decl : object_name (  LPAREN  array_spec  RPAREN  )?
                    ( lbracket coarray_spec rbracket )?
-                   ( '*' char_length )? ( initialization )?
-              | function_name ( '*' char_length )? ;
+                   (  ASTERIK  char_length )? ( initialization )?
+              | function_name (  ASTERIK  char_length )? ;
  object_name : name ;
  initialization : '=' constant_expr
               | '=>' null_init
@@ -425,12 +425,12 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
  null_init : function_reference ;
  access_spec : 'PUBLIC'
               | 'PRIVATE' ;
- language_binding_spec : 'BIND' '(C' ( ',' 'NAME' '=' scalar_default_char_constant_expr )?')' ;
+ language_binding_spec : 'BIND'  LPAREN C  (  COMMA  'NAME' '=' scalar_default_char_constant_expr )? RPAREN  ;
  coarray_spec : deferred_coshape_spec_list
               | explicit_coshape_spec ;
- deferred_coshape_spec : ':' ;
- explicit_coshape_spec : ( ( lower_cobound ':' )? upper_cobound',' )*
-                   ( lower_cobound ':' )? '*' ;
+ deferred_coshape_spec :  COLON  ;
+ explicit_coshape_spec : ( ( lower_cobound  COLON  )? upper_cobound COMMA  )*
+                   ( lower_cobound  COLON  )?  ASTERIK  ;
  lower_cobound : specification_expr ;
  upper_cobound : specification_expr ;
  array_spec : explicit_shape_spec_list
@@ -442,51 +442,51 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
               | implied_shape_spec
               | implied_shape_or_assumed_size_spec
               | assumed_rank_spec ;
- explicit_shape_spec : ( lower_bound ':' )? upper_bound ;
+ explicit_shape_spec : ( lower_bound  COLON  )? upper_bound ;
  lower_bound : specification_expr ;
  upper_bound : specification_expr ;
- explicit_shape_bounds_spec : ( explicit_bounds_expr ':' )? explicit_bounds_expr
-              | lower_bound ':' explicit_bounds_expr
-              | explicit_bounds_expr ':' upper_bound ;
+ explicit_shape_bounds_spec : ( explicit_bounds_expr  COLON  )? explicit_bounds_expr
+              | lower_bound  COLON  explicit_bounds_expr
+              | explicit_bounds_expr  COLON  upper_bound ;
  explicit_bounds_expr : int_expr ;
- assumed_shape_spec : ( lower_bound )? ':' ;
- assumed_shape_bounds_spec : explicit_bounds_expr ':' ;
- deferred_shape_spec : ':' ;
- assumed_implied_spec : ( lower_bound ':' )? '*' ;
- assumed_size_spec : explicit_shape_spec_list',' assumed_implied_spec ;
+ assumed_shape_spec : ( lower_bound )?  COLON  ;
+ assumed_shape_bounds_spec : explicit_bounds_expr  COLON  ;
+ deferred_shape_spec :  COLON  ;
+ assumed_implied_spec : ( lower_bound  COLON  )?  ASTERIK  ;
+ assumed_size_spec : explicit_shape_spec_list COMMA  assumed_implied_spec ;
  implied_shape_or_assumed_size_spec : assumed_implied_spec ;
- implied_shape_spec : assumed_implied_spec',' assumed_implied_spec_list ;
+ implied_shape_spec : assumed_implied_spec COMMA  assumed_implied_spec_list ;
  assumed_rank_spec : '..' ;
  intent_spec : 'IN'
               | 'OUT'
               | 'INOUT' ;
- rank_clause : 'RANK' '(' scalar_int_constant_expr ')' ;
+ rank_clause : 'RANK'  LPAREN  scalar_int_constant_expr  RPAREN  ;
  access_stmt : access_spec ( ( '::' )? access_id_list )? ;
  access_id : access_name
               | generic_spec ;
  allocatable_stmt : 'ALLOCATABLE' ( '::' )? allocatable_decl_list ;
- allocatable_decl : object_name ( '(' array_spec ')' )?
+ allocatable_decl : object_name (  LPAREN  array_spec  RPAREN  )?
                    ( lbracket coarray_spec rbracket )? ;
  asynchronous_stmt : 'ASYNCHRONOUS' ( '::' )? object_name_list ;
  bind_stmt : language_binding_spec ( '::' )? bind_entity_list ;
  bind_entity : entity_name
-              | '/' common_block_name '/' ;
+              |  SLASH  common_block_name  SLASH  ;
  codimension_stmt : 'CODIMENSION' ( '::' )? codimension_decl_list ;
  codimension_decl : coarray_name lbracket coarray_spec rbracket ;
  contiguous_stmt : 'CONTIGUOUS' ( '::' )? object_name_list ;
- data_stmt : 'DATA' data_stmt_set ( ( ',' )? data_stmt_set )*  ;
- data_stmt_set : data_stmt_object_list '/' data_stmt_value_list '/' ;
+ data_stmt : 'DATA' data_stmt_set ( (  COMMA  )? data_stmt_set )*  ;
+ data_stmt_set : data_stmt_object_list  SLASH  data_stmt_value_list  SLASH  ;
  data_stmt_object : variable
               | data_implied_do ;
- data_implied_do : '(' data_i_do_object_list ',' ( integer_type_spec '::' )? data_i_do_variable '='
-                  scalar_int_constant_expr ','
+ data_implied_do :  LPAREN  data_i_do_object_list  COMMA  ( integer_type_spec '::' )? data_i_do_variable '='
+                  scalar_int_constant_expr  COMMA 
                   scalar_int_constant_expr
-                   ( ',' scalar_int_constant_expr )? ')' ;
+                   (  COMMA  scalar_int_constant_expr )?  RPAREN  ;
  data_i_do_object : array_element
               | scalar_structure_component
               | data_implied_do ;
  data_i_do_variable : do_variable ;
- data_stmt_value : ( data_stmt_repeat '*' )? data_stmt_constant ;
+ data_stmt_value : ( data_stmt_repeat  ASTERIK  )? data_stmt_constant ;
  data_stmt_repeat : scalar_int_constant
               | scalar_int_constant_subobject ;
  data_stmt_constant : scalar_constant
@@ -500,52 +500,52 @@ boz_literal_constant : BINARY_CONSTANT | OCTAL_CONSTANT | HEX_CONSTANT ;
               | enumeration_constructor ;
  int_constant_subobject : constant_subobject ;
  constant_subobject : designator ;
- dimension_stmt : 'DIMENSION' ( '::' )? array_name '(' array_spec ')'
-                   ( ',' array_name '(' array_spec ')' )*  ;
- intent_stmt : 'INTENT' '(' intent_spec ')' ( '::' )? dummy_arg_name_list ;
+ dimension_stmt : 'DIMENSION' ( '::' )? array_name  LPAREN  array_spec  RPAREN 
+                   (  COMMA  array_name  LPAREN  array_spec  RPAREN  )*  ;
+ intent_stmt : 'INTENT'  LPAREN  intent_spec  RPAREN  ( '::' )? dummy_arg_name_list ;
  optional_stmt : 'OPTIONAL' ( '::' )? dummy_arg_name_list ;
- parameter_stmt : 'PARAMETER' '(' named_constant_def_list ')' ;
+ parameter_stmt : 'PARAMETER'  LPAREN  named_constant_def_list  RPAREN  ;
  named_constant_def : named_constant '=' constant_expr ;
  pointer_stmt : 'POINTER' ( '::' )? pointer_decl_list ;
- pointer_decl : object_name ( '(' deferred_shape_spec_list ')' )?
+ pointer_decl : object_name (  LPAREN  deferred_shape_spec_list  RPAREN  )?
               | procptr_entity_name ;
  protected_stmt : 'PROTECTED' ( '::' )? entity_name_list ;
  save_stmt : 'SAVE' ( ( '::' )? saved_entity_list )? ;
  saved_entity : object_name
               | proc_pointer_name
-              | '/' common_block_name '/' ;
+              |  SLASH  common_block_name  SLASH  ;
  proc_pointer_name : name ;
  target_stmt : 'TARGET' ( '::' )? target_decl_list ;
- target_decl : object_name ( '(' array_spec ')' )?
+ target_decl : object_name (  LPAREN  array_spec  RPAREN  )?
                    ( lbracket coarray_spec rbracket )? ;
  value_stmt : 'VALUE' ( '::' )? dummy_arg_name_list ;
  volatile_stmt : 'VOLATILE' ( '::' )? object_name_list ;
  implicit_stmt : 'IMPLICIT' implicit_spec_list
-              | 'IMPLICIT' 'NONE' ( '(' ( implicit_none_spec_list )? ')' )? ;
- implicit_spec : declaration_type_spec '(' letter_spec_list ')' ;
+              | 'IMPLICIT' 'NONE' (  LPAREN  ( implicit_none_spec_list )?  RPAREN  )? ;
+ implicit_spec : declaration_type_spec  LPAREN  letter_spec_list  RPAREN  ;
 letter_spec : LETTER_SPEC ;
 
  implicit_none_spec : 'EXTERNAL'
               | 'TYPE' ;
  import_stmt : 'IMPORT' (( '::' )? import_name_list )?
-              | 'IMPORT,' 'ONLY' ':' import_name_list
-              | 'IMPORT,' 'NONE'
-              | 'IMPORT,' 'ALL' ;
+              |  IMPORT COMMA  'ONLY'  COLON  import_name_list
+              |  IMPORT COMMA  'NONE'
+              |  IMPORT COMMA  'ALL' ;
  namelist_stmt : 'NAMELIST'                   
-'/' namelist_group_name '/' namelist_group_object_list
-                   ( ( ',' )? '/' namelist_group_name '/'
+ SLASH  namelist_group_name  SLASH  namelist_group_object_list
+                   ( (  COMMA  )?  SLASH  namelist_group_name  SLASH 
                   namelist_group_object_list )*  ;
  namelist_group_object : variable_name ;
  equivalence_stmt : 'EQUIVALENCE' equivalence_set_list ;
- equivalence_set : '(' equivalence_object ',' equivalence_object_list ')' ;
+ equivalence_set :  LPAREN  equivalence_object  COMMA  equivalence_object_list  RPAREN  ;
  equivalence_object : variable_name
               | array_element
               | substring ;
  common_stmt : 'COMMON'
-                      ( '/' ( common_block_name )? '/' )? common_block_object_list
-                      ( ( ',' )? '/' ( common_block_name )? '/'
+                      (  SLASH  ( common_block_name )?  SLASH  )? common_block_object_list
+                      ( (  COMMA  )?  SLASH  ( common_block_name )?  SLASH 
                      common_block_object_list )*  ;
- common_block_object : variable_name ( '(' array_spec ')' )? ;
+ common_block_object : variable_name (  LPAREN  array_spec  RPAREN  )? ;
  designator : object_name
               | array_element
               | array_section
@@ -560,22 +560,22 @@ letter_spec : LETTER_SPEC ;
  char_variable : variable ;
  default_char_variable : variable ;
  int_variable : variable ;
- substring : parent_string '(' substring_range ')' ;
+ substring : parent_string  LPAREN  substring_range  RPAREN  ;
  parent_string : scalar_variable_name
               | array_element
               | coindexed_named_object
               | scalar_structure_component
               | scalar_constant ;
- substring_range : ( scalar_int_expr )? ':' ( scalar_int_expr )? ;
+ substring_range : ( scalar_int_expr )?  COLON  ( scalar_int_expr )? ;
  data_ref : part_ref ( '%' part_ref )*  ;
- part_ref : part_name ( '(' section_subscript_list ')' )? ( image_selector )? ;
+ part_ref : part_name (  LPAREN  section_subscript_list  RPAREN  )? ( image_selector )? ;
  structure_component : data_ref ;
  coindexed_named_object : data_ref ;
  complex_part_designator : designator '%' 'RE'
               | designator '%' 'IM' ;
  type_param_inquiry : designator '%' type_param_name ;
  array_element : data_ref ;
- array_section : data_ref ( '(' substring_range ')' )?
+ array_section : data_ref (  LPAREN  substring_range  RPAREN  )?
               | complex_part_designator ;
  subscript : scalar_int_expr ;
  multiple_subscript : '@' int_expr ;
@@ -584,42 +584,42 @@ letter_spec : LETTER_SPEC ;
               | subscript_triplet
               | multiple_subscript_triplet
               | vector_subscript ;
- subscript_triplet : ( subscript )? ':' ( subscript )? ( ':' stride )? ;
- multiple_subscript_triplet : '@' ( int_expr )? ':' ( int_expr )? ( ':' int_expr )? ;
+ subscript_triplet : ( subscript )?  COLON  ( subscript )? (  COLON  stride )? ;
+ multiple_subscript_triplet : '@' ( int_expr )?  COLON  ( int_expr )? (  COLON  int_expr )? ;
  stride : scalar_int_expr ;
  vector_subscript : int_expr ;
- image_selector : lbracket cosubscript_list ( ',' image_selector_spec_list )? rbracket ;
+ image_selector : lbracket cosubscript_list (  COMMA  image_selector_spec_list )? rbracket ;
  cosubscript : scalar_int_expr ;
  image_selector_spec : 'NOTIFY' '=' notify_variable
               | 'STAT' '=' stat_variable
               | 'TEAM' '=' team_value
               | 'TEAM_NUMBER' '=' scalar_int_expr ;
- allocate_stmt : 'ALLOCATE' '(' ( type_spec '::' )? allocation_list
-                   ( ',' alloc_opt_list )? ')' ;
+ allocate_stmt : 'ALLOCATE'  LPAREN  ( type_spec '::' )? allocation_list
+                   (  COMMA  alloc_opt_list )?  RPAREN  ;
  alloc_opt : 'ERRMSG' '=' errmsg_variable
               | 'MOLD' '=' source_expr
               | 'SOURCE' '=' source_expr
               | 'STAT' '=' stat_variable ;
  errmsg_variable : scalar_default_char_variable ;
  source_expr : expr ;
- allocation : allocate_object ( '(' allocate_shape_spec_list ')' )?
+ allocation : allocate_object (  LPAREN  allocate_shape_spec_list  RPAREN  )?
                    ( lbracket allocate_coarray_spec rbracket )?
-              | '(' ( lower_bounds_expr ':' )? upper_bounds_expr ')'
+              |  LPAREN  ( lower_bounds_expr  COLON  )? upper_bounds_expr  RPAREN 
                    ( lbracket allocate_coarray_spec rbracket )? ;
  allocate_object : variable_name
               | structure_component ;
- allocate_shape_spec : ( lower_bound_expr ':' )? upper_bound_expr ;
+ allocate_shape_spec : ( lower_bound_expr  COLON  )? upper_bound_expr ;
  lower_bound_expr : scalar_int_expr ;
  lower_bounds_expr : int_expr ;
  upper_bound_expr : scalar_int_expr ;
  upper_bounds_expr : int_expr ;
- allocate_coarray_spec : ( allocate_coshape_spec_list ',' )? ( lower_bound_expr ':' )? '*' ;
- allocate_coshape_spec : ( lower_bound_expr ':' )? upper_bound_expr ;
- nullify_stmt : 'NULLIFY' '(' pointer_object_list ')' ;
+ allocate_coarray_spec : ( allocate_coshape_spec_list  COMMA  )? ( lower_bound_expr  COLON  )?  ASTERIK  ;
+ allocate_coshape_spec : ( lower_bound_expr  COLON  )? upper_bound_expr ;
+ nullify_stmt : 'NULLIFY'  LPAREN  pointer_object_list  RPAREN  ;
  pointer_object : variable_name
               | structure_component
               | proc_pointer_name ;
- deallocate_stmt : 'DEALLOCATE' '(' allocate_object_list ( ',' dealloc_opt_list )? ')' ;
+ deallocate_stmt : 'DEALLOCATE'  LPAREN  allocate_object_list (  COMMA  dealloc_opt_list )?  RPAREN  ;
  dealloc_opt : 'STAT' '=' stat_variable
               | 'ERRMSG' '=' errmsg_variable ;
  stat_variable : scalar_int_variable ;
@@ -632,9 +632,9 @@ letter_spec : LETTER_SPEC ;
               | function_reference
               | type_param_inquiry
               | type_param_name
-              | '(' expr ')'
+              |  LPAREN  expr  RPAREN 
               | conditional_expr ;
- conditional_expr : '(' scalar_logical_expr '?' expr ( ':' scalar_logical_expr '?' expr )* ':' expr ')' ;
+ conditional_expr :  LPAREN  scalar_logical_expr '?' expr (  COLON  scalar_logical_expr '?' expr )*  COLON  expr  RPAREN  ;
  level_1_expr : ( defined_unary_op )? primary ;
 
  mult_operand : level_1_expr ( power_op mult_operand )? ;
@@ -657,16 +657,16 @@ letter_spec : LETTER_SPEC ;
  default_char_constant_expr : default_char_expr ;
  int_constant_expr : int_expr ;
  assignment_stmt : variable '=' expr ;
- pointer_assignment_stmt : data_pointer_object ( '(' bounds_spec_list ')' )? '=>' data_target
-              | data_pointer_object '(' lower_bounds_expr ':' ')' '=>' data_target
-              | data_pointer_object '(' bounds_remapping_list ')' '=>' data_target
-              | data_pointer_object '(' lower_bounds_expr ':' upper_bounds_expr ')'                   
+ pointer_assignment_stmt : data_pointer_object (  LPAREN  bounds_spec_list  RPAREN  )? '=>' data_target
+              | data_pointer_object  LPAREN  lower_bounds_expr  COLON   RPAREN  '=>' data_target
+              | data_pointer_object  LPAREN  bounds_remapping_list  RPAREN  '=>' data_target
+              | data_pointer_object  LPAREN  lower_bounds_expr  COLON  upper_bounds_expr  RPAREN                    
 '=>' data_target
               | proc_pointer_object '=>' proc_target ;
  data_pointer_object : variable_name
               | scalar_variable '%' data_pointer_component_name ;
- bounds_spec : lower_bound_expr ':' ;
- bounds_remapping : lower_bound_expr ':' upper_bound_expr ;
+ bounds_spec : lower_bound_expr  COLON  ;
+ bounds_remapping : lower_bound_expr  COLON  upper_bound_expr ;
  data_target : expr ;
  proc_pointer_object : proc_pointer_name
               | proc_component_ref ;
@@ -674,7 +674,7 @@ letter_spec : LETTER_SPEC ;
  proc_target : expr
               | procedure_name
               | proc_component_ref ;
- where_stmt : 'WHERE' '(' mask_expr ')' where_assignment_stmt ;
+ where_stmt : 'WHERE'  LPAREN  mask_expr  RPAREN  where_assignment_stmt ;
  where_construct : where_construct_stmt
                      ( where_body_construct )* 
                    ( masked_elsewhere_stmt
@@ -682,19 +682,19 @@ letter_spec : LETTER_SPEC ;
                    ( elsewhere_stmt
                      ( where_body_construct )*  )?
                    end_where_stmt ;
- where_construct_stmt : (where_construct_name':')? 'WHERE' '(' mask_expr ')' ;
+ where_construct_stmt : (where_construct_name COLON )? 'WHERE'  LPAREN  mask_expr  RPAREN  ;
  where_body_construct : where_assignment_stmt
               | where_stmt
               | where_construct ;
  where_assignment_stmt : assignment_stmt ;
  mask_expr : logical_expr ;
- masked_elsewhere_stmt : 'ELSEWHERE' '('mask_expr')' (where_construct_name)? ;
+ masked_elsewhere_stmt : 'ELSEWHERE'  LPAREN mask_expr RPAREN  (where_construct_name)? ;
  elsewhere_stmt : 'ELSEWHERE' (where_construct_name)? ;
  end_where_stmt : 'END' 'WHERE' (where_construct_name)? ;
  forall_construct : forall_construct_stmt
                        (forall_body_construct )* 
                        end_forall_stmt ;
- forall_construct_stmt : (forall_construct_name ':')? 'FORALL' concurrent_header ;
+ forall_construct_stmt : (forall_construct_name  COLON )? 'FORALL' concurrent_header ;
  forall_body_construct : forall_assignment_stmt
               | where_stmt
               | where_construct
@@ -708,8 +708,8 @@ letter_spec : LETTER_SPEC ;
  associate_construct : associate_stmt
                    block
                    end_associate_stmt ;
- associate_stmt : ( associate_construct_name ':' )? 'ASSOCIATE'                   
-'('association_list ')' ;
+ associate_stmt : ( associate_construct_name  COLON  )? 'ASSOCIATE'                   
+ LPAREN association_list  RPAREN  ;
  association : associate_name '=>' selector ;
  selector : expr
               | variable ;
@@ -718,7 +718,7 @@ letter_spec : LETTER_SPEC ;
                     ( block_specification_part )?
                    block
                    end_block_stmt ;
- block_stmt : ( block_construct_name ':' )? 'BLOCK' ;
+ block_stmt : ( block_construct_name  COLON  )? 'BLOCK' ;
  block_specification_part : ( use_stmt )* 
                   ( import_stmt )* 
                   ( declaration_construct )*  ;
@@ -726,42 +726,42 @@ letter_spec : LETTER_SPEC ;
  change_team_construct : change_team_stmt
                    block
                    end_change_team_stmt ;
- change_team_stmt : ( team_construct_name ':' )? 'CHANGE' 'TEAM' '(' team_value
-                   ( ',' coarray_association_list )? ( ',' sync_stat_list )? ')' ;
+ change_team_stmt : ( team_construct_name  COLON  )? 'CHANGE' 'TEAM'  LPAREN  team_value
+                   (  COMMA  coarray_association_list )? (  COMMA  sync_stat_list )?  RPAREN  ;
  coarray_association : codimension_decl '=>' selector ;
- end_change_team_stmt : 'END' 'TEAM' ( '(' ( sync_stat_list )? ')' )? ( team_construct_name )? ;
+ end_change_team_stmt : 'END' 'TEAM' (  LPAREN  ( sync_stat_list )?  RPAREN  )? ( team_construct_name )? ;
  team_value : scalar_expr ;
  critical_construct : critical_stmt
                    block
                    end_critical_stmt ;
- critical_stmt : ( critical_construct_name ':' )? 'CRITICAL' ( '(' ( sync_stat_list )? ')' )? ;
+ critical_stmt : ( critical_construct_name  COLON  )? 'CRITICAL' (  LPAREN  ( sync_stat_list )?  RPAREN  )? ;
  end_critical_stmt : 'END' 'CRITICAL' ( critical_construct_name )? ;
  do_construct : do_stmt
                    block
                    end_do ;
  do_stmt : nonlabel_do_stmt
               | label_do_stmt ;
- label_do_stmt : ( do_construct_name ':' )? 'DO' label ( loop_control )? ;
- nonlabel_do_stmt : ( do_construct_name ':' )? 'DO' ( loop_control )? ;
- loop_control : ( ',' )? do_variable '=' scalar_int_expr',' scalar_int_expr
-                   ( ',' scalar_int_expr )?
-              | ( ',' )? 'WHILE' '(' scalar_logical_expr ')'
-              | ( ',' )? 'CONCURRENT' concurrent_header concurrent_locality ;
+ label_do_stmt : ( do_construct_name  COLON  )? 'DO' label ( loop_control )? ;
+ nonlabel_do_stmt : ( do_construct_name  COLON  )? 'DO' ( loop_control )? ;
+ loop_control : (  COMMA  )? do_variable '=' scalar_int_expr COMMA  scalar_int_expr
+                   (  COMMA  scalar_int_expr )?
+              | (  COMMA  )? 'WHILE'  LPAREN  scalar_logical_expr  RPAREN 
+              | (  COMMA  )? 'CONCURRENT' concurrent_header concurrent_locality ;
  do_variable : scalar_int_variable_name ;
- concurrent_header : '(' ( integer_type_spec '::' )? concurrent_control_list ( ',' scalar_mask_expr )? ')' ;
- concurrent_control : index_name '=' concurrent_limit ':' concurrent_limit ( ':' concurrent_step )? ;
+ concurrent_header :  LPAREN  ( integer_type_spec '::' )? concurrent_control_list (  COMMA  scalar_mask_expr )?  RPAREN  ;
+ concurrent_control : index_name '=' concurrent_limit  COLON  concurrent_limit (  COLON  concurrent_step )? ;
  concurrent_limit : scalar_int_expr ;
  concurrent_step : scalar_int_expr ;
  concurrent_locality : ( locality_spec )* ;
- locality_spec : 'LOCAL' '(' variable_name_list ')'
-              | 'LOCAL_INIT' '(' variable_name_list ')'
-              | 'REDUCE' '(' reduce_operation ':' variable_name_list ')'
-              | 'SHARED' '(' variable_name_list ')'
-              | 'DEFAULT' '(' 'NONE' ')' ;
+ locality_spec : 'LOCAL'  LPAREN  variable_name_list  RPAREN 
+              | 'LOCAL_INIT'  LPAREN  variable_name_list  RPAREN 
+              | 'REDUCE'  LPAREN  reduce_operation  COLON  variable_name_list  RPAREN 
+              | 'SHARED'  LPAREN  variable_name_list  RPAREN 
+              | 'DEFAULT'  LPAREN  'NONE'  RPAREN  ;
  reduce_operation : binary_reduce_op
               | function_reduction_name ;
- binary_reduce_op : '+'
-              | '*'
+ binary_reduce_op :  PLUS 
+              |  ASTERIK 
               | '.AND.'
               | '.OR.'
               | '.EQV.'
@@ -777,88 +777,88 @@ letter_spec : LETTER_SPEC ;
                    ( else_stmt
                      block )?
                    end_if_stmt ;
- if_then_stmt : ( if_construct_name ':' )? 'IF' '(' scalar_logical_expr ')' 'THEN' ;
- else_if_stmt : 'ELSE' 'IF' '(' scalar_logical_expr ')' 'THEN' ( if_construct_name )? ;
+ if_then_stmt : ( if_construct_name  COLON  )? 'IF'  LPAREN  scalar_logical_expr  RPAREN  'THEN' ;
+ else_if_stmt : 'ELSE' 'IF'  LPAREN  scalar_logical_expr  RPAREN  'THEN' ( if_construct_name )? ;
  else_stmt : 'ELSE' ( if_construct_name )? ;
  end_if_stmt : 'END' 'IF' ( if_construct_name )? ;
- if_stmt : 'IF' '(' scalar_logical_expr ')' action_stmt ;
+ if_stmt : 'IF'  LPAREN  scalar_logical_expr  RPAREN  action_stmt ;
  case_construct : select_case_stmt
                    ( case_stmt
                      block )* 
                    end_select_stmt ;
- select_case_stmt : ( case_construct_name ':' )? 'SELECT' 'CASE' '(' case_expr ')' ;
+ select_case_stmt : ( case_construct_name  COLON  )? 'SELECT' 'CASE'  LPAREN  case_expr  RPAREN  ;
  case_stmt : 'CASE' case_selector (case_construct_name)? ;
  end_select_stmt : 'END' 'SELECT' ( case_construct_name )? ;
  case_expr : scalar_expr ;
- case_selector : '(' case_value_range_list ')'
+ case_selector :  LPAREN  case_value_range_list  RPAREN 
               | 'DEFAULT' ;
  case_value_range : case_value
-              | case_value ':'
-              | ':' case_value
-              | case_value ':' case_value ;
+              | case_value  COLON 
+              |  COLON  case_value
+              | case_value  COLON  case_value ;
  case_value : scalar_constant_expr ;
  select_rank_construct : select_rank_stmt
                    ( select_rank_case_stmt
                    block )*
                    end_select_rank_stmt ;
- select_rank_stmt : ( select_construct_name ':' )? 'SELECT' 'RANK'                   
-'(' ( associate_name '=>' )? selector ')' ;
- select_rank_case_stmt : 'RANK' '(' scalar_int_constant_expr ')' ( select_construct_name )?
-              | 'RANK' '(' '*' ')' ( select_construct_name )?
+ select_rank_stmt : ( select_construct_name  COLON  )? 'SELECT' 'RANK'                   
+ LPAREN  ( associate_name '=>' )? selector  RPAREN  ;
+ select_rank_case_stmt : 'RANK'  LPAREN  scalar_int_constant_expr  RPAREN  ( select_construct_name )?
+              | 'RANK'  LPAREN   ASTERIK   RPAREN  ( select_construct_name )?
               | 'RANK' 'DEFAULT' ( select_construct_name )? ;
  end_select_rank_stmt : 'END' 'SELECT' ( select_construct_name )? ;
  select_type_construct : select_type_stmt
                    ( type_guard_stmt
                      block )* 
                    end_select_type_stmt ;
- select_type_stmt : ( select_construct_name ':' )? 'SELECT' 'TYPE'                   
-'(' ( associate_name '=>' )? selector ')' ;
- type_guard_stmt : 'TYPE' 'IS' '(' type_spec ')' ( select_construct_name )?
-              | 'CLASS' 'IS' '(' derived_type_spec ')' ( select_construct_name )?
+ select_type_stmt : ( select_construct_name  COLON  )? 'SELECT' 'TYPE'                   
+ LPAREN  ( associate_name '=>' )? selector  RPAREN  ;
+ type_guard_stmt : 'TYPE' 'IS'  LPAREN  type_spec  RPAREN  ( select_construct_name )?
+              | 'CLASS' 'IS'  LPAREN  derived_type_spec  RPAREN  ( select_construct_name )?
               | 'CLASS' 'DEFAULT' ( select_construct_name )? ;
  end_select_type_stmt : 'END' 'SELECT' ( select_construct_name )? ;
  exit_stmt : 'EXIT' ( construct_name )? ;
- goto_stmt : 'GO' 'TO' label ;
- computed_goto_stmt : 'GO' 'TO' '(' label_list ')' ( ',' )? scalar_int_expr ;
+ goto_stmt :  GO   TO  label ;
+ computed_goto_stmt :  GO   TO   LPAREN  label_list  RPAREN  (  COMMA  )? scalar_int_expr ;
  continue_stmt : 'CONTINUE' ;
- stop_stmt : 'STOP' ( stop_code )? ( ',' 'QUIET' '=' scalar_logical_expr)? ;
- error_stop_stmt : 'ERROR' 'STOP' ( stop_code )? ( ',' 'QUIET' '=' scalar_logical_expr)? ;
+ stop_stmt : 'STOP' ( stop_code )? (  COMMA  'QUIET' '=' scalar_logical_expr)? ;
+ error_stop_stmt : 'ERROR' 'STOP' ( stop_code )? (  COMMA  'QUIET' '=' scalar_logical_expr)? ;
  stop_code : scalar_default_char_expr
               | scalar_int_expr ;
  fail_image_stmt : 'FAIL' 'IMAGE' ;
- notify_wait_stmt : 'NOTIFY' 'WAIT' '(' notify_variable ( ',' event_wait_spec_list )? ')' ;
+ notify_wait_stmt : 'NOTIFY' 'WAIT'  LPAREN  notify_variable (  COMMA  event_wait_spec_list )?  RPAREN  ;
  notify_variable : scalar_variable ;
- sync_all_stmt : 'SYNC' 'ALL' ( '(' ( sync_stat_list )? ')' )? ;
+ sync_all_stmt : 'SYNC' 'ALL' (  LPAREN  ( sync_stat_list )?  RPAREN  )? ;
  sync_stat : 'STAT' '=' stat_variable
               | 'ERRMSG' '=' errmsg_variable ;
- sync_images_stmt : 'SYNC' 'IMAGES' '(' image_set ( ',' sync_stat_list )? ')' ;
+ sync_images_stmt : 'SYNC' 'IMAGES'  LPAREN  image_set (  COMMA  sync_stat_list )?  RPAREN  ;
  image_set : int_expr
-              | '*' ;
- sync_memory_stmt : 'SYNC' 'MEMORY' ( '(' ( sync_stat_list )? ')' )? ;
- sync_team_stmt : 'SYNC' 'TEAM' '(' team_value ( ',' sync_stat_list )? ')' ;
- event_post_stmt : 'EVENT' 'POST' '(' event_variable ( ',' sync_stat_list )? ')' ;
+              |  ASTERIK  ;
+ sync_memory_stmt : 'SYNC' 'MEMORY' (  LPAREN  ( sync_stat_list )?  RPAREN  )? ;
+ sync_team_stmt : 'SYNC' 'TEAM'  LPAREN  team_value (  COMMA  sync_stat_list )?  RPAREN  ;
+ event_post_stmt : 'EVENT' 'POST'  LPAREN  event_variable (  COMMA  sync_stat_list )?  RPAREN  ;
  event_variable : scalar_variable ;
- event_wait_stmt : 'EVENT' 'WAIT' '(' event_variable ( ',' event_wait_spec_list )? ')' ;
+ event_wait_stmt : 'EVENT' 'WAIT'  LPAREN  event_variable (  COMMA  event_wait_spec_list )?  RPAREN  ;
  event_wait_spec : until_spec
               | sync_stat ;
  until_spec : 'UNTIL_COUNT' '=' scalar_int_expr ;
- form_team_stmt : 'FORM' 'TEAM' '(' team_number',' team_variable
-                   ( ',' form_team_spec_list )? ')' ;
+ form_team_stmt : 'FORM' 'TEAM'  LPAREN  team_number COMMA  team_variable
+                   (  COMMA  form_team_spec_list )?  RPAREN  ;
  team_number : scalar_int_expr ;
  team_variable : scalar_variable ;
  form_team_spec : 'NEW_INDEX' '=' scalar_int_expr
               | sync_stat ;
- lock_stmt : 'LOCK' '(' lock_variable ( ',' lock_stat_list )? ')' ;
+ lock_stmt : 'LOCK'  LPAREN  lock_variable (  COMMA  lock_stat_list )?  RPAREN  ;
  lock_stat : 'ACQUIRED_LOCK' '=' scalar_logical_variable
               | sync_stat ;
- unlock_stmt : 'UNLOCK' '(' lock_variable ( ',' sync_stat_list )? ')' ;
+ unlock_stmt : 'UNLOCK'  LPAREN  lock_variable (  COMMA  sync_stat_list )?  RPAREN  ;
  lock_variable : scalar_variable ;
  io_unit : file_unit_number
-              | '*'
+              |  ASTERIK 
               | internal_file_variable ;
  file_unit_number : scalar_int_expr ;
  internal_file_variable : char_variable ;
- open_stmt : 'OPEN' '(' connect_spec_list ')' ;
+ open_stmt : 'OPEN'  LPAREN  connect_spec_list  RPAREN  ;
  connect_spec : ( 'UNIT' '=' )? file_unit_number
               | 'ACCESS' '=' scalar_default_char_expr
               | 'ACTION' '=' scalar_default_char_expr
@@ -882,16 +882,16 @@ letter_spec : LETTER_SPEC ;
               | 'STATUS' '=' scalar_default_char_expr ;
  file_name_expr : scalar_default_char_expr ;
  iomsg_variable : scalar_default_char_variable ;
- close_stmt : 'CLOSE' '(' close_spec_list ')' ;
+ close_stmt : 'CLOSE'  LPAREN  close_spec_list  RPAREN  ;
  close_spec : ( 'UNIT' '=' )? file_unit_number
               | 'IOSTAT' '=' stat_variable
               | 'IOMSG' '=' iomsg_variable
               | 'ERR' '=' label
               | 'STATUS' '=' scalar_default_char_expr ;
- read_stmt : 'READ' '(' io_control_spec_list ')' ( input_item_list )?
-              | 'READ' format ( ',' input_item_list )? ;
- write_stmt : 'WRITE' '(' io_control_spec_list ')' ( output_item_list )? ;
- print_stmt : 'PRINT' format ( ',' output_item_list )? ;
+ read_stmt : 'READ'  LPAREN  io_control_spec_list  RPAREN  ( input_item_list )?
+              | 'READ' format (  COMMA  input_item_list )? ;
+ write_stmt : 'WRITE'  LPAREN  io_control_spec_list  RPAREN  ( output_item_list )? ;
+ print_stmt : 'PRINT' format (  COMMA  output_item_list )? ;
  io_control_spec : ( 'UNIT' '=' )? io_unit
               | ( 'FMT' '=' )? format
               | ( 'NML' '=' )? namelist_group_name
@@ -916,19 +916,19 @@ letter_spec : LETTER_SPEC ;
  id_variable : scalar_int_variable ;
  format : default_char_expr
               | label
-              | '*' ;
+              |  ASTERIK  ;
  input_item : variable
               | io_implied_do ;
  output_item : expr
               | io_implied_do ;
- io_implied_do : '(' io_implied_do_object_list ',' io_implied_do_control ')' ;
+ io_implied_do :  LPAREN  io_implied_do_object_list  COMMA  io_implied_do_control  RPAREN  ;
  io_implied_do_object : input_item
               | output_item ;
- io_implied_do_control : do_variable '=' scalar_int_expr ','
-                  scalar_int_expr ( ',' scalar_int_expr )? ;
- dtv_type_spec : 'TYPE(' derived_type_spec ')'
-              | 'CLASS(' derived_type_spec ')' ;
- wait_stmt : 'WAIT' '('wait_spec_list')' ;
+ io_implied_do_control : do_variable '=' scalar_int_expr  COMMA 
+                  scalar_int_expr (  COMMA  scalar_int_expr )? ;
+ dtv_type_spec :  TYPE LPAREN  derived_type_spec  RPAREN 
+              |  CLASS LPAREN  derived_type_spec  RPAREN  ;
+ wait_stmt : 'WAIT'  LPAREN wait_spec_list RPAREN  ;
  wait_spec : ( 'UNIT' '=' )? file_unit_number
               | 'END' '=' label
               | 'EOR' '=' label
@@ -937,23 +937,23 @@ letter_spec : LETTER_SPEC ;
               | 'IOMSG' '=' iomsg_variable
               | 'IOSTAT' '=' stat_variable ;
  backspace_stmt : 'BACKSPACE' file_unit_number
-              | 'BACKSPACE' '(' position_spec_list ')' ;
+              | 'BACKSPACE'  LPAREN  position_spec_list  RPAREN  ;
  endfile_stmt : 'ENDFILE' file_unit_number
-              | 'ENDFILE' '(' position_spec_list ')' ;
+              | 'ENDFILE'  LPAREN  position_spec_list  RPAREN  ;
  rewind_stmt : 'REWIND' file_unit_number
-              | 'REWIND' '(' position_spec_list ')' ;
+              | 'REWIND'  LPAREN  position_spec_list  RPAREN  ;
  position_spec : ( 'UNIT' '=' )? file_unit_number
               | 'IOMSG' '=' iomsg_variable
               | 'IOSTAT' '=' stat_variable
               | 'ERR' '=' label ;
  flush_stmt : 'FLUSH' file_unit_number
-              | 'FLUSH' '(' flush_spec_list ')' ;
+              | 'FLUSH'  LPAREN  flush_spec_list  RPAREN  ;
  flush_spec : ('UNIT' '=')? file_unit_number
               | 'IOSTAT' '=' stat_variable
               | 'IOMSG' '=' iomsg_variable
               | 'ERR' '=' label ;
- inquire_stmt : 'INQUIRE' '(' inquire_spec_list ')'
-              | 'INQUIRE' '(' 'IOLENGTH' '=' scalar_int_variable ')'
+ inquire_stmt : 'INQUIRE'  LPAREN  inquire_spec_list  RPAREN 
+              | 'INQUIRE'  LPAREN  'IOLENGTH' '=' scalar_int_variable  RPAREN 
                   output_item_list ;
  inquire_spec : ( 'UNIT' '=' )? file_unit_number
               | 'FILE' '=' file_name_expr
@@ -993,30 +993,30 @@ letter_spec : LETTER_SPEC ;
               | 'UNFORMATTED' '=' scalar_default_char_variable
               | 'WRITE' '=' scalar_default_char_variable ;
  format_stmt : 'FORMAT' format_specification ;
- format_specification : '(' ( format_items )? ')'
-              | '(' ( format_items',' )? unlimited_format_item ')' ;
- format_items : format_item ( ( ',' )? format_item )*  ;
+ format_specification :  LPAREN  ( format_items )?  RPAREN 
+              |  LPAREN  ( format_items COMMA  )? unlimited_format_item  RPAREN  ;
+ format_items : format_item ( (  COMMA  )? format_item )*  ;
  format_item : ( r )? data_edit_desc
               | control_edit_desc
               | char_string_edit_desc
-              | ( r )? '(' format_items ')' ;
- unlimited_format_item : '*' '(' format_items ')' ;
+              | ( r )?  LPAREN  format_items  RPAREN  ;
+ unlimited_format_item :  ASTERIK   LPAREN  format_items  RPAREN  ;
  r : int_literal_constant ;
- data_edit_desc : 'I' w ( '.' m )?
-              | 'B' w ( '.' m )?
-              | 'O' w ( '.' m )?
-              | 'Z' w ( '.' m )?
-              | 'F' w '.' d
-              | 'E' w '.' d ( 'E' e )?
-              | 'EN' w '.' d ( 'E' e )?
-              | 'ES' w '.' d ( 'E' e )?
-              | 'EX' w '.' d ( 'E' e )?
-              | 'G' w ( '.' d ( 'E' e )? )?
+ data_edit_desc : 'I' w (  DOT  m )?
+              |  B  w (  DOT  m )?
+              |  O  w (  DOT  m )?
+              |  Z  w (  DOT  m )?
+              |  F  w  DOT  d
+              |  E  w  DOT  d (  E  e )?
+              | 'EN' w  DOT  d (  E  e )?
+              | 'ES' w  DOT  d (  E  e )?
+              | 'EX' w  DOT  d (  E  e )?
+              | 'G' w (  DOT  d (  E  e )? )?
               | 'L' w
-              | 'A' ( w )?
+              |  A  ( w )?
               | 'AT'
-              | 'D' w '.' d
-              | 'DT' ( char_literal_constant )? ( '(' v_list ')' )? ;
+              |  D  w  DOT  d
+              | 'DT' ( char_literal_constant )? (  LPAREN  v_list  RPAREN  )? ;
  w : int_literal_constant ;
  m : int_literal_constant ;
  d : int_literal_constant ;
@@ -1029,8 +1029,8 @@ letter_spec : LETTER_SPEC ;
               | round_edit_desc
               | sign_edit_desc
               | k 'P'
-              | ':'
-              | ( r )? '/' ;
+              |  COLON 
+              | ( r )?  SLASH  ;
  k : signed_int_literal_constant ;
  position_edit_desc : 'T' n
               | 'TL' n
@@ -1058,14 +1058,14 @@ letter_spec : LETTER_SPEC ;
  end_program_stmt : 'END' ( 'PROGRAM' ( program_name )? )? ;
  module_stmt : 'MODULE' module_name ;
  end_module_stmt : 'END' ( 'MODULE' ( module_name )? )? ;
- use_stmt : 'USE' ( ( ',' module_nature )? '::' )? module_name ( ',' rename_list )?
-              | 'USE' ( ( ',' module_nature )? '::' )? module_name ','                   
-'ONLY' ':' ( only_list )? ;
+ use_stmt : 'USE' ( (  COMMA  module_nature )? '::' )? module_name (  COMMA  rename_list )?
+              | 'USE' ( (  COMMA  module_nature )? '::' )? module_name  COMMA                    
+'ONLY'  COLON  ( only_list )? ;
  module_nature : 'INTRINSIC'
               | 'NON_INTRINSIC' ;
  rename : local_name '=>' use_name
-              | 'OPERATOR' '('local_defined_operator')' '=>'                   
-'OPERATOR' '('use_defined_operator')' ;
+              | 'OPERATOR'  LPAREN local_defined_operator RPAREN  '=>'                   
+'OPERATOR'  LPAREN use_defined_operator RPAREN  ;
  only : generic_spec
               | only_use_name
               | rename ;
@@ -1074,8 +1074,8 @@ letter_spec : LETTER_SPEC ;
               | defined_binary_op ;
  use_defined_operator : defined_unary_op
               | defined_binary_op ;
- submodule_stmt : 'SUBMODULE' '(' parent_identifier ')' submodule_name ;
- parent_identifier : ancestor_module_name ( ':' parent_submodule_name )? ;
+ submodule_stmt : 'SUBMODULE'  LPAREN  parent_identifier  RPAREN  submodule_name ;
+ parent_identifier : ancestor_module_name (  COLON  parent_submodule_name )? ;
  end_submodule_stmt : 'END' ( 'SUBMODULE' ( submodule_name )? )? ;
  block_data_stmt : 'BLOCK' 'DATA' ( block_data_name )? ;
  end_block_data_stmt : 'END' ( 'BLOCK' 'DATA' ( block_data_name )? )? ;
@@ -1096,22 +1096,22 @@ letter_spec : LETTER_SPEC ;
  procedure_stmt : ( 'MODULE' )? 'PROCEDURE' ( '::' )? specific_procedure_list ;
  specific_procedure : procedure_name ;
  generic_spec : generic_name
-              | 'OPERATOR' '(' defined_operator ')'
-              | 'ASSIGNMENT' '(' '=' ')'
+              | 'OPERATOR'  LPAREN  defined_operator  RPAREN 
+              | 'ASSIGNMENT'  LPAREN  '='  RPAREN 
               | defined_io_generic_spec ;
- defined_io_generic_spec : 'READ' '(FORMATTED)'
-              | 'READ' '(UNFORMATTED)'
-              | 'WRITE' '(FORMATTED)'
-              | 'WRITE' '(UNFORMATTED)' ;
- generic_stmt : 'GENERIC' ( ',' access_spec )? '::' generic_spec '=>' specific_procedure_list ;
+ defined_io_generic_spec : 'READ'  LPAREN FORMATTED RPAREN 
+              | 'READ'  LPAREN UNFORMATTED RPAREN 
+              | 'WRITE'  LPAREN FORMATTED RPAREN 
+              | 'WRITE'  LPAREN UNFORMATTED RPAREN  ;
+ generic_stmt : 'GENERIC' (  COMMA  access_spec )? '::' generic_spec '=>' specific_procedure_list ;
  external_stmt : 'EXTERNAL' ( '::' )? external_name_list ;
- procedure_declaration_stmt : 'PROCEDURE' '(' ( proc_interface )? ')'
-                   ( ( ',' proc_attr_spec )*  '::' )? proc_decl_list ;
+ procedure_declaration_stmt : 'PROCEDURE'  LPAREN  ( proc_interface )?  RPAREN 
+                   ( (  COMMA  proc_attr_spec )*  '::' )? proc_decl_list ;
  proc_interface : interface_name
               | declaration_type_spec ;
  proc_attr_spec : access_spec
               | proc_language_binding_spec
-              | 'INTENT' '(' intent_spec ')'
+              | 'INTENT'  LPAREN  intent_spec  RPAREN 
               | 'OPTIONAL'
               | 'POINTER'
               | 'PROTECTED'
@@ -1122,8 +1122,8 @@ letter_spec : LETTER_SPEC ;
               | initial_proc_target ;
  initial_proc_target : procedure_name ;
  intrinsic_stmt : 'INTRINSIC' ( '::' )? intrinsic_procedure_name_list ;
- function_reference : procedure_designator '(' ( actual_arg_spec_list )? ')' ;
- call_stmt : 'CALL' procedure_designator ( '(' ( actual_arg_spec_list )? ')' )? ;
+ function_reference : procedure_designator  LPAREN  ( actual_arg_spec_list )?  RPAREN  ;
+ call_stmt : 'CALL' procedure_designator (  LPAREN  ( actual_arg_spec_list )?  RPAREN  )? ;
  procedure_designator : procedure_name
               | proc_component_ref
               | data_ref '%' binding_name ;
@@ -1134,11 +1134,11 @@ letter_spec : LETTER_SPEC ;
               | proc_component_ref
               | conditional_arg
               | alt_return_spec ;
- alt_return_spec : '*' label ;
- conditional_arg : '(' scalar_logical_expr '?' consequent
-                   ( ':' scalar_logical_expr '?' consequent )* ':' consequent ')' ;
+ alt_return_spec :  ASTERIK  label ;
+ conditional_arg :  LPAREN  scalar_logical_expr '?' consequent
+                   (  COLON  scalar_logical_expr '?' consequent )*  COLON  consequent  RPAREN  ;
  consequent : consequent_arg
-              | '.NIL.' ;
+              |  NIL  ;
  consequent_arg : expr
               | variable ;
  prefix : prefix_spec ( prefix_spec )*  ;
@@ -1152,108 +1152,108 @@ letter_spec : LETTER_SPEC ;
               | 'SIMPLE' ;
  proc_language_binding_spec : language_binding_spec ;
  function_stmt : ( prefix )? 'FUNCTION' function_name                   
-'(' ( dummy_arg_name_list )? ')' ( suffix )? ;
+ LPAREN  ( dummy_arg_name_list )?  RPAREN  ( suffix )? ;
  dummy_arg_name : name ;
- suffix : proc_language_binding_spec ( 'RESULT' '(' result_name ')' )?
-              | 'RESULT' '(' result_name ')' ( proc_language_binding_spec )? ;
+ suffix : proc_language_binding_spec ( 'RESULT'  LPAREN  result_name  RPAREN  )?
+              | 'RESULT'  LPAREN  result_name  RPAREN  ( proc_language_binding_spec )? ;
  end_function_stmt : 'END' ( 'FUNCTION' ( function_name )? )? ;
  subroutine_stmt : ( prefix )? 'SUBROUTINE' subroutine_name
-                   ( '(' ( dummy_arg_list )? ')' ( proc_language_binding_spec )? )? ;
+                   (  LPAREN  ( dummy_arg_list )?  RPAREN  ( proc_language_binding_spec )? )? ;
  dummy_arg : dummy_arg_name
-              | '*' ;
+              |  ASTERIK  ;
  end_subroutine_stmt : 'END' ( 'SUBROUTINE' ( subroutine_name )? )? ;
  mp_subprogram_stmt : 'MODULE' 'PROCEDURE' procedure_name ;
  end_mp_subprogram_stmt : 'END' ('PROCEDURE' (procedure_name)?)? ;
- entry_stmt : 'ENTRY' entry_name ( '(' ( dummy_arg_list )? ')' ( suffix )? )? ;
+ entry_stmt : 'ENTRY' entry_name (  LPAREN  ( dummy_arg_list )?  RPAREN  ( suffix )? )? ;
  return_stmt : 'RETURN' ( scalar_int_expr )? ;
  contains_stmt : 'CONTAINS' ;
- stmt_function_stmt : function_name '(' ( dummy_arg_name_list )? ')' '=' scalar_expr ;
+ stmt_function_stmt : function_name  LPAREN  ( dummy_arg_name_list )?  RPAREN  '=' scalar_expr ;
 
 
-ac_value_list : ac_value ( ',' ac_value )*  ;
-access_id_list : access_id ( ',' access_id )*  ;
-actual_arg_spec_list : actual_arg_spec ( ',' actual_arg_spec )*  ;
-alloc_opt_list : alloc_opt ( ',' alloc_opt )*  ;
-allocatable_decl_list : allocatable_decl ( ',' allocatable_decl )*  ;
-allocate_coshape_spec_list : allocate_coshape_spec ( ',' allocate_coshape_spec )*  ;
-allocate_object_list : allocate_object ( ',' allocate_object )*  ;
-allocate_shape_spec_list : allocate_shape_spec ( ',' allocate_shape_spec )*  ;
-allocation_list : allocation ( ',' allocation )*  ;
-association_list : association ( ',' association )*  ;
-assumed_implied_spec_list : assumed_implied_spec ( ',' assumed_implied_spec )*  ;
-assumed_shape_spec_list : assumed_shape_spec ( ',' assumed_shape_spec )*  ;
-bind_entity_list : bind_entity ( ',' bind_entity )*  ;
-binding_attr_list : binding_attr ( ',' binding_attr )*  ;
-binding_name_list : binding_name ( ',' binding_name )*  ;
-bounds_remapping_list : bounds_remapping ( ',' bounds_remapping )*  ;
-bounds_spec_list : bounds_spec ( ',' bounds_spec )*  ;
-case_value_range_list : case_value_range ( ',' case_value_range )*  ;
-close_spec_list : close_spec ( ',' close_spec )*  ;
-coarray_association_list : coarray_association ( ',' coarray_association )*  ;
-codimension_decl_list : codimension_decl ( ',' codimension_decl )*  ;
-common_block_object_list : common_block_object ( ',' common_block_object )*  ;
-component_attr_spec_list : component_attr_spec ( ',' component_attr_spec )*  ;
-component_decl_list : component_decl ( ',' component_decl )*  ;
-component_spec_list : component_spec ( ',' component_spec )*  ;
-concurrent_control_list : concurrent_control ( ',' concurrent_control )*  ;
-connect_spec_list : connect_spec ( ',' connect_spec )*  ;
-cosubscript_list : cosubscript ( ',' cosubscript )*  ;
-data_i_do_object_list : data_i_do_object ( ',' data_i_do_object )*  ;
-data_stmt_object_list : data_stmt_object ( ',' data_stmt_object )*  ;
-data_stmt_value_list : data_stmt_value ( ',' data_stmt_value )*  ;
-dealloc_opt_list : dealloc_opt ( ',' dealloc_opt )*  ;
-deferred_coshape_spec_list : deferred_coshape_spec ( ',' deferred_coshape_spec )*  ;
-deferred_shape_spec_list : deferred_shape_spec ( ',' deferred_shape_spec )*  ;
-dummy_arg_list : dummy_arg ( ',' dummy_arg )*  ;
-dummy_arg_name_list : dummy_arg_name ( ',' dummy_arg_name )*  ;
-entity_decl_list : entity_decl ( ',' entity_decl )*  ;
-entity_name_list : entity_name ( ',' entity_name )*  ;
-enumerator_list : enumerator ( ',' enumerator )*  ;
-enumerator_name_list : enumerator_name ( ',' enumerator_name )*  ;
-equivalence_object_list : equivalence_object ( ',' equivalence_object )*  ;
-equivalence_set_list : equivalence_set ( ',' equivalence_set )*  ;
-event_wait_spec_list : event_wait_spec ( ',' event_wait_spec )*  ;
-explicit_shape_spec_list : explicit_shape_spec ( ',' explicit_shape_spec )*  ;
-external_name_list : external_name ( ',' external_name )*  ;
-final_subroutine_name_list : final_subroutine_name ( ',' final_subroutine_name )*  ;
-flush_spec_list : flush_spec ( ',' flush_spec )*  ;
-form_team_spec_list : form_team_spec ( ',' form_team_spec )*  ;
-image_selector_spec_list : image_selector_spec ( ',' image_selector_spec )*  ;
-implicit_none_spec_list : implicit_none_spec ( ',' implicit_none_spec )*  ;
-implicit_spec_list : implicit_spec ( ',' implicit_spec )*  ;
-import_name_list : import_name ( ',' import_name )*  ;
-input_item_list : input_item ( ',' input_item )*  ;
-inquire_spec_list : inquire_spec ( ',' inquire_spec )*  ;
-intrinsic_procedure_name_list : intrinsic_procedure_name ( ',' intrinsic_procedure_name )*  ;
-io_control_spec_list : io_control_spec ( ',' io_control_spec )*  ;
-io_implied_do_object_list : io_implied_do_object ( ',' io_implied_do )*  ;
-label_list : label ( ',' label )*  ;
-letter_spec_list : LETTER_SPEC ( ',' LETTER_SPEC )*  ;
-lock_stat_list : lock_stat ( ',' lock_stat )*  ;
-named_constant_def_list : named_constant_def ( ',' named_constant_def )*  ;
-namelist_group_object_list : namelist_group_object ( ',' namelist_group_object )*  ;
-object_name_list : object_name ( ',' object_name )*  ;
-only_list : only ( ',' only )*  ;
-output_item_list : output_item ( ',' output_item )*  ;
-pointer_decl_list : pointer_decl ( ',' pointer_decl )*  ;
-pointer_object_list : pointer_object ( ',' pointer_object )*  ;
-position_spec_list : position_spec ( ',' position_spec )*  ;
-proc_component_attr_spec_list : proc_component_attr_spec ( ',' proc_component_attr_spec )*  ;
-proc_decl_list : proc_decl ( ',' proc_decl )*  ;
-rename_list : rename ( ',' rename )*  ;
-saved_entity_list : saved_entity ( ',' saved_entity )*  ;
-section_subscript_list : section_subscript ( ',' section_subscript )*  ;
-specific_procedure_list : specific_procedure ( ',' specific_procedure )*  ;
-sync_stat_list : sync_stat ( ',' sync_stat )*  ;
-target_decl_list : target_decl ( ',' target_decl )*  ;
-type_attr_spec_list : type_attr_spec ( ',' type_attr_spec )*  ;
-type_bound_proc_decl_list : type_bound_proc_decl ( ',' type_bound_proc_decl )*  ;
-type_param_decl_list : type_param_decl ( ',' type_param_decl )*  ;
-type_param_name_list : type_param_name ( ',' type_param_name )*  ;
-type_param_spec_list : type_param_spec ( ',' type_param_spec )*  ;
-v_list : v ( ',' v )*  ;
-variable_name_list : variable_name ( ',' variable_name )*  ;
-wait_spec_list : wait_spec ( ',' wait_spec )*  ;
+ac_value_list : ac_value (  COMMA  ac_value )*  ;
+access_id_list : access_id (  COMMA  access_id )*  ;
+actual_arg_spec_list : actual_arg_spec (  COMMA  actual_arg_spec )*  ;
+alloc_opt_list : alloc_opt (  COMMA  alloc_opt )*  ;
+allocatable_decl_list : allocatable_decl (  COMMA  allocatable_decl )*  ;
+allocate_coshape_spec_list : allocate_coshape_spec (  COMMA  allocate_coshape_spec )*  ;
+allocate_object_list : allocate_object (  COMMA  allocate_object )*  ;
+allocate_shape_spec_list : allocate_shape_spec (  COMMA  allocate_shape_spec )*  ;
+allocation_list : allocation (  COMMA  allocation )*  ;
+association_list : association (  COMMA  association )*  ;
+assumed_implied_spec_list : assumed_implied_spec (  COMMA  assumed_implied_spec )*  ;
+assumed_shape_spec_list : assumed_shape_spec (  COMMA  assumed_shape_spec )*  ;
+bind_entity_list : bind_entity (  COMMA  bind_entity )*  ;
+binding_attr_list : binding_attr (  COMMA  binding_attr )*  ;
+binding_name_list : binding_name (  COMMA  binding_name )*  ;
+bounds_remapping_list : bounds_remapping (  COMMA  bounds_remapping )*  ;
+bounds_spec_list : bounds_spec (  COMMA  bounds_spec )*  ;
+case_value_range_list : case_value_range (  COMMA  case_value_range )*  ;
+close_spec_list : close_spec (  COMMA  close_spec )*  ;
+coarray_association_list : coarray_association (  COMMA  coarray_association )*  ;
+codimension_decl_list : codimension_decl (  COMMA  codimension_decl )*  ;
+common_block_object_list : common_block_object (  COMMA  common_block_object )*  ;
+component_attr_spec_list : component_attr_spec (  COMMA  component_attr_spec )*  ;
+component_decl_list : component_decl (  COMMA  component_decl )*  ;
+component_spec_list : component_spec (  COMMA  component_spec )*  ;
+concurrent_control_list : concurrent_control (  COMMA  concurrent_control )*  ;
+connect_spec_list : connect_spec (  COMMA  connect_spec )*  ;
+cosubscript_list : cosubscript (  COMMA  cosubscript )*  ;
+data_i_do_object_list : data_i_do_object (  COMMA  data_i_do_object )*  ;
+data_stmt_object_list : data_stmt_object (  COMMA  data_stmt_object )*  ;
+data_stmt_value_list : data_stmt_value (  COMMA  data_stmt_value )*  ;
+dealloc_opt_list : dealloc_opt (  COMMA  dealloc_opt )*  ;
+deferred_coshape_spec_list : deferred_coshape_spec (  COMMA  deferred_coshape_spec )*  ;
+deferred_shape_spec_list : deferred_shape_spec (  COMMA  deferred_shape_spec )*  ;
+dummy_arg_list : dummy_arg (  COMMA  dummy_arg )*  ;
+dummy_arg_name_list : dummy_arg_name (  COMMA  dummy_arg_name )*  ;
+entity_decl_list : entity_decl (  COMMA  entity_decl )*  ;
+entity_name_list : entity_name (  COMMA  entity_name )*  ;
+enumerator_list : enumerator (  COMMA  enumerator )*  ;
+enumerator_name_list : enumerator_name (  COMMA  enumerator_name )*  ;
+equivalence_object_list : equivalence_object (  COMMA  equivalence_object )*  ;
+equivalence_set_list : equivalence_set (  COMMA  equivalence_set )*  ;
+event_wait_spec_list : event_wait_spec (  COMMA  event_wait_spec )*  ;
+explicit_shape_spec_list : explicit_shape_spec (  COMMA  explicit_shape_spec )*  ;
+external_name_list : external_name (  COMMA  external_name )*  ;
+final_subroutine_name_list : final_subroutine_name (  COMMA  final_subroutine_name )*  ;
+flush_spec_list : flush_spec (  COMMA  flush_spec )*  ;
+form_team_spec_list : form_team_spec (  COMMA  form_team_spec )*  ;
+image_selector_spec_list : image_selector_spec (  COMMA  image_selector_spec )*  ;
+implicit_none_spec_list : implicit_none_spec (  COMMA  implicit_none_spec )*  ;
+implicit_spec_list : implicit_spec (  COMMA  implicit_spec )*  ;
+import_name_list : import_name (  COMMA  import_name )*  ;
+input_item_list : input_item (  COMMA  input_item )*  ;
+inquire_spec_list : inquire_spec (  COMMA  inquire_spec )*  ;
+intrinsic_procedure_name_list : intrinsic_procedure_name (  COMMA  intrinsic_procedure_name )*  ;
+io_control_spec_list : io_control_spec (  COMMA  io_control_spec )*  ;
+io_implied_do_object_list : io_implied_do_object (  COMMA  io_implied_do )*  ;
+label_list : label (  COMMA  label )*  ;
+letter_spec_list : LETTER_SPEC (  COMMA  LETTER_SPEC )*  ;
+lock_stat_list : lock_stat (  COMMA  lock_stat )*  ;
+named_constant_def_list : named_constant_def (  COMMA  named_constant_def )*  ;
+namelist_group_object_list : namelist_group_object (  COMMA  namelist_group_object )*  ;
+object_name_list : object_name (  COMMA  object_name )*  ;
+only_list : only (  COMMA  only )*  ;
+output_item_list : output_item (  COMMA  output_item )*  ;
+pointer_decl_list : pointer_decl (  COMMA  pointer_decl )*  ;
+pointer_object_list : pointer_object (  COMMA  pointer_object )*  ;
+position_spec_list : position_spec (  COMMA  position_spec )*  ;
+proc_component_attr_spec_list : proc_component_attr_spec (  COMMA  proc_component_attr_spec )*  ;
+proc_decl_list : proc_decl (  COMMA  proc_decl )*  ;
+rename_list : rename (  COMMA  rename )*  ;
+saved_entity_list : saved_entity (  COMMA  saved_entity )*  ;
+section_subscript_list : section_subscript (  COMMA  section_subscript )*  ;
+specific_procedure_list : specific_procedure (  COMMA  specific_procedure )*  ;
+sync_stat_list : sync_stat (  COMMA  sync_stat )*  ;
+target_decl_list : target_decl (  COMMA  target_decl )*  ;
+type_attr_spec_list : type_attr_spec (  COMMA  type_attr_spec )*  ;
+type_bound_proc_decl_list : type_bound_proc_decl (  COMMA  type_bound_proc_decl )*  ;
+type_param_decl_list : type_param_decl (  COMMA  type_param_decl )*  ;
+type_param_name_list : type_param_name (  COMMA  type_param_name )*  ;
+type_param_spec_list : type_param_spec (  COMMA  type_param_spec )*  ;
+v_list : v (  COMMA  v )*  ;
+variable_name_list : variable_name (  COMMA  variable_name )*  ;
+wait_spec_list : wait_spec (  COMMA  wait_spec )*  ;
 
 access_name : name ;
 ancestor_module_name : name ;

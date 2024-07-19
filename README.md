@@ -45,3 +45,20 @@ extracting the EBNF from the text, [extraction](https://github.com/kaby76/fortra
 The script also uses an [ENBF in Antlr](https://github.com/kaby76/fortran/tree/main/ebnf) to parse and modify the scraped Fortran EBNF.
 * There are many rules that end in `-list`. These are currently enumerated in the extract.sh script, but the rules
 should be generated.
+* The grammar generated is based on https://github.com/AkhilAkkapelli/Fortran2023Grammar. But,
+there are several issues that need explanation.
+    * [NAME](https://github.com/AkhilAkkapelli/Fortran2023Grammar/blob/553123a023f70e9a524e2a4036be128978834c42/Fortran2023Lexer.g4#L502)
+      is an identifer. [PROGRAM](https://github.com/AkhilAkkapelli/Fortran2023Grammar/blob/553123a023f70e9a524e2a4036be128978834c42/Fortran2023Lexer.g4#L14)
+      is a keyword. There is no distinguishment between keywords
+      and non-keywords, but there should be. In other words, NAME can remain NAME because it is
+      that way in the spec, but PROGRAM should be KW_PROGRAM in order to distinguish the two
+      uses.
+    * NAME is defined here: https://github.com/AkhilAkkapelli/Fortran2023Grammar/blob/553123a023f70e9a524e2a4036be128978834c42/Fortran2023Lexer.g4#L502.
+      But, keyword "NAME" is define using NAAM here. https://github.com/AkhilAkkapelli/Fortran2023Grammar/blob/553123a023f70e9a524e2a4036be128978834c42/Fortran2023Lexer.g4#L152.
+      It needs standardization.
+    * Beyond camel-case naming, `program : program_unit ( program_unit )*;` contains useless parentheses.
+      These need to be removed.
+    * The order of the parser rules does not correspond to the spec.
+    * `mult_op :  ASTERIK |  SLASH  ;`. Terminal symbols should use the established Unicode
+      character name. ['*'](https://www.compart.com/en/unicode/U+002A)
+      is not named ASTERIK, but Asterisk.

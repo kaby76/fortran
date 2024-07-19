@@ -10,6 +10,8 @@ SPACE: [ ] -> skip;
 
 WS: [\t\r\n]+ -> skip;
 
+EXTENDS: 'EXTENDS' ;
+
 PROGRAM: 'PROGRAM';
 
 END: 'END';
@@ -369,7 +371,8 @@ STREAM: 'STREAM';
 
 IF: 'IF';
 
-GOTO: 'GOTO';
+GO: 'GO';
+TO: 'TO';
 
 NEWINDEX: 'NEW_INDEX';
 
@@ -482,13 +485,13 @@ DEFINEDUNARYBINARYOP: DOT LETTER+? DOT;
 LETTER_SPEC: LETTER MINUS LETTER;
 
 // R765 binary-constant -> B ' digit [digit]... ' | B " digit [digit]... "
-BINARYCONSTANT: B SQUOTE DIGIT+? SQUOTE | B DQUOTE DIGIT+? DQUOTE;
+BINARY_CONSTANT: B SQUOTE DIGIT+? SQUOTE | B DQUOTE DIGIT+? DQUOTE;
 
 // R766 octal-constant -> O ' digit [digit]... ' | O " digit [digit]... "
-OCTALCONSTANT: O SQUOTE DIGIT+? SQUOTE | O DQUOTE DIGIT+? DQUOTE;
+OCTAL_CONSTANT: O SQUOTE DIGIT+? SQUOTE | O DQUOTE DIGIT+? DQUOTE;
 
 // R767 hex-constant -> Z ' hex-digit [hex-digit]... ' | Z " hex-digit [hex-digit]... "
-HEXCONSTANT: Z SQUOTE HEXDIGIT+? SQUOTE | Z DQUOTE HEXDIGIT+? DQUOTE;
+HEX_CONSTANT: Z SQUOTE HEXDIGIT+? SQUOTE | Z DQUOTE HEXDIGIT+? DQUOTE;
 
 //R0003 RepChar
 SQUOTE_REP_CHAR: SQUOTE (~[\u0000-\u001F])*?  SQUOTE;

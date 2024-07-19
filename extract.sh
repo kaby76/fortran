@@ -412,6 +412,8 @@ SPACE: [ ] -> skip;
 
 WS: [\t\r\n]+ -> skip;
 
+EXTENDS: 'EXTENDS' ;
+
 PROGRAM: 'PROGRAM';
 
 END: 'END';
@@ -771,7 +773,8 @@ STREAM: 'STREAM';
 
 IF: 'IF';
 
-GOTO: 'GOTO';
+GO: 'GO';
+TO: 'TO';
 
 NEWINDEX: 'NEW_INDEX';
 
@@ -884,13 +887,13 @@ DEFINEDUNARYBINARYOP: DOT LETTER+? DOT;
 LETTER_SPEC: LETTER MINUS LETTER;
 
 // R765 binary-constant -> B ' digit [digit]... ' | B " digit [digit]... "
-BINARYCONSTANT: B SQUOTE DIGIT+? SQUOTE | B DQUOTE DIGIT+? DQUOTE;
+BINARY_CONSTANT: B SQUOTE DIGIT+? SQUOTE | B DQUOTE DIGIT+? DQUOTE;
 
 // R766 octal-constant -> O ' digit [digit]... ' | O " digit [digit]... "
-OCTALCONSTANT: O SQUOTE DIGIT+? SQUOTE | O DQUOTE DIGIT+? DQUOTE;
+OCTAL_CONSTANT: O SQUOTE DIGIT+? SQUOTE | O DQUOTE DIGIT+? DQUOTE;
 
 // R767 hex-constant -> Z ' hex-digit [hex-digit]... ' | Z " hex-digit [hex-digit]... "
-HEXCONSTANT: Z SQUOTE HEXDIGIT+? SQUOTE | Z DQUOTE HEXDIGIT+? DQUOTE;
+HEX_CONSTANT: Z SQUOTE HEXDIGIT+? SQUOTE | Z DQUOTE HEXDIGIT+? DQUOTE;
 
 //R0003 RepChar
 SQUOTE_REP_CHAR: SQUOTE (~[\u0000-\u001F])*?  SQUOTE;
@@ -1072,7 +1075,7 @@ name: NAME | PROGRAM | END| FUNCTION | SUBROUTINE | MODULE
 	 | WAIT | UNTILCOUNT | POST | ERRMSG | ERROR | STOP | QUIET | ENDFILE | DEALLOCATE | CYCLE | CONTINUE | CLOSE | UNIT | IOSTAT 
 	 | IOMSG | ERR | STATUS | CALL | BACKSPACE | ALLOCATE | MOLD | SOURCE | OPEN | ACCESS | ACTION | BLANK | DECIMAL | DELIM 
 	 | ENCODING | FILE | FORM | NEWUNIT | PAD | POSITION | RECL | ROUND | SIGN | NULLIFY | LOCK | ACQUIREDLOCK | INQUIRE | IOLENGTH
-	 | EXIST | ID | NAMED | NEXTREC | NUMBER | OPENED | PENDING | POS | READWRITE | SEQUENTIAL | SIZE | STREAM | IF | GOTO | NEWINDEX
+	 | EXIST | ID | NAMED | NEXTREC | NUMBER | OPENED | PENDING | POS | READWRITE | SEQUENTIAL | SIZE | STREAM | IF | GO | TO | NEWINDEX
 	 | FLUSH | FAIL | IMAGE | EXIT | FORALL | WHERE | EOR | UNLOCK | SYNC | MEMORY | IMAGES | REWIND | RETURN | FMT | NML | ADVANCE | REC
 	 | PRINT | CRITICAL | CHANGE | SELECT | CASE | DEFAULT | ASSOCIATE | ELSEWHERE | IS | RANK | ELSE | THEN | DO | CONCURRENT | WHILE
 	 | SHARED | LOCAL | LOCALINIT | RECURSIVE | PURE | NONRECURSIVE | IMPURE | ELEMENTAL | NOTIFY | TYPEOF | CLASSOF | ENUMERATION
@@ -1082,3 +1085,41 @@ EOF
 cat ebnf.ebnf >> FortranParser.g4
 
 rm -f rename.txt rename2.txt rename3.txt ids.txt updated_ids.txt ebnf1.ebnf
+
+echo "Fixing string literals in parser grammar."
+trparse -t ANTLRv4 FortranParser.g4 | \
+	trquery '
+	replace //STRING_LITERAL[text() = "'"','"'" ]' '" COMMA ";
+	replace //STRING_LITERAL[text() = "'"'_'"'" ]' '" UNDERSCORE ";
+	replace //STRING_LITERAL[text() = "'"')'"'" ]' '" RPAREN ";
+	replace //STRING_LITERAL[text() = "'"'('"'" ]' '" LPAREN ";
+	replace //STRING_LITERAL[text() = "'"':'"'" ]' '" COLON ";
+	replace //STRING_LITERAL[text() = "'"'+'"'" ]' '" PLUS ";
+	replace //STRING_LITERAL[text() = "'"'/'"'" ]' '" SLASH ";
+	replace //STRING_LITERAL[text() = "'"'*'"'" ]' '" ASTERIK ";
+	replace //STRING_LITERAL[text() = "'"'-'"'" ]' '" MINUS ";
+	replace //STRING_LITERAL[text() = "'"'.'"'" ]' '" DOT ";
+	replace //STRING_LITERAL[text() = "'"'GO'"'" ]' '" GO ";
+	replace //STRING_LITERAL[text() = "'"'TO'"'" ]' '" TO ";
+	replace //STRING_LITERAL[text() = "'"'A'"'" ]' '" A ";
+	replace //STRING_LITERAL[text() = "'"'B'"'" ]' '" B ";
+	replace //STRING_LITERAL[text() = "'"'C'"'" ]' '" C ";
+	replace //STRING_LITERAL[text() = "'"'D'"'" ]' '" D ";
+	replace //STRING_LITERAL[text() = "'"'E'"'" ]' '" E ";
+	replace //STRING_LITERAL[text() = "'"'F'"'" ]' '" F ";
+	replace //STRING_LITERAL[text() = "'"'IMPORT,'"'" ]' '" IMPORT COMMA ";
+	replace //STRING_LITERAL[text() = "'"'(C)'"'" ]' '" LPAREN C RPAREN ";
+	replace //STRING_LITERAL[text() = "'"'(C'"'" ]' '" LPAREN C ";
+	replace //STRING_LITERAL[text() = "'"'),'"'" ]' '" RPAREN COMMA ";
+	replace //STRING_LITERAL[text() = "'"'ENUM,'"'" ]' '" ENUM COMMA ";
+	replace //STRING_LITERAL[text() = "'"'BIND(C)'"'" ]' '" BIND LPAREN C RPAREN ";
+	replace //STRING_LITERAL[text() = "'"'TYPE('"'" ]' '" TYPE LPAREN ";
+	replace //STRING_LITERAL[text() = "'"'CLASS('"'" ]' '" CLASS LPAREN ";
+	replace //STRING_LITERAL[text() = "'"'(FORMATTED)'"'" ]' '" LPAREN FORMATTED RPAREN ";
+	replace //STRING_LITERAL[text() = "'"'(UNFORMATTED)'"'" ]' '" LPAREN UNFORMATTED RPAREN ";
+	replace //STRING_LITERAL[text() = "'"'O'"'" ]' '" O ";
+	replace //STRING_LITERAL[text() = "'"'Z'"'" ]' '" Z ";
+	replace //STRING_LITERAL[text() = "'"'.NIL.'"'" ]' '" NIL ";
+	
+' | \
+	trsponge -c
