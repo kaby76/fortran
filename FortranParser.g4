@@ -638,15 +638,22 @@ letter_spec : LETTER_SPEC ;
  level_1_expr : ( defined_unary_op )? primary ;
 
  mult_operand : level_1_expr ( power_op mult_operand )? ;
- add_operand : ( add_operand mult_op )? mult_operand ;
- level_2_expr : ( ( level_2_expr )? add_op )? add_operand ;
- level_3_expr : ( level_3_expr concat_op )? level_2_expr ; //
+add_operand: mult_operand (add_operand mult_operand)* ;
+
+level_2_expr: (add_operand | add_op add_operand) (add_op add_operand)* ;
+
+level_3_expr: level_2_expr (concat_op level_2_expr)* ;
+ //
  level_4_expr : ( level_3_expr rel_op )? level_3_expr ;
  and_operand : ( not_op )? level_4_expr ;
- or_operand : ( or_operand and_op )? and_operand ;
- equiv_operand : ( equiv_operand or_op )? or_operand ;
- level_5_expr : ( level_5_expr equiv_op )? equiv_operand ;
- expr : ( expr defined_binary_op )? level_5_expr ;
+or_operand: and_operand (and_op and_operand)* ;
+
+equiv_operand: or_operand (or_op or_operand)* ;
+
+level_5_expr: equiv_operand (equiv_op equiv_operand)* ;
+
+expr: level_5_expr (defined_binary_op level_5_expr)* ;
+
 
  logical_expr : expr ;
  default_char_expr : expr ;

@@ -1123,3 +1123,31 @@ trparse -t ANTLRv4 FortranParser.g4 | \
 	
 ' | \
 	trsponge -c
+
+echo "Fix mutual left-recursion in various rules."
+trparse -t ANTLRv4 FortranParser.g4 | \
+	trquery '
+	replace //parserRuleSpec[RULE_REF/text() = "level_5_expr"] "
+level_5_expr: equiv_operand (equiv_op equiv_operand)* ;
+";
+	replace //parserRuleSpec[RULE_REF/text() = "level_3_expr"] "
+level_3_expr: level_2_expr (concat_op level_2_expr)* ;
+";
+	replace //parserRuleSpec[RULE_REF/text() = "level_2_expr"] "
+level_2_expr: (add_operand | add_op add_operand) (add_op add_operand)* ;
+";
+	replace //parserRuleSpec[RULE_REF/text() = "add_operand"] "
+add_operand: mult_operand (add_operand mult_operand)* ;
+";
+	replace //parserRuleSpec[RULE_REF/text() = "or_operand"] "
+or_operand: and_operand (and_op and_operand)* ;
+";
+	replace //parserRuleSpec[RULE_REF/text() = "equiv_operand"] "
+equiv_operand: or_operand (or_op or_operand)* ;
+";
+	replace //parserRuleSpec[RULE_REF/text() = "expr"] "
+expr: level_5_expr (defined_binary_op level_5_expr)* ;
+";
+
+' | \
+	trsponge -c
