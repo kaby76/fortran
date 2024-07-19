@@ -1178,3 +1178,28 @@ variable : designator
 "
 ' | \
 	trsponge -c
+
+echo "Removing MLR in designator."
+#trparse -t ANTLRv4 FortranParser.g4 | \
+#	trunfold ' //parserRuleSpec[RULE_REF/text() = "designator"]//labeledAlt//RULE_REF[text() = "array_section"]' | \
+#	trsponge -c
+#trparse -t ANTLRv4 FortranParser.g4 | \
+#	trunfold ' //parserRuleSpec[RULE_REF/text() = "designator"]//labeledAlt//RULE_REF[text() = "complex_part_designator"]' | \
+#	trsponge -c
+trparse -t ANTLRv4 FortranParser.g4 | \
+	trquery '
+	replace //parserRuleSpec[RULE_REF/text() = "designator"]
+"
+designator : object_name
+              | array_element
+	      | data_ref (  LPAREN  substring_range  RPAREN  )?
+              | designator PERCENT RE
+	      | designator PERCENT IM
+              | coindexed_named_object
+              | structure_component
+              | substring ;
+"
+' | \
+	trsponge -c
+
+	

@@ -546,13 +546,15 @@ letter_spec : LETTER_SPEC ;
                       ( (  COMMA  )?  SLASH  ( common_block_name )?  SLASH 
                      common_block_object_list )*  ;
  common_block_object : variable_name (  LPAREN  array_spec  RPAREN  )? ;
- designator : object_name
+designator : object_name
               | array_element
-              | array_section
+	      | data_ref (  LPAREN  substring_range  RPAREN  )?
+              | designator PERCENT RE
+	      | designator PERCENT IM
               | coindexed_named_object
-              | complex_part_designator
               | structure_component
               | substring ;
+
 variable : designator
  | procedure_name LPAREN ( actual_arg_spec_list )? RPAREN
  | variable PERCENT procedure_component_name LPAREN ( actual_arg_spec_list )?  RPAREN
