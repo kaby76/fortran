@@ -1202,4 +1202,6 @@ designator : object_name
 ' | \
 	trsponge -c
 
-	
+
+/c/Users/Kenne/Documents/Github/g4-scripts/delete-useless-parentheses.sh FortranLexer.g4 FortranParser.g4
+antlr-format -c ./repo_coding_style.json FortranLexer.g4 FortranParser.g4

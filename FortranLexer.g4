@@ -1,6 +1,13 @@
+
+// $antlr-format alignColons trailing, alignLabels true, alignLexerCommands true, alignSemicolons ownLine, alignTrailers true
+// $antlr-format alignTrailingComments true, allowShortBlocksOnASingleLine true, allowShortRulesOnASingleLine true, columnLimit 150
+// $antlr-format maxEmptyLinesToKeep 1, minEmptyLines 0, reflowComments false, singleLineOverrulesHangingColon true, useTab false
+
 lexer grammar FortranLexer;
 
-options { caseInsensitive=true; }
+options {
+    caseInsensitive = true;
+}
 
 LINE_COMMENT: '!' .*? '\r'? '\n' -> skip;
 
@@ -10,7 +17,7 @@ SPACE: [ ] -> skip;
 
 WS: [\t\r\n]+ -> skip;
 
-EXTENDS: 'EXTENDS' ;
+EXTENDS: 'EXTENDS';
 
 PROGRAM: 'PROGRAM';
 
@@ -36,7 +43,7 @@ BLOCK: 'BLOCK';
 
 DATA: 'DATA';
 
-COLON : ':';
+COLON: ':';
 
 INTRINSIC: 'INTRINSIC';
 
@@ -108,7 +115,7 @@ DOUBLECOLON: '::';
 
 ONLY: 'ONLY';
 
-IMPORT : 'IMPORT';
+IMPORT: 'IMPORT';
 
 NONE: 'NONE';
 
@@ -142,7 +149,7 @@ IMPLICIT: 'IMPLICIT';
 
 PARAMETER: 'PARAMETER';
 
-FORMATIN : FORMAT (SPACE)* LPAREN -> pushMode(FORMAT_MODE);
+FORMATIN: FORMAT SPACE* LPAREN -> pushMode(FORMAT_MODE);
 
 FORMAT: 'FORMAT';
 
@@ -371,8 +378,8 @@ STREAM: 'STREAM';
 
 IF: 'IF';
 
-GO: 'GO';
-TO: 'TO';
+GO : 'GO';
+TO : 'TO';
 
 NEWINDEX: 'NEW_INDEX';
 
@@ -494,25 +501,29 @@ OCTAL_CONSTANT: O SQUOTE DIGIT+? SQUOTE | O DQUOTE DIGIT+? DQUOTE;
 HEX_CONSTANT: Z SQUOTE HEXDIGIT+? SQUOTE | Z DQUOTE HEXDIGIT+? DQUOTE;
 
 //R0003 RepChar
-SQUOTE_REP_CHAR: SQUOTE (~[\u0000-\u001F])*?  SQUOTE;
+SQUOTE_REP_CHAR: SQUOTE ~[\u0000-\u001F]*? SQUOTE;
 
-DQUOTE_REP_CHAR: DQUOTE (~[\u0000-\u001F])*?  DQUOTE;
+DQUOTE_REP_CHAR: DQUOTE ~[\u0000-\u001F]*? DQUOTE;
 
-REALEXPONENTLETTER: DIGITSTRING DOT DIGITSTRING? EXPONENTLETTER | DOT DIGITSTRING EXPONENTLETTER | DIGITSTRING EXPONENTLETTER;
+REALEXPONENTLETTER:
+    DIGITSTRING DOT DIGITSTRING? EXPONENTLETTER
+    | DOT DIGITSTRING EXPONENTLETTER
+    | DIGITSTRING EXPONENTLETTER
+;
 
 // R603 name -> letter [alphanumeric-character]...
-NAME: LETTER (ALPHANUMERICCHARACTER)*;
+NAME: LETTER ALPHANUMERICCHARACTER*;
 
 // R0002 Letter ->
 //         A | B | C | D | E | F | G | H | I | J | K | L | M |
 //         N | O | P | Q | R | S | T | U | V | W | X | Y | Z
-LETTER: 'A'..'Z'; 
+LETTER: 'A' ..'Z';
 
 // R711 digit-string -> digit [digit]...
-DIGITSTRING: DIGIT+; 
+DIGITSTRING: DIGIT+;
 
 // R0001 Digit -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-DIGIT: '0'..'9';
+DIGIT: '0' ..'9';
 
 // R601 alphanumeric-character -> letter | digit | underscore
 ALPHANUMERICCHARACTER: LETTER | DIGIT | UNDERSCORE;
@@ -539,7 +550,6 @@ F: 'F';
 // R768 hex-digit -> digit | A | B | C | D | E | F
 HEXDIGIT: DIGIT | A | B | C | D | E | F;
 
-
 ///FORMAT MODE
 
 mode FORMAT_MODE;
@@ -556,17 +566,19 @@ FORMAT_ASTERIK: '*' -> type(ASTERIK);
 
 FORMAT_UNDERSCORE: '_' -> type(UNDERSCORE);
 
-FORMAT_DIGITSTRING: FORMAT_DIGIT+  -> type(DIGITSTRING);
+FORMAT_DIGITSTRING: FORMAT_DIGIT+ -> type(DIGITSTRING);
 
-FORMAT_DIGIT: '0'..'9' -> type(DIGIT);
+FORMAT_DIGIT: '0' ..'9' -> type(DIGIT);
 
 FORMAT_APOSTROPHE: '\'' -> type(SQUOTE);
 
 FORMAT_QUOTE: '"' -> type(DQUOTE);
 
-FORMAT_APOSTROPHEREPCHAR: FORMAT_APOSTROPHE (~[\u0000-\u001F\u0027])*?  FORMAT_APOSTROPHE -> type(SQUOTE_REP_CHAR);
+FORMAT_APOSTROPHEREPCHAR:
+    FORMAT_APOSTROPHE ~[\u0000-\u001F\u0027]*? FORMAT_APOSTROPHE -> type(SQUOTE_REP_CHAR)
+;
 
-FORMAT_QUOTEREPCHAR: FORMAT_QUOTE (~[\u0000-\u001F\u0022])*?  FORMAT_QUOTE -> type(DQUOTE_REP_CHAR);
+FORMAT_QUOTEREPCHAR: FORMAT_QUOTE ~[\u0000-\u001F\u0022]*? FORMAT_QUOTE -> type(DQUOTE_REP_CHAR);
 
 P: 'P';
 
@@ -640,11 +652,12 @@ FORMAT_D: 'D' -> type(D);
 
 DT: 'DT';
 
-FORMAT_NAME: FORMAT_LETTER (FORMAT_ALPHANUMERICCHARACTER)* -> type(NAME);
+FORMAT_NAME: FORMAT_LETTER FORMAT_ALPHANUMERICCHARACTER* -> type(NAME);
 
-FORMAT_LETTER: 'A'..'Z' -> type(LETTER); 
+FORMAT_LETTER: 'A' ..'Z' -> type(LETTER);
 
-FORMAT_ALPHANUMERICCHARACTER: (FORMAT_LETTER | FORMAT_DIGIT | FORMAT_UNDERSCORE) -> type(ALPHANUMERICCHARACTER);
+FORMAT_ALPHANUMERICCHARACTER: (FORMAT_LETTER | FORMAT_DIGIT | FORMAT_UNDERSCORE) -> type(ALPHANUMERICCHARACTER)
+;
 
 FORMAT_SLASH: '/' -> type(SLASH);
 
