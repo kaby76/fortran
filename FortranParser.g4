@@ -553,8 +553,12 @@ letter_spec : LETTER_SPEC ;
               | complex_part_designator
               | structure_component
               | substring ;
- variable : designator
-              | function_reference ;
+variable : designator
+ | procedure_name LPAREN ( actual_arg_spec_list )? RPAREN
+ | variable PERCENT procedure_component_name LPAREN ( actual_arg_spec_list )?  RPAREN
+ | data_ref PERCENT binding_name LPAREN  ( actual_arg_spec_list )?  RPAREN
+ ;
+
  variable_name : name ;
  logical_variable : variable ;
  char_variable : variable ;

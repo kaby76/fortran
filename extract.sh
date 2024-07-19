@@ -1151,3 +1151,30 @@ expr: level_5_expr (defined_binary_op level_5_expr)* ;
 
 ' | \
 	trsponge -c
+
+echo "Unfold function-reference."
+#trparse -t ANTLRv4 FortranParser.g4 | \
+#	trunfold ' //parserRuleSpec[RULE_REF/text() = "variable"]//labeledAlt//RULE_REF[text() = "function_reference"]' | \
+#	trsponge -c
+#trparse -t ANTLRv4 FortranParser.g4 | \
+#	trunfold ' //parserRuleSpec[RULE_REF/text() = "variable"]//labeledAlt//RULE_REF[text() = "procedure_designator"]' | \
+#	trsponge -c
+#trparse -t ANTLRv4 FortranParser.g4 | \
+#	trunfold ' //parserRuleSpec[RULE_REF/text() = "variable"]//labeledAlt//RULE_REF[text() = "proc_component_ref"]' | \
+#	trsponge -c
+#trparse -t ANTLRv4 FortranParser.g4 | \
+#	trunfold ' //parserRuleSpec[RULE_REF/text() = "variable"]//labeledAlt//RULE_REF[text() = "scalar_variable"]' | \
+#	trsponge -c
+echo "(trungroup not ported yet, add in final form of 'variable'."
+trparse -t ANTLRv4 FortranParser.g4 | \
+	trquery '
+	replace //parserRuleSpec[RULE_REF/text() = "variable"]
+"
+variable : designator
+ | procedure_name LPAREN ( actual_arg_spec_list )? RPAREN
+ | variable PERCENT procedure_component_name LPAREN ( actual_arg_spec_list )?  RPAREN
+ | data_ref PERCENT binding_name LPAREN  ( actual_arg_spec_list )?  RPAREN
+ ;
+"
+' | \
+	trsponge -c
