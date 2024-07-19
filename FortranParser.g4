@@ -198,6 +198,11 @@ name
     | SIMPLE
     ;
 
+// add in start rule.
+file_
+    : program EOF
+    ;
+
 program
     : program_unit program_unit*
     ;
