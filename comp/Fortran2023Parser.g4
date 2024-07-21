@@ -23,7 +23,7 @@ ac_implied_do_control
 
 ac_spec
     : type_spec DOUBLECOLON
-    | (type_spec DOUBLECOLON)? ac_value_list
+    | ( type_spec DOUBLECOLON)? ac_value_list
     ;
 
 ac_value
@@ -206,7 +206,7 @@ and_op
     ;
 
 and_operand
-    : not_op? level4Expr
+    : not_op? level_4_expr
     ;
 
 arg_name
@@ -352,16 +352,16 @@ bind_stmt
     : language_binding_spec DOUBLECOLON? bind_entity_list
     ;
 
-bindAttr
+binding_attr
     : access_spec
     | DEFERRED
     | NONOVERRIDABLE
     | NOPASS
-    | PASS (LPAREN arg_name RPAREN)?
+    | PASS ( LPAREN arg_name RPAREN)?
     ;
 
-bindAttrList
-    : bindAttr (COMMA bindAttr)*
+binding_attr_list
+    : binding_attr (COMMA binding_attr)*
     ;
 
 binding_name
@@ -430,9 +430,9 @@ bounds_spec_list
     ;
 
 boz_literal_constant
-    : BINARYCONSTANT
-    | OCTALCONSTANT
-    | HEXCONSTANT
+    : BINARY_CONSTANT
+    | OCTAL_CONSTANT
+    | HEX_CONSTANT
     ;
 
 call_stmt
@@ -492,7 +492,7 @@ char_length
 
 char_literal_constant
     : (kind_param UNDERSCORE)? APOSTROPHEREPCHAR
-    | (kind_param UNDERSCORE)? QUOTEREPCHAR
+    | ( kind_param UNDERSCORE)? QUOTEREPCHAR
     ;
 
 char_selector
@@ -796,20 +796,20 @@ d
     ;
 
 data_component_def_stmt
-    : declaration_type_spec ((COMMA component_attr_spec_list)? DOUBLECOLON)? component_decl_list
+    : declaration_type_spec (( COMMA component_attr_spec_list)? DOUBLECOLON)? component_decl_list
     ;
 
 data_edit_desc
     : I w (DOT m)?
-    | B w (DOT m)?
-    | O w (DOT m)?
-    | Z w (DOT m)?
+    | B w ( DOT m)?
+    | O w ( DOT m)?
+    | Z w ( DOT m)?
     | F w DOT d
     | E w DOT d ( E e)?
     | EN w DOT d ( E e)?
     | ES w DOT d ( E e)?
     | EX w DOT d ( E e)?
-    | G w (DOT d ( E e)?)?
+    | G w ( DOT d ( E e)?)?
     | L w
     | A w?
     | AT
@@ -992,7 +992,7 @@ derived_type_spec
     ;
 
 derived_type_stmt
-    : TYPE ((COMMA type_attr_spec_list)? DOUBLECOLON)? type_name (
+    : TYPE (( COMMA type_attr_spec_list)? DOUBLECOLON)? type_name (
         LPAREN type_param_name_list RPAREN
     )?
     ;
@@ -1000,9 +1000,9 @@ derived_type_stmt
 designator
     : object_name
     | array_element
-    | data_ref (LPAREN substring_range RPAREN)?
+    | data_ref ( LPAREN substring_range RPAREN)?
     | coindexed_named_object
-    | designator PERCENT (RE | IM)
+    | designator PERCENT ( RE | IM)
     | structure_component
     | substring
     ;
@@ -1165,7 +1165,7 @@ entity_decl
     : object_name (LPAREN array_spec RPAREN)? (lbracket coarray_spec rbracket)? (
         ASTERIK char_length
     )? initialization?
-    | function_name (ASTERIK char_length)?
+    | function_name ( ASTERIK char_length)?
     ;
 
 entity_decl_list
@@ -1229,7 +1229,7 @@ enumeration_type_spec
     ;
 
 enumeration_type_stmt
-    : ENUMERATION TYPE ((COMMA access_spec)? DOUBLECOLON)? enumeration_type_name
+    : ENUMERATION TYPE (( COMMA access_spec)? DOUBLECOLON)? enumeration_type_name
     ;
 
 enumerator
@@ -1362,7 +1362,7 @@ explicit_shape_spec_list
     ;
 
 explicitCoShapeSpec
-    : ((lowerCoBound COLON)? upperCoBound COMMA)* (lowerCoBound COLON)? ASTERIK
+    : (( lowerCoBound COLON)? upper_cobound COMMA)* (lowerCoBound COLON)? ASTERIK
     ;
 
 exponent
@@ -1370,8 +1370,8 @@ exponent
     ;
 
 expr
-    : level5Expr
-    | expr defined_binary_op level5Expr
+    : level_5_expr
+    | expr defined_binary_op level_5_expr
     ;
 
 extended_intrinsic_op
@@ -1500,7 +1500,7 @@ format_items
 
 format_specification
     : format_items
-    | (format_items COMMA)? unlimited_format_item
+    | ( format_items COMMA)? unlimited_format_item
     ;
 
 format_stmt
@@ -1841,8 +1841,8 @@ intrinsic_type_spec
 
 io_control_spec
     : (UNIT ASSIGN)? io_unit
-    | (FMT ASSIGN)? format
-    | (NML ASSIGN)? namelist_group_name
+    | ( FMT ASSIGN)? format
+    | ( NML ASSIGN)? namelist_group_name
     | ADVANCE ASSIGN scalar_default_char_expr
     | ASYNCHRONOUS ASSIGN scalar_default_char_constant_expr
     | BLANK ASSIGN scalar_default_char_expr
@@ -1946,28 +1946,28 @@ letter_spec_list
     : LETTERSPEC (COMMA LETTERSPEC)*
     ;
 
-level1Expr
+level_1_expr
     : defined_unary_op? primary
     ;
 
-level2Expr
+level_2_expr
     : add_operand
     | add_op add_operand
-    | level2Expr add_op add_operand
+    | level_2_expr add_op add_operand
     ;
 
-level3Expr
-    : level2Expr
-    | level3Expr concat_op level2Expr
+level_3_expr
+    : level_2_expr
+    | level_3_expr concat_op level_2_expr
     ;
 
-level4Expr
-    : (level3Expr rel_op)? level3Expr
+level_4_expr
+    : (level_3_expr rel_op)? level_3_expr
     ;
 
-level5Expr
+level_5_expr
     : equiv_operand
-    | level5Expr equiv_op equiv_operand
+    | level_5_expr equiv_op equiv_operand
     ;
 
 literal_constant
@@ -2019,7 +2019,7 @@ logical_expr
 
 logical_literal_constant
     : TRUE (UNDERSCORE kind_param)?
-    | FALSE (UNDERSCORE kind_param)?
+    | FALSE ( UNDERSCORE kind_param)?
     ;
 
 logical_variable
@@ -2101,7 +2101,7 @@ mult_op
     ;
 
 mult_operand
-    : level1Expr (power_op mult_operand)?
+    : level_1_expr (power_op mult_operand)?
     ;
 
 multiple_subscript
@@ -2566,7 +2566,7 @@ proc_attr_spec
 proc_component_attr_spec
     : access_spec
     | NOPASS
-    | PASS (LPAREN arg_name RPAREN)?
+    | PASS ( LPAREN arg_name RPAREN)?
     | POINTER
     ;
 
@@ -2624,7 +2624,7 @@ procedure_component_name
     ;
 
 procedure_declaration_stmt
-    : PROCEDURE LPAREN proc_interface? RPAREN ((COMMA proc_attr_spec)* DOUBLECOLON)? proc_decl_list
+    : PROCEDURE LPAREN proc_interface? RPAREN (( COMMA proc_attr_spec)* DOUBLECOLON)? proc_decl_list
     ;
 
 procedure_designator
@@ -2691,13 +2691,13 @@ rbracket
 
 read_stmt
     : READ LPAREN io_control_spec_list RPAREN input_item_list?
-    | READ format (COMMA input_item_list)?
+    | READ format ( COMMA input_item_list)?
     ;
 
 real_literal_constant
     : DIGITSTRING DOT DIGITSTRING? (UNDERSCORE kind_param)?
-    | DOT DIGITSTRING (UNDERSCORE kind_param)?
-    | REALEXPONENTLETTER exponent (UNDERSCORE kind_param)?
+    | DOT DIGITSTRING ( UNDERSCORE kind_param)?
+    | REALEXPONENTLETTER exponent ( UNDERSCORE kind_param)?
     ;
 
 real_part
@@ -3125,12 +3125,12 @@ type_bound_procedure_part
     ;
 
 type_bound_procedure_stmt
-    : PROCEDURE ((COMMA bindAttrList)? DOUBLECOLON)? type_bound_proc_decl_list
-    | PROCEDURE LPAREN interface_name RPAREN COMMA bindAttrList DOUBLECOLON binding_name_list
+    : PROCEDURE (( COMMA binding_attr_list)? DOUBLECOLON)? type_bound_proc_decl_list
+    | PROCEDURE LPAREN interface_name RPAREN COMMA binding_attr_list DOUBLECOLON binding_name_list
     ;
 
 type_declaration_stmt
-    : declaration_type_spec ((COMMA attr_spec)* DOUBLECOLON)? entity_decl_list
+    : declaration_type_spec (( COMMA attr_spec)* DOUBLECOLON)? entity_decl_list
     ;
 
 type_guard_stmt
@@ -3217,7 +3217,7 @@ upper_bounds_expr
     : int_expr
     ;
 
-upperCoBound
+upper_cobound
     : specification_expr
     ;
 
@@ -3231,8 +3231,8 @@ use_name
     ;
 
 use_stmt
-    : USE ((COMMA module_nature)? DOUBLECOLON)? module_name (COMMA rename_list)?
-    | USE ((COMMA module_nature)? DOUBLECOLON)? module_name COMMA ONLY COLON only_list?
+    : USE (( COMMA module_nature)? DOUBLECOLON)? module_name (COMMA rename_list)?
+    | USE (( COMMA module_nature)? DOUBLECOLON)? module_name COMMA ONLY COLON only_list?
     ;
 
 v

@@ -394,11 +394,11 @@ leadingZeroEditDesc
 lengthSelector
 letterSpec
 letterSpecList
-level_1Expr
-level_2Expr
-level_3Expr
-level_4Expr
-level_5Expr
+level1Expr
+level2Expr
+level3Expr
+level4Expr
+level5Expr
 literalConstant
 localDefinedOperator
 localName
