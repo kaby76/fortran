@@ -1520,7 +1520,7 @@ mult_operand
     ;
 
 add_operand
-    : mult_operand (add_operand mult_operand)*
+    : mult_operand (mult_op mult_operand)*
     ;
 
 level_2_expr

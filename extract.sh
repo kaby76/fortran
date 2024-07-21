@@ -1141,7 +1141,7 @@ level_3_expr: level_2_expr (concat_op level_2_expr)* ;
 level_2_expr: (add_operand | add_op add_operand) (add_op add_operand)* ;
 ";
 	replace //parserRuleSpec[RULE_REF/text() = "add_operand"] "
-add_operand: mult_operand (add_operand mult_operand)* ;
+add_operand: mult_operand (mult_op mult_operand)* ;
 ";
 	replace //parserRuleSpec[RULE_REF/text() = "or_operand"] "
 or_operand: and_operand (and_op and_operand)* ;
