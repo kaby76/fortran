@@ -3,7 +3,6 @@ QU : '\'';
 ASSIGN : '<b>is</b>';
 ALT : '<b>or</b>' ;
 CHAR : '\'' ~'\''* '\'' ;
-COMMENT : '//' ~[\n\r]* -> channel(HIDDEN) ;
 DOT_DOT_DOT : '...';
 EXCLAMATION_MARK : '!';
 ID : '<i>' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '_')+ '</i>';

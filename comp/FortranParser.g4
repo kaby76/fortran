@@ -654,7 +654,7 @@ computed_goto_stmt
     ;
 
 concat_op
-    :
+    : CONCAT
     ;
 
 concurrent_control

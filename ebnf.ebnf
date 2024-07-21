@@ -175,7 +175,7 @@
               | '/' ;
  add_op : '+'
               | '-' ;
- concat_op : ; //
+ concat_op : '//' ;
  rel_op : '.EQ.'
               | '.NE.'
               | '.LT.'
@@ -619,7 +619,7 @@ letter_spec : LETTER_SPEC ;
  mult_operand : level_1_expr ( power_op mult_operand )? ;
  add_operand : ( add_operand mult_op )? mult_operand ;
  level_2_expr : ( ( level_2_expr )? add_op )? add_operand ;
- level_3_expr : ( level_3_expr concat_op )? level_2_expr ; //
+ level_3_expr : ( level_3_expr concat_op )? level_2_expr ;
  level_4_expr : ( level_3_expr rel_op )? level_3_expr ;
  and_operand : ( not_op )? level_4_expr ;
  or_operand : ( or_operand and_op )? and_operand ;

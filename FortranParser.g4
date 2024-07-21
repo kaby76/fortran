@@ -450,8 +450,8 @@ add_op
     ;
 
 concat_op
-    :
-    ; //
+    : '//'
+    ;
 
 rel_op
     : '.EQ.'
@@ -1531,7 +1531,6 @@ level_3_expr
     : level_2_expr (concat_op level_2_expr)*
     ;
 
-//
 level_4_expr
     : (level_3_expr rel_op)? level_3_expr
     ;

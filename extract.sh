@@ -375,7 +375,6 @@ trparse -p ebnf/Generated-CSharp ebnf.ebnf | \
 mv ebnf1.ebnf ebnf.ebnf
 dos2unix ebnf.ebnf
 
-
 echo "Rename."
 sed -f rename.txt -i ebnf.ebnf
 
