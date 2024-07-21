@@ -32,6 +32,14 @@ OCTALCONSTANT,OCTAL_CONSTANT
 HEXCONSTANT,HEX_CONSTANT
 bindAttr,binding_attr
 bindAttrList,binding_attr_list
+APOSTROPHEREPCHAR,SQUOTE_REP_CHAR
+QUOTEREPCHAR,DQUOTE_REP_CHAR
+deferredCoShapeSpecList,deferred_coshape_spec_list
+deferredCoShapeSpec,deferred_coshape_spec
+explicitCoShapeSpec,explicit_coshape_spec
+definedIOGenericSpec,defined_io_generic_spec
+lowerCoBound,lower_cobound
+LETTERSPEC,LETTER_SPEC
 EOF
 bash /c/Users/Kenne/Documents/Github/g4-scripts/delete-useless-parentheses.sh Fortran2023Parser.g4
 trparse -t ANTLRv4 Fortran2023Parser.g4 | trrename -R rename.txt | trsponge -c

@@ -491,8 +491,8 @@ char_length
     ;
 
 char_literal_constant
-    : (kind_param UNDERSCORE)? APOSTROPHEREPCHAR
-    | ( kind_param UNDERSCORE)? QUOTEREPCHAR
+    : (kind_param UNDERSCORE)? SQUOTE_REP_CHAR
+    | ( kind_param UNDERSCORE)? DQUOTE_REP_CHAR
     ;
 
 char_selector
@@ -539,8 +539,8 @@ coarray_name
     ;
 
 coarray_spec
-    : deferredCoShapeSpecList
-    | explicitCoShapeSpec
+    : deferred_coshape_spec_list
+    | explicit_coshape_spec
     ;
 
 codimension_decl
@@ -946,6 +946,14 @@ default_char_variable
     : variable
     ;
 
+deferred_coshape_spec
+    : COLON
+    ;
+
+deferred_coshape_spec_list
+    : deferred_coshape_spec (COMMA deferred_coshape_spec)*
+    ;
+
 deferred_shape_spec
     : COLON
     ;
@@ -954,16 +962,15 @@ deferred_shape_spec_list
     : deferred_shape_spec (COMMA deferred_shape_spec)*
     ;
 
-deferredCoShapeSpec
-    : COLON
-    ;
-
-deferredCoShapeSpecList
-    : deferredCoShapeSpec (COMMA deferredCoShapeSpec)*
-    ;
-
 defined_binary_op
     : DEFINEDUNARYBINARYOP
+    ;
+
+defined_io_generic_spec
+    : READ LPAREN FORMATTED RPAREN
+    | READ LPAREN UNFORMATTED RPAREN
+    | WRITE LPAREN FORMATTED RPAREN
+    | WRITE LPAREN UNFORMATTED RPAREN
     ;
 
 defined_operator
@@ -974,13 +981,6 @@ defined_operator
 
 defined_unary_op
     : DEFINEDUNARYBINARYOP
-    ;
-
-definedIOGenericSpec
-    : READ LPAREN FORMATTED RPAREN
-    | READ LPAREN UNFORMATTED RPAREN
-    | WRITE LPAREN FORMATTED RPAREN
-    | WRITE LPAREN UNFORMATTED RPAREN
     ;
 
 derived_type_def
@@ -1347,6 +1347,10 @@ explicit_bounds_expr
     : int_expr
     ;
 
+explicit_coshape_spec
+    : (( lower_cobound COLON)? upper_cobound COMMA)* (lower_cobound COLON)? ASTERIK
+    ;
+
 explicit_shape_bounds_spec
     : (explicit_bounds_expr COLON)? explicit_bounds_expr
     | lower_bound COLON explicit_bounds_expr
@@ -1359,10 +1363,6 @@ explicit_shape_spec
 
 explicit_shape_spec_list
     : explicit_shape_spec (COMMA explicit_shape_spec)*
-    ;
-
-explicitCoShapeSpec
-    : (( lowerCoBound COLON)? upper_cobound COMMA)* (lowerCoBound COLON)? ASTERIK
     ;
 
 exponent
@@ -1535,7 +1535,7 @@ generic_spec
     : generic_name
     | OPERATOR LPAREN defined_operator RPAREN
     | ASSIGNMENT LPAREN ASSIGN RPAREN
-    | definedIOGenericSpec
+    | defined_io_generic_spec
     ;
 
 generic_stmt
@@ -1943,7 +1943,7 @@ length_selector
     ;
 
 letter_spec_list
-    : LETTERSPEC (COMMA LETTERSPEC)*
+    : LETTER_SPEC (COMMA LETTER_SPEC)*
     ;
 
 level_1_expr
@@ -2044,7 +2044,7 @@ lower_bounds_expr
     : int_expr
     ;
 
-lowerCoBound
+lower_cobound
     : specification_expr
     ;
 
