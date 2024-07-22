@@ -3,7 +3,9 @@
 # Copy from source.
 cp ../FortranParser.g4 .
 cp ../FortranLexer.g4 .
-cp ../../Fortran2023Grammar/Fortran2023Parser.g4 .
+git clone https://github.com/kaby76/Fortran2023Grammar.git
+cp Fortran2023Grammar/Fortran2023Parser.g4 .
+rm -rf Fortran2023Grammar
 
 # Work around antlr-reformat issue of inconsistent spacing.
 trparse -t ANTLRv4 *.g4 | trquery insert after ' //LPAREN' '" "' | trsponge -c
@@ -48,6 +50,8 @@ trparse -t ANTLRv4 Fortran2023Parser.g4 | trsort | trsponge -c
 
 # Reformat all grammars.
 antlr-format -c ../../repo_coding_style.json *.g4
+
+rm -f after.txt before.txt rename.txt
 
 # Diff grammars.
 diff FortranParser.g4 Fortran2023Parser.g4
